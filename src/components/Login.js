@@ -75,8 +75,8 @@ export class BaseLogin extends Component {
             <div className="login-container">
                 <Grid className="Login">
                     <Row>
-                        <Col xs={4} />
-                        <Col xs={4} className="content">
+                        <Col xs={1} sm={4} />
+                        <Col xs={10} sm={4} className="content">
                             <Panel>
                                 <PageHeader>{t('login')}</PageHeader>
                                 <form>
@@ -130,7 +130,7 @@ export class BaseLogin extends Component {
                                 </div>
                             </Panel>
                         </Col>
-                        <Col xs={4} />
+                        <Col xs={1} sm={4} />
                     </Row>
                 </Grid>
             </div>

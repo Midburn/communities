@@ -46,7 +46,7 @@ const BaseAppNavigation = (props) => {
     };
 
     return (
-            <Navbar className="Navbar">
+            <Navbar className="Navbar" collapseOnSelect>
                 <Navbar.Header>
                     <Navbar.Brand>
                     <LinkContainer to="/">
