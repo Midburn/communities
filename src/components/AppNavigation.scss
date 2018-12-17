@@ -1,0 +1,11 @@
+.Navbar {
+  .nav-home-btn {
+    cursor: pointer;
+  }
+  li {
+    transition: 0.3s;
+    a {
+      transition: 0.3s;
+    }
+  }
+}

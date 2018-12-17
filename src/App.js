@@ -1,28 +1,56 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+import './App.scss';
+
+import { AppNavigation } from './components/AppNavigation';
+import { Layout } from './components/Layout';
+import { InitilizationService } from './services/initialization';
+import { Loader } from './components/Loader';
+import { withNamespaces } from 'react-i18next';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+
+    initService = new InitilizationService();
+
+    constructor(props) {
+        super(props);
+        this.init();
+    }
+
+    state = {
+        loading: true,
+        err: null
+    };
+
+    async init() {
+        try {
+            await this.initService.init();
+            this.setState({
+                loading: false
+            });
+        } catch (err) {
+            this.setState({
+                loading: false,
+                err
+            });
+        }
+
+    }
+
+    render() {
+        return (
+            <div className="App">
+                {this.props.lng === 'he' ? <link rel="stylesheet" href="//cdn.rawgit.com/morteza/bootstrap-rtl/v3.3.4/dist/css/bootstrap-rtl.min.css" /> : null }
+                { this.state.loading ? <Loader /> : <BrowserRouter>
+                    <div>
+                        <AppNavigation />
+                        <Layout />
+                    </div>
+                </BrowserRouter> }
+
+            </div>
+        );
+    }
 }
 
-export default App;
+export default withNamespaces()(App);
