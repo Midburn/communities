@@ -2,9 +2,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Features
 
 - Routing using [react-router-dom](https://github.com/ReactTraining/react-router#readme)
-- Translation using [react-i18next](https://github.com/i18next/react-i18next).
+- Translation using [react-i18next](https://github.com/i18next/react-i18next)
 - View components using [react-bootstrap](https://react-bootstrap.github.io/)
-
+- RTL support using [bootstrap-rtl](https://github.com/morteza/bootstrap-rtl)
 ## Available Scripts
 
 In the project directory, you can run:
