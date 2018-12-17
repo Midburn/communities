@@ -1,10 +1,11 @@
 import React from 'react';
-import { MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
+import { Button, MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import i18n from '../services/i18n';
 import { withI18n } from 'react-i18next';
 import Flag from "react-flags";
 import './AppNavigation.scss';
+import { withRouter } from 'react-router-dom';
 
 const BaseAppNavigation = (props) => {
     const { t, lng } = props;
@@ -27,6 +28,21 @@ const BaseAppNavigation = (props) => {
             shiny={true}
             alt={lngToFlagNameDict[lng] + 'Flag'}
         />
+    };
+
+    const logout = () => {
+        function deleteAllCookies() {
+            var cookies = document.cookie.split(";");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            }
+        }
+        deleteAllCookies();
+        props.history.push('/login');
     };
 
     return (
@@ -69,10 +85,13 @@ const BaseAppNavigation = (props) => {
                                 shiny={true}
                             /></MenuItem>
                         </NavDropdown>
+                        <NavItem eventKey={4} onClick={logout}>
+                            {t('logout')}
+                        </NavItem>
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
         );
 };
 
-export const AppNavigation = withI18n()(BaseAppNavigation);
+export const AppNavigation = withRouter(withI18n()(BaseAppNavigation));

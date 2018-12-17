@@ -1,28 +1,34 @@
 import './i18n';
-import * as axios from 'axios';
+
+
+export class CookieError extends Error {}
 
 export class InitilizationService {
 
-    async login() {
-        if (!document.cookie || !document.cookie.includes('connect.sid')) {
-            // perform login
-            try {
-                const data = await axios.post('http://localhost:3333/api/apilogin', { email: 'a', password: 'a' });
-                const data2 = await axios.get('http://localhost:3333/camps', {withCredentials: true});
-                console.log(data);
-                console.log(data2);
-                console.log(document.cookie);
-            } catch (e) {
-                console.log(e);
-            }
-        } else {
-            // use cookie.
-        }
-        console.log(document.cookie);
+    async fetchInitialData() {
+        /**
+         * Put all requests for initial data here.
+         */
     }
+
     async init() {
-        this.login();
-        // If we'll need to pre-fetch data;
-        return;
+        if (!document.cookie || !document.cookie.includes('authToken')) {
+            /**
+             * We don't have cookie - we need to redirect to login.
+             */
+            throw new CookieError();
+        }
+        /**
+         * We have cookie - we may init all required data from API.
+         */
+        try {
+            await this.fetchInitialData();
+        } catch (e) {
+            /**
+             * Something is wrong with the cookie - we should redirect to login.
+             */
+            throw new CookieError();
+        }
     }
+
 }

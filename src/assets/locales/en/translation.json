@@ -4,5 +4,10 @@
   "arts": "Arts",
   "he": "עברית",
   "en": "English",
-  "search_camps": "Search Camp"
+  "search_camps": "Search Camp",
+  "email": "Email",
+  "password": "Password",
+  "login": "Login",
+  "logout": "Log Out",
+  "loginError": "Wrong email or password"
 }

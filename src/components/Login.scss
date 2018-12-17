@@ -1,0 +1,35 @@
+@import "../styles/_colors";
+
+.login-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  .Login {
+    height: 85vh;
+    overflow-y: hidden;
+    .row, .col, .content {
+      height: 100%;
+    };
+    button {
+      width: 100%;
+    }
+    .panel {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      .lng-changer {
+        padding: 2vh 0;
+        width: 25%;
+        display: flex;
+        justify-content: space-evenly;
+      }
+      .help-block {
+        height: 5vh;
+        text-align: center;
+        color: $red;
+      }
+    }
+  }
+}

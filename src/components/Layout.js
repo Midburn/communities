@@ -1,34 +1,55 @@
-import React from 'react';
-import { Arts } from './Arts';
-import { NotFound } from './NotFound';
-import { Home } from './Home';
-import { Camps } from './Camps';
-import { Col, Grid, Panel, Row } from 'react-bootstrap';
-import { Route, Switch } from 'react-router-dom';
-import { AppBreadcrumbs } from './AppBreadcrumbs';
+import React, { Component } from 'react';
 
-export const Layout = () => {
-    return (
-        <Grid>
-            <Row>
-                <Col xs={12}>
-                    <AppBreadcrumbs />
-                </Col>
-            </Row>
-            <Row>
-                <Col xs={12}>
-                    <Panel>
-                        <Panel.Body>
-                            <Switch>
-                                <Route path="/" component={Home} exact />
-                                <Route path="/camps" component={Camps}/>
-                                <Route path="/arts" component={Arts}/>
-                                <Route component={NotFound}/>
-                            </Switch>
-                        </Panel.Body>
-                    </Panel>
-                </Col>
-            </Row>
-        </Grid>
-    );
-};
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { Main } from './Main';
+import { Login } from './Login';
+import { CookieError, InitilizationService } from '../services/initialization';
+import { Loader } from './Loader';
+
+export class BaseLayout extends Component {
+    initService = new InitilizationService();
+
+    constructor(props) {
+        super(props);
+        this.init();
+    }
+
+    state = {
+        loading: true,
+        err: null
+    };
+
+    async init() {
+        try {
+            await this.initService.init();
+            if (this.props.location.pathname === '/login') {
+                this.props.history.push('/');
+            }
+            this.setState({
+                loading: false
+            });
+        } catch (err) {
+            this.setState({
+                loading: false,
+                err
+            });
+            if (err instanceof CookieError) {
+                this.props.history.push('/login');
+            }
+        }
+
+    }
+    render() {
+        return (
+            <div>
+                { this.state.loading ? <Loader /> :
+                    <Switch>
+                        <Route path="/login" component={Login} />
+                        <Route path="/" component={Main}></Route>
+                    </Switch> }
+            </div>
+        );
+    }
+}
+
+export const Layout = withRouter(BaseLayout);
