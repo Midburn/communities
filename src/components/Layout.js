@@ -41,7 +41,7 @@ export class BaseLayout extends Component {
     }
     render() {
         return (
-            <div>
+            <div className="Layout">
                 { this.state.loading ? <Loader /> :
                     <Switch>
                         <Route path="/login" component={Login} />
