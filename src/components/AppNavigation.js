@@ -88,7 +88,7 @@ class BaseAppNavigation extends Component {
                     <NavbarNav className="right-nav" right>
                         <NavItem>
                             <Dropdown id="basic-nav-dropdown">
-                                <DropdownToggle nav caret> <div className="d-none d-md-inline">{this.getFlag(lng)}</div></DropdownToggle>
+                                <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
                                 <DropdownMenu basic>
                                     <DropdownItem onClick={() => this.changLng('en')}>
                                         {t('en')}
