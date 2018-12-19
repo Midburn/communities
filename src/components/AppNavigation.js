@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
+import { MenuItem, Nav, Navbar, NavDropdown, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import i18n from '../services/i18n';
 import { withI18n } from 'react-i18next';

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { Main } from './Main';
 import { Login } from './Login';
 import { CookieError, InitilizationService } from '../services/initialization';
 import { Loader } from './Loader';
+import { PrivateRoute } from './PrivateRoute';
 
 export class BaseLayout extends Component {
     initService = new InitilizationService();
@@ -16,26 +16,27 @@ export class BaseLayout extends Component {
 
     state = {
         loading: true,
-        err: null
+        err: null,
+        authenticated: false
     };
 
     async init() {
         try {
-            await this.initService.init();
             if (this.props.location.pathname === '/login') {
                 this.props.history.push('/');
             }
             this.setState({
-                loading: false
+                loading: false,
+                authenticated: await this.initService.init()
             });
         } catch (err) {
             this.setState({
                 loading: false,
                 err
             });
-            if (err instanceof CookieError) {
-                this.props.history.push('/login');
-            }
+            // if (err instanceof CookieError) {
+            //     this.props.history.push('/login');
+            // }
         }
 
     }
@@ -45,7 +46,7 @@ export class BaseLayout extends Component {
                 { this.state.loading ? <Loader /> :
                     <Switch>
                         <Route path="/login" component={Login} />
-                        <Route path="/" component={Main}></Route>
+                        <PrivateRoute path="/" authenticated={this.state.authenticated} component={Main}></PrivateRoute>
                     </Switch> }
             </div>
         );
