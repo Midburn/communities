@@ -1,23 +1,24 @@
 import React from 'react';
-import { Breadcrumb } from 'react-bootstrap';
+import { Breadcrumb, BreadcrumbItem } from 'mdbreact';
 import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { withI18n } from 'react-i18next';
 
 const BaseAppBreadcrumbs = (props) => {
     const paths = props.location.pathname.split('/').filter(p => !!p);
-    const { t } = props;
+    const { t, lng } = props;
+
     return (
-        <Breadcrumb>
+        <Breadcrumb light color="white">
             <LinkContainer to="/">
-                <Breadcrumb.Item >{t('home')}</Breadcrumb.Item>
+                <BreadcrumbItem >{t('home')}</BreadcrumbItem >
             </LinkContainer>
             {paths.map((p, index) => {
                 return (
-                    index === paths.length - 1 ? <Breadcrumb.Item key={p} active>{t(p)}</Breadcrumb.Item> :
-                    <LinkContainer key={p} to={`/${p}`}>
-                        <Breadcrumb.Item>{t(p)}</Breadcrumb.Item>
-                    </LinkContainer>
+                    index === paths.length ? <BreadcrumbItem  key={p} active>{t(p)}</BreadcrumbItem > :
+                        <LinkContainer key={p} to={`/${p}`}>
+                            <BreadcrumbItem > {t(p)}</BreadcrumbItem >
+                        </LinkContainer>
                 );
             })}
         </Breadcrumb>

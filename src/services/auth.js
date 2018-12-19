@@ -19,4 +19,8 @@ export class AuthService {
             throw e;
         }
     }
+
+    async logOut() {
+        window.location.href = `${this.BASE_URL}/en/logout`;
+    }
 }

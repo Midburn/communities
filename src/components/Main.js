@@ -1,38 +1,42 @@
 import { AppNavigation } from './AppNavigation';
-import { Col, Grid, Panel, Row } from 'react-bootstrap';
+import { Col, Container, Card, Row, CardBody } from 'mdbreact';
 import { AppBreadcrumbs } from './AppBreadcrumbs';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Home } from './Home';
 import { Camps } from './Camps';
 import { Arts } from './Arts';
 import { NotFound } from './NotFound';
 import React from 'react';
+import { withI18n } from 'react-i18next';
 
-export const Main = () => {
+const BaseMain = (props) => {
+    const { lng } = props;
     return (
         <div>
             <AppNavigation />
-            <Grid>
+            <Container className={lng === 'he' ? 'rtl' : ''}>
                 <Row>
-                    <Col xs={12}>
+                    <Col>
                         <AppBreadcrumbs />
                     </Col>
                 </Row>
                 <Row>
-                    <Col xs={12}>
-                        <Panel>
-                            <Panel.Body>
+                    <Col>
+                        <Card >
+                            <CardBody>
                                 <Switch>
                                     <Route path="/" component={Home} exact />
                                     <Route path="/camps" component={Camps}/>
                                     <Route path="/arts" component={Arts}/>
                                     <Route component={NotFound}/>
                                 </Switch>
-                            </Panel.Body>
-                        </Panel>
+                            </CardBody>
+                        </Card >
                     </Col>
                 </Row>
-            </Grid>
+            </Container>
         </div>
     )
 };
+
+export const Main = withI18n()(withRouter(props => <BaseMain {...props}/>));

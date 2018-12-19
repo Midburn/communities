@@ -19,7 +19,9 @@ export class InitilizationService {
          * We have cookie - we may init all required data from API.
          */
         try {
-            return await this.auth.auth();
+           await this.auth.auth();
+           await this.fetchInitialData();
+           return true;
         } catch (e) {
             /**
              * Something is wrong with the cookie - we should redirect to login.

@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "bootstrap-v4-rtl": "^4.1.1-1",
     "classnames": "^2.2.6",
     "i18next": "^13.0.0",
     "i18next-browser-languagedetector": "^2.2.4",
     "lodash": "^4.17.11",
+    "mdbreact": "4.8.5-patch.1",
     "node-sass": "^4.11.0",
     "react": "^16.6.3",
     "react-bootstrap": "^0.32.4",
