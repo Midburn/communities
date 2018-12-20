@@ -2,8 +2,10 @@
  * Export dictionery for services singletons.
  * @type {{}}
  */
-const ConfigService = require('./config');
+const configService = require('./config'),
+    sparkService = require('./spark');
 
 module.exports = {
-    config: new ConfigService()
+    config: configService,
+    spark: sparkService
 };

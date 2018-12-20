@@ -17,6 +17,6 @@ module.exports = class AuthRouter {
         /**
          * E.G - /api/VERSION/login
          */
-        this.router.use('/login', controllers.auth.login);
+        this.router.get('/user', controllers.auth.getUser);
     }
 };

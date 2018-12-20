@@ -28,12 +28,19 @@ class Server {
     }
 
     initMiddlewares() {
+        this.app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Credentials', true);
+            res.header("Access-Control-Allow-Origin", req.headers.origin);
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,UPDATE,OPTIONS');
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
         this.app.use(cookieParser());
         this.app.use(bodyParser.json()); // for parsing application/json
         this.app.use(compression()); // compress all responses
         this.app.use(async (req, res, next) => {
-            if (req.path === '/api/v1/login') {
-                return next();
+            if (req.url.includes(this.config.SPARK_HOST)) {
+                next();
             }
             try {
                 const token = req.cookies && req.cookies[this.config.JWT_KEY] && req.cookies[this.config.JWT_KEY].token;
@@ -44,9 +51,8 @@ class Server {
             }
             catch (err) {
                 if (req.path.startsWith('/api/v1/') && !req.path.startsWith('/api/v1/public/')) {
-                    console.log(err);
                     res.clearCookie(this.config.JWT_KEY);
-                    return res.redirect(this.config.SPARK_HOST);
+                    return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Unauthorized'), 401));
                 } else {
                     next();
                 }
@@ -55,7 +61,7 @@ class Server {
     }
 
     initRouters() {
-        this.app.use('api', routers.v1.router);
+        this.app.use('/api', routers.v1.router);
     }
 
     initStaticServer() {
@@ -83,8 +89,7 @@ class Server {
                 "/public": {
                     target: "http://localhost:3006",
                     pathRewrite: {"^/public": ""}
-                },
-                "/login": "http://localhost:8080/api/v1"
+                }
             },
             historyApiFallback: {
                 rewrites: [

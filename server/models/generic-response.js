@@ -1,12 +1,12 @@
 const constants = require('./constants');
 
 module.exports = class GenericResponse {
-    constructor(type, data, status) {
+    constructor(type, body, status) {
         if (!type) {
             throw new Error('Generic Response must have type');
         }
         this.type = type;
-        this.data = data || {};
+        this.body = body || {};
         this.status = status || this.getDefaultStatus();
     }
 
@@ -15,7 +15,7 @@ module.exports = class GenericResponse {
             case constants.RESPONSE_TYPES.ERROR:
                 return 500;
             case constants.RESPONSE_TYPES.JSON:
-                return !!this.data ? 200 : 204;
+                return !!this.body ? 200 : 204;
             case constants.RESPONSE_TYPES.STATIC:
                 return 200;
             default:

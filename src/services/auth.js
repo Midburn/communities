@@ -13,7 +13,8 @@ export class AuthService {
 
     async auth() {
         try {
-            await axios.get(`${this.BASE_URL}/en/campsapp/validate`, { withCredentials: true });
+            const user = await axios.get(`/api/v1/user`, { withCredentials: true });
+            console.log(user);
             return true;
         } catch (e) {
             throw e;

@@ -1,7 +1,6 @@
 // Load environment variables default values
 require('dotenv').config();
-
-module.exports = class ConfigService {
+class ConfigService {
     get isDevMode() {
         return process.env.ENVIRONMENT === 'debug';
     }
@@ -15,7 +14,7 @@ module.exports = class ConfigService {
     }
 
     get SECRET() {
-        return process.env.SECRET;
+        return process.env.SECRET || "YWxseW91bmVlZGlzbG92ZWFsbHlvdW5lZWRpc2xvdmVsb3ZlbG92ZWlzYWxseW91";
     }
 
     get LOCAL_SPARK() {
@@ -25,4 +24,6 @@ module.exports = class ConfigService {
     get PORT() {
         return process.env.PORT;
     }
-};
+}
+
+module.exports = new ConfigService();
