@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');
-const webpackConfig = require("../webpack.config.js");
+const webpackConfig = require("../config/webpack.config.dev.js");
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const compression = require('compression');
 const constants = require('./models/constants');
 const services = require('./services');
-const routers = require('routers');
+const routers = require('./routers');
+const GenericResponse = require('./models/generic-response');
 
 class Server {
 
@@ -109,7 +110,7 @@ class Server {
                 case constants.RESPONSE_TYPES.JSON:
                     break;
                 default:
-                    genericResponse = new genericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Server Error - empty response sent to handler'));
+                    genericResponse = new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Server Error - empty response sent to handler'));
 
             }
             return res.status(genericResponse.status).json(genericResponse);
@@ -117,12 +118,13 @@ class Server {
     }
 
     listen() {
+        const that = this;
         this.listener = this.app.listen(this.config.PORT, function () {
-            const host = this.listener.address().address;
-            const port = this.listener.address().port;
+            const host = that.listener.address().address;
+            const port = that.listener.address().port;
             console.log("Listening at http://%s:%s", host, port);
-            if (this.config.isDevMode) {
-                console.log(`For debug go to http://localhost:9090/login`);
+            if (that.config.isDevMode) {
+                console.log(`For debug go to http://localhost:3006`);
             }
         });
     }

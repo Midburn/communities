@@ -1,10 +1,10 @@
-const Router = require('express').Router();
+const Router = require('express').Router;
 const AuthRouter = require('./auth');
 
-export class V1Router {
+module.exports = class V1Router {
 
     constructor() {
-        this.router = Router();
+        this.router = new Router();
         this.auth = new AuthRouter();
         this.initMiddleware();
         this.initRoutes();
@@ -15,7 +15,6 @@ export class V1Router {
     }
 
     initRoutes() {
-        this.router.use('/v1');
-        this.router.use(this.auth.router);
+        this.router.use('/v1', this.auth.router);
     }
-}
+};

@@ -7,9 +7,10 @@ module.exports = class AuthController {
 
     constructor() {
         this.config = services.config;
+        this.login = this.login.bind(this);
     }
 
-    login = (req, res, next) => {
+    login(req, res, next) {
         let token = req.query.token;
         if (!token && this.config.isDevMode && this.config.LOCAL_SPARK) {
             token = jwt.sign({
