@@ -4,10 +4,16 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "bootstrap-v4-rtl": "^4.1.1-1",
     "classnames": "^2.2.6",
+    "compression": "^1.7.3",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
     "i18next": "^13.0.0",
     "i18next-browser-languagedetector": "^2.2.4",
+    "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "mdbreact": "4.8.5-patch.1",
     "node-sass": "^4.11.0",
@@ -21,7 +27,7 @@
     "react-scripts": "2.1.1"
   },
   "scripts": {
-    "start": "PORT=3006 react-scripts start",
+    "start": "cross-env PORT=3006 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -34,5 +40,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "cross-env": "^5.2.0"
+  }
 }
