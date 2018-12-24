@@ -28,7 +28,7 @@ class BaseCampEdit extends React.Component {
         tab = +tab;
         if (this.activeTab !== tab) {
             this.activeTab = tab;
-            this.props.history.push(`#${tab}`, {search: this.props.location.search})
+            this.props.history.push({hash: `#${tab}`, search: this.props.location.search})
         }
     }
 

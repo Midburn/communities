@@ -25,6 +25,7 @@
     "join": "Join",
     "description": "Camp's description",
     "notfound": "No camps found for matching search term - '{{q}}'",
+    "since": "Since",
     "joinmodal": {
       "header": "Join camp request",
       "body": "You're about to request camp {{campname}} to join, are you sure?"

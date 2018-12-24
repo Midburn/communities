@@ -21,13 +21,13 @@ class BaseCamp extends React.Component {
     @observable
     editMode = false;
 
-    edit = (e) => {
+    edit = () => {
         this.editMode = true;
         this.buttons = [this.viewButton];
         this.props.history.push({ search: '?edit=true'});
     };
 
-    view = (e) => {
+    view = () => {
         this.editMode = false;
         this.buttons = [this.editButton];
         this.props.history.push({ search: ''});
@@ -48,6 +48,13 @@ class BaseCamp extends React.Component {
     buttons = [
         this.editButton
     ];
+
+    constructor(props) {
+        super(props);
+        if (props.location.search.includes('edit=true')) {
+            this.edit();
+        };
+    }
 
     render() {
         const {match} = this.props;
