@@ -37,6 +37,7 @@
     "html-webpack-plugin": "4.0.0-alpha.2",
     "i18next": "^13.0.0",
     "i18next-browser-languagedetector": "^2.2.4",
+    "i18next-xhr-backend": "^1.5.1",
     "identity-obj-proxy": "3.0.0",
     "jest": "23.6.0",
     "jest-pnp-resolver": "1.0.1",

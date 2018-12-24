@@ -1,0 +1,48 @@
+{
+  "search": {
+    "title": "Search Camps",
+    "notFound": "No Camps found for term - '{{q}}'"
+  },
+  "camp": {
+    "header": {
+      "description": "Camp's description"
+    },
+    "publication":  {
+      "title": "Publication",
+      "body": "The details here will be shown in the web-site, if camp is published.",
+      "contactTitle": "Contact Person",
+      "facebook": "Facebook link",
+      "details": {
+        "title": "Camp Details",
+        "children": "Child friendly",
+        "openMembers": "Open to new members",
+        "art": "Art",
+        "family": "Accept Families",
+        "time": "Time active",
+        "noise": "Noise Level",
+        "street": "Street",
+        "hour": "Time"
+      }
+    },
+    "edit": {
+      "tabs": {
+        "info": "Basic information",
+        "details": "Basic details",
+        "members": "Members",
+        "files": "Files & Forms upload",
+        "suppliers": "Suppliers"
+      },
+      "info": {
+        "nameTitle": "Camp Name & Description",
+        "publicationTitle": "Midburn Website Publication",
+        "contactsTitle": "Camp Contact Personnel",
+        "facebookLink": "Facebook Page Link",
+        "contactPerson": "Contact Person {{type}}"
+      }
+    }
+  },
+  "joinModal": {
+    "header": "Join camp request",
+    "body": "You're about to request camp {{campname}} to join, are you sure?"
+  }
+}

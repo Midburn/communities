@@ -6,7 +6,7 @@ import { withI18n } from 'react-i18next';
 import './AppBreadcrumbs.scss';
 
 const BaseAppBreadcrumbs = (props) => {
-    const paths = props.location.pathname.split('/').filter(p => !!p);
+    const paths = props.location.pathname.split('/').filter(p => !!p).slice(1);
     const { t, lng, match } = props;
     const [ main, id ] = paths;
 
@@ -24,7 +24,7 @@ const BaseAppBreadcrumbs = (props) => {
     return (
         <Breadcrumb>
             <LinkContainer to="/">
-                <BreadcrumbItem active={"false"}>{t('home')}</BreadcrumbItem >
+                <BreadcrumbItem active={false}>{t('home')}</BreadcrumbItem >
             </LinkContainer>
             {paths.map((p, index) => {
                 return (

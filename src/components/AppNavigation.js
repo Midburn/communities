@@ -13,12 +13,12 @@ import {
     NavLink } from 'mdbreact';
 import { LinkContainer } from 'react-router-bootstrap';
 import i18n from '../services/i18n';
-import { withI18n } from 'react-i18next';
 import Flag from "react-flags";
 import './AppNavigation.scss';
 import { withRouter } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { CONSTANTS } from '../models/constants';
+import { withNamespaces } from 'react-i18next';
 
 class BaseAppNavigation extends Component {
 
@@ -27,6 +27,7 @@ class BaseAppNavigation extends Component {
         collapse: false,
         links: CONSTANTS.GROUP_TYPES
     };
+
     changLng = (lng) => {
         i18n.changeLanguage(lng);
     };
@@ -68,8 +69,8 @@ class BaseAppNavigation extends Component {
         return (
             <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling fixed="top">
                 <NavbarBrand>
-                    <LinkContainer to="/">
-                        <div className="nav-home-btn">{t('home')}</div>
+                    <LinkContainer to={`/${lng}/home`}>
+                        <div className="nav-home-btn">{t('common:home')}</div>
                     </LinkContainer>
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggleCollapse} />
@@ -78,7 +79,7 @@ class BaseAppNavigation extends Component {
                         {this.state.links.map((link, index)=> {
                             return (
                                 <NavItem onClick={this.toggleCollapse}key={link} active={ location.pathname.includes(link) }>
-                                    <NavLink to={`../${link}`}>{t(link)}</NavLink>
+                                    <NavLink to={`../${lng}/${link}`}>{t(link)}</NavLink>
                                 </NavItem>
                             )
                         })}
@@ -92,6 +93,7 @@ class BaseAppNavigation extends Component {
                                         {t('en')}
                                         <Flag
                                             name="US"
+                                            country="US"
                                             format="png"
                                             pngSize={16}
                                             basePath="img/flags"
@@ -102,6 +104,7 @@ class BaseAppNavigation extends Component {
                                         {t('he')}
                                         <Flag
                                             name="IL"
+                                            country="IL"
                                             format="png"
                                             pngSize={16}
                                             basePath="img/flags"
@@ -121,4 +124,4 @@ class BaseAppNavigation extends Component {
     }
 }
 
-export const AppNavigation = withRouter(withI18n()(BaseAppNavigation));
+export const AppNavigation = withRouter(withNamespaces()(BaseAppNavigation));

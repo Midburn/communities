@@ -56,7 +56,7 @@ class BaseCampList extends React.Component {
         return (
             <FlipMove className="CampList">
                 <JoinCampModal isOpen={this.isJoinCampModal} camp={this.selectedCamp} toggle={this.toggle}/>
-                { filteredCamps.length ? null : <Alert color="danger w-100" >{t('campspage.notfound', { q: query})}</Alert>}
+                { filteredCamps.length ? null : <Alert color="danger w-100" >{t('camps:search.notFound', { q: query})}</Alert>}
                 {filteredCamps.map(camp => {
                     return (
                         <Card className="CampResult">
@@ -71,8 +71,8 @@ class BaseCampList extends React.Component {
                                 <CardText>
                                     {this.campService.getPropertyByLang(camp, 'description')}
                                 </CardText>
-                                <Button onClick={() => this.viewCamp(camp.id)}>{t('campspage.view')}</Button>
-                                <Button onClick={() => this.joinCamp(camp.id)}>{t('campspage.join')}</Button>
+                                <Button onClick={() => this.viewCamp(camp.id)}>{t('view')}</Button>
+                                <Button onClick={() => this.joinCamp(camp.id)}>{t('join')}</Button>
                             </CardBody>
                         </Card>
                     );

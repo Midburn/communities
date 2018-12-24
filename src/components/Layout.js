@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Switch, withRouter } from 'react-router-dom';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Main } from './Main';
 import { InitilizationService } from '../services/initialization';
 import { Loader } from './Loader';
 import { PrivateRoute } from './PrivateRoute';
+import { NotFound } from './NotFound';
 
 export class BaseLayout extends Component {
     initService = new InitilizationService();
@@ -21,9 +22,6 @@ export class BaseLayout extends Component {
 
     async init() {
         try {
-            if (this.props.location.pathname === '/login') {
-                this.props.history.push('/');
-            }
             this.setState({
                 loading: false,
                 authenticated: await this.initService.init()
@@ -41,7 +39,8 @@ export class BaseLayout extends Component {
             <div className="Layout">
                 { this.state.loading ? <Loader /> :
                     <Switch>
-                        <PrivateRoute path="/" authenticated={this.state.authenticated} component={Main}></PrivateRoute>
+                        <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
+                        <Route component={NotFound}/>
                     </Switch> }
             </div>
         );
