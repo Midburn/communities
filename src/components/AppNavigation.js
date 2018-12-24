@@ -11,7 +11,6 @@ import {
     DropdownMenu,
     NavbarToggler,
     NavLink } from 'mdbreact';
-import { LinkContainer } from 'react-router-bootstrap';
 import i18n from '../services/i18n';
 import Flag from "react-flags";
 import './AppNavigation.scss';
@@ -64,14 +63,16 @@ class BaseAppNavigation extends Component {
         return lng === 'he' ? className += ' rtl' : className;
     };
 
+    backToSpark = (e) => {
+        window.location.href = 'http://localhost:3000';
+    }
+
     render() {
         const { t, lng, location } = this.props;
         return (
             <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling fixed="top">
-                <NavbarBrand>
-                    <LinkContainer to={`/${lng}/home`}>
-                        <div className="nav-home-btn">{t('common:home')}</div>
-                    </LinkContainer>
+                <NavbarBrand className="NavbarBrand" onClick={this.backToSpark}>
+                        <div>Spark</div>
                 </NavbarBrand>
                 <NavbarToggler onClick={this.toggleCollapse} />
                 <Collapse isOpen={this.state.collapse} navbar>

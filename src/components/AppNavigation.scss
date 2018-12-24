@@ -1,4 +1,13 @@
 .Navbar {
+  .NavbarBrand {
+    background: url("../assets/images/midburn_logo.svg");
+    background-size: 50px;
+    padding-left: 30px;
+    background-repeat: no-repeat;
+    background-position: -10px 50%;
+    color: black !important;
+    cursor: pointer;
+  }
   margin-bottom: 2vh;
   .nav-home-btn {
     cursor: pointer;

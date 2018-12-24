@@ -37,7 +37,7 @@ class BaseMain extends React.Component {
                             <Card>
                                 <CardBody className="MainPanel">
                                     <Switch>
-                                        <Route exact path="/:lng(en|he)/home" component={Home}/>
+                                        {/*<Route exact path="/:lng(en|he)/home" component={Home}/>*/}
                                         <Route path="/:lng(en|he)/camps" component={Camps} exact/>
                                         <Route path="/:lng(en|he)/camps/:id" component={Camp}/>
                                     </Switch>

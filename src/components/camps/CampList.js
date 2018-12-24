@@ -56,14 +56,13 @@ class BaseCampList extends React.Component {
         return (
             <FlipMove className="CampList">
                 <JoinCampModal isOpen={this.isJoinCampModal} camp={this.selectedCamp} toggle={this.toggle}/>
-                { filteredCamps.length ? null : <Alert color="danger w-100" >{t('camps:search.notFound', { q: query})}</Alert>}
+                { filteredCamps.length ? null : <Alert className="w-100" color="danger" >{t('camps:search.notFound', { q: query})}</Alert>}
                 {filteredCamps.map(camp => {
                     return (
-                        <Card className="CampResult">
+                        <Card key={camp.id} className="CampResult">
                             <CardImage
                                 className="img-fluid"
                                 src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
-                                onerror="this.onerror=null;this.src='imagefound.gif';"
                                 hover
                             />
                             <CardBody>
