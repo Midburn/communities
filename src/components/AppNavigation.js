@@ -47,7 +47,7 @@ class BaseAppNavigation extends Component {
         />
     };
 
-    toggleCollapse = (e) => {
+    toggleCollapse = () => {
         this.setState({
             collapse: !this.state.collapse
         })
@@ -77,7 +77,7 @@ class BaseAppNavigation extends Component {
                     <NavbarNav left>
                         {this.state.links.map((link, index)=> {
                             return (
-                                <NavItem key={link} active={ location.pathname.includes(link) }>
+                                <NavItem onClick={this.toggleCollapse}key={link} active={ location.pathname.includes(link) }>
                                     <NavLink to={`../${link}`}>{t(link)}</NavLink>
                                 </NavItem>
                             )
@@ -88,7 +88,7 @@ class BaseAppNavigation extends Component {
                             <Dropdown id="basic-nav-dropdown">
                                 <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
                                 <DropdownMenu basic>
-                                    <DropdownItem onClick={() => this.changLng('en')}>
+                                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('en')}}>
                                         {t('en')}
                                         <Flag
                                             name="US"
@@ -98,7 +98,7 @@ class BaseAppNavigation extends Component {
                                             shiny={true}
                                         />
                                     </DropdownItem>
-                                    <DropdownItem onClick={() => this.changLng('he')}>
+                                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('he')}}>
                                         {t('he')}
                                         <Flag
                                             name="IL"
