@@ -38,12 +38,12 @@ class BaseJoinCampModal extends React.Component {
         const {isOpen, camp, toggle, t} = this.props;
         return (
             <Modal className="JoinModal" isOpen={isOpen} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{t('campspage.joinmodal.header')}</ModalHeader>
+                <ModalHeader toggle={toggle}>{t('camps:joinModal.header')}</ModalHeader>
                 <ModalBody>
                     {
                         // TODO - implement loader
                         this.loading ? <div className="loader small"></div> :
-                        this.error ? t(this.error.message) : t('campspage.joinmodal.body', {campname: this.campService.getPropertyByLang(camp, 'name')})
+                        this.error ? t(this.error.message) : t('camps:joinModal.body', {campname: this.campService.getPropertyByLang(camp, 'name')})
                     }
 
                 </ModalBody>

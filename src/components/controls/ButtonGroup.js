@@ -1,5 +1,6 @@
 import React from 'react';
 import { Btn, MDBIcon , MDBTooltip } from "mdbreact";
+import { withI18n } from 'react-i18next';
 
 /**
  * Button interface =
@@ -12,14 +13,14 @@ import { Btn, MDBIcon , MDBTooltip } from "mdbreact";
  * @param buttons - array of buttons
  * @constructor
  */
-export const ButtonGroup = ({buttons, vertical}) => {
+const BaseButtonGroup = ({buttons, vertical, lng}) => {
     return (
         <div className={`d-flex ${vertical ? 'flex-column' : null}`}>
             {(buttons || []).map(button => {
                 return (
                     <div onClick={button.onClick}>
                         <MDBTooltip
-                            placement="left"
+                            placement={`${lng === 'he' ? 'right' : 'left'}`}
                             component="button"
                             componentClass="btn btn-primary"
                             tag="div"
@@ -33,3 +34,4 @@ export const ButtonGroup = ({buttons, vertical}) => {
         </div>
     )
 };
+export const ButtonGroup = withI18n()(BaseButtonGroup);

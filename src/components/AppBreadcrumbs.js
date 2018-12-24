@@ -6,7 +6,7 @@ import { withI18n } from 'react-i18next';
 import './AppBreadcrumbs.scss';
 
 const BaseAppBreadcrumbs = (props) => {
-    const paths = props.location.pathname.split('/').filter(p => !!p);
+    const paths = props.location.pathname.split('/').filter(p => !!p).slice(1);
     const { t, lng, match } = props;
     const [ main, id ] = paths;
 
@@ -21,16 +21,26 @@ const BaseAppBreadcrumbs = (props) => {
         }
     }
 
+    function getLinkPath(index) {
+        let path = `/${lng}`;
+        for (const i in paths) {
+            const item = paths[i];
+            path += `/${item}`;
+            if (+i === index) {
+                return path;
+            }
+        }
+        return path;
+    }
+
+
     return (
         <Breadcrumb>
-            <LinkContainer to="/">
-                <BreadcrumbItem active={"false"}>{t('home')}</BreadcrumbItem >
-            </LinkContainer>
             {paths.map((p, index) => {
+                const isLast = index === (paths.length - 1);
                 return (
-                    index === paths.length - 1 ? <BreadcrumbItem className={`${lng === 'he' ? 'pad-left' : null}`}  key={p} active>{ p === id ? getNameFromPath(p) : t(p) }</BreadcrumbItem > :
-                        <LinkContainer key={p} to={`/${p}`}>
-                            <BreadcrumbItem className={`${lng === 'he' ? 'pad-left' : null}`} active={false}> { p === id ? getNameFromPath(p) : t(p) }</BreadcrumbItem >
+                        <LinkContainer disabled={isLast} key={index} to={getLinkPath(+index)}>
+                            <BreadcrumbItem active={isLast} className={`${lng === 'he' ? 'pad-left' : null}`}> { p === id ? getNameFromPath(p) : t(p) }</BreadcrumbItem >
                         </LinkContainer>
                 );
             })}

@@ -6,7 +6,7 @@ import { TextAreaInput } from '../../controls/EditableItem/TextAreaInput';
 
 class BaseCampInfoEdit extends React.Component {
 
-    TRANSLATE_PREFIX = 'campspage.edit.infoEdit';
+    TRANSLATE_PREFIX = 'camps:camp.edit.info';
 
     state = {
         editedCamp: {...this.props.camp}

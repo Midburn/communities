@@ -5,7 +5,7 @@ import { CampsService } from '../../services/camps';
 import { Row, Col, ListGroup, MDBIcon , MDBBtn   } from 'mdbreact';
 import { ListItemWithBadge } from '../controls/ListItemWithBadge';
 
-class BaseCampSiteDetails extends React.Component {
+class BaseCampPublicationDetails extends React.Component {
 
     campService = new CampsService();
 
@@ -43,11 +43,11 @@ class BaseCampSiteDetails extends React.Component {
             <div className="CampSiteDetails">
                 <Row>
                     <Col className="mb-3" xs="12">
-                        <h4 className="h4-responsive">{t('campspage.publication.title')}</h4>
-                        <p >{t('campspage.publication.body')}</p>
+                        <h4 className="h4-responsive">{t('camps:camp.publication.title')}</h4>
+                        <p >{t('camps:camp.publication.body')}</p>
                     </Col>
                     <Col className="mb-4" xs="12" md="6">
-                        <h5 className="h5-responsive">{t('campspage.publication.contactTitle')}</h5>
+                        <h5 className="h5-responsive">{t('camps:camp.publication.contactTitle')}</h5>
                         <ListGroup>
                             <ListItemWithBadge title={t('name')} value={camp.contact_person_name}/>
                             <ListItemWithBadge title={t('phone')} value={camp.contact_person_phone}/>
@@ -57,7 +57,7 @@ class BaseCampSiteDetails extends React.Component {
                     {      !!camp.facebook_page_url ?
                         <Col xs="12" md="6" className="FacebookLink mb-4">
                             <div className="d-flex justify-content-between">
-                                <h5 className="h5-responsive">{t('campspage.publication.facebook')}</h5>
+                                <h5 className="h5-responsive">{t('camps:camp.publication.facebook')}</h5>
                                 <MDBBtn social="fb" color="primary" >
                                     <MDBIcon icon="facebook" className="pr-1" />Facebook
                                 </MDBBtn >
@@ -65,26 +65,26 @@ class BaseCampSiteDetails extends React.Component {
                         </Col> : null
                     }
                     <Col xs="12" className="mb-4">
-                        <h5 className="h5-responsive">{t('campspage.publication.details.title')}</h5>
+                        <h5 className="h5-responsive">{t('camps:camp.publication.details.title')}</h5>
                     </Col>
                     <Col xs="12" className="mb-4" md="4">
                         <ListGroup>
-                            <ListItemWithBadge color={this.getColor(this.camp.status === 'open')} title={t('campspage.publication.details.openMembers')} value={this.openToNewMembers}/>
-                            <ListItemWithBadge color={this.getColor(this.camp.accept_families)} title={t('campspage.publication.details.family')} value={this.acceptFamilies}/>
-                            <ListItemWithBadge color={this.getColor(this.camp.child_friendly)} title={t('campspage.publication.details.children')} value={this.childFriendly}/>
-                            <ListItemWithBadge color={this.getColor(this.camp.support_art)} title={t('campspage.publication.details.art')} value={this.art}/>
+                            <ListItemWithBadge color={this.getColor(this.camp.status === 'open')} title={t('camps:camp.publication.details.openMembers')} value={this.openToNewMembers}/>
+                            <ListItemWithBadge color={this.getColor(this.camp.accept_families)} title={t('camps:camp.publication.details.family')} value={this.acceptFamilies}/>
+                            <ListItemWithBadge color={this.getColor(this.camp.child_friendly)} title={t('camps:camp.publication.details.children')} value={this.childFriendly}/>
+                            <ListItemWithBadge color={this.getColor(this.camp.support_art)} title={t('camps:camp.publication.details.art')} value={this.art}/>
                         </ListGroup>
                     </Col>
                     <Col xs="12" className="mb-4" md="4">
                         <ListGroup>
-                            <ListItemWithBadge color="primary" title={t('campspage.publication.details.time')} value={camp.camp_activity_time}/>
-                            <ListItemWithBadge color="primary" title={t('campspage.publication.details.noise')} value={camp.noise_level}/>
+                            <ListItemWithBadge color="primary" title={t('camps:camp.publication.details.time')} value={camp.camp_activity_time}/>
+                            <ListItemWithBadge color="primary" title={t('camps:camp.publication.details.noise')} value={camp.noise_level}/>
                         </ListGroup>
                     </Col>
                     <Col xs="12" className="mb-4" md="4">
                         <ListGroup>
-                            <ListItemWithBadge color="dark" title={t('campspage.publication.details.street')} value={camp.camp_location_street}/>
-                            <ListItemWithBadge color="dark" title={t('campspage.publication.details.hour')} value={camp.camp_location_street_time}/>
+                            <ListItemWithBadge color="dark" title={t('camps:camp.publication.details.street')} value={camp.camp_location_street}/>
+                            <ListItemWithBadge color="dark" title={t('camps:camp.publication.details.hour')} value={camp.camp_location_street_time}/>
                         </ListGroup>
                     </Col>
                 </Row>
@@ -93,4 +93,4 @@ class BaseCampSiteDetails extends React.Component {
     }
 }
 
-export const CampSiteDetails = withRouter(withI18n()(BaseCampSiteDetails));
+export const CampPublicationDetails = withRouter(withI18n()(BaseCampPublicationDetails));

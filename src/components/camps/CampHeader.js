@@ -16,12 +16,12 @@ class BaseCampBasicHeader extends React.Component {
                     <Row>
                         <Col md="11">
                             <h1 className="h1-responsive">{this.campService.getPropertyByLang(camp, 'name')}</h1>
-                            <label>{t('campspage.since')}: <Moment format={'DD/MM/YYYY'}>{camp.created_at}</Moment></label>
+                            <label>{t('since')}: <Moment format={'DD/MM/YYYY'}>{camp.created_at}</Moment></label>
                         </Col>
                     </Row>
                     <Row>
                         <Col md="11">
-                            <h2 className="h2-responsive">{t('campspage.description')}</h2>
+                            <h2 className="h2-responsive">{t('camps:camp.header.description')}</h2>
                             <p>
                                 {this.campService.getPropertyByLang(camp, 'description')}
                             </p>

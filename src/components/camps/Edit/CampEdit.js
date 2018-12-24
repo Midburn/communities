@@ -45,27 +45,27 @@ class BaseCampEdit extends React.Component {
         const tabs = [
             {
                 id: 1,
-                title: t('campspage.edit.info'),
+                title: t('camps:camp.edit.tabs.info'),
                 component: <CampBasicInfo camp={camp} onSave={this.saveChanges} />
             },
             {
                 id: 2,
-                title: t('campspage.edit.details'),
+                title: t('camps:camp.edit.tabs.details'),
                 component: <CampBasicDetails camp={camp} onSave={this.saveChanges} />
             },
             {
                 id: 3,
-                title: t('campspage.edit.members'),
+                title: t('camps:camp.edit.tabs.members'),
                 component: <CampMembers camp={camp} onSave={this.saveChanges} />
             },
             {
                 id: 4,
-                title: t('campspage.edit.files'),
+                title: t('camps:camp.edit.tabs.files'),
                 component: <CampFiles camp={camp} onSave={this.saveChanges} />
             },
             {
                 id: 5,
-                title: t('campspage.edit.suppliers'),
+                title: t('camps:camp.edit.tabs.suppliers'),
                 component: <CampSuppliers camp={camp} onSave={this.saveChanges} />
             }
         ];

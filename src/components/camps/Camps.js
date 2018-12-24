@@ -26,7 +26,7 @@ class BaseCamps extends React.Component {
             <div>
                 <Row>
                     <Col md="12">
-                        <h1>{t('campspage.title')}</h1>
+                        <h1>{t('camps:search.title')}</h1>
                     </Col>
                 </Row>
                 <Row>
@@ -35,9 +35,9 @@ class BaseCamps extends React.Component {
                             <Input
                                 className="form-control form-control-sm ml-3"
                                 type="text"
-                                hint={t('campspage.search')}
-                                placeholder={t('campspage.search')}
-                                aria-label={t('campspage.search')}
+                                hint={t('camps:search.title')}
+                                placeholder={t('camps:search.title')}
+                                aria-label={t('camps:search.title')}
                                 onChange={this.handleChange}
                             />
                             <Fa icon="search"/>

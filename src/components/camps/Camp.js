@@ -9,7 +9,7 @@ import { CampHeader } from './CampHeader';
 import { ButtonGroup } from '../controls/ButtonGroup';
 import './Camp.scss';
 import { CampEdit } from './Edit/CampEdit';
-import { CampSiteDetails } from './CampSiteDetails';
+import { CampPublicationDetails } from './CampPublicationDetails';
 import FlipMove from 'react-flip-move';
 
 @observer
@@ -36,13 +36,13 @@ class BaseCamp extends React.Component {
     editButton = {
         icon: 'pencil',
         onClick: this.edit,
-        tooltip: "Edit",
+        tooltip: this.props.t('edit')
     };
 
     viewButton = {
         icon: 'eye',
         onClick: this.view,
-        tooltip: "View",
+        tooltip: this.props.t('view')
     };
 
     buttons = [
@@ -53,17 +53,17 @@ class BaseCamp extends React.Component {
         super(props);
         if (props.location.search.includes('edit=true')) {
             this.edit();
-        };
+        }
     }
 
     render() {
-        const {match} = this.props;
+        const {match, lng} = this.props;
         const camp = this.camps.find(camp => camp.id === +match.params.id);
         return (
             <div className="CampView">
                 <Row>
                     <Col md="12">
-                        <div className="ButtonGroup">
+                        <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                             <ButtonGroup buttons={this.buttons} vertical={true}/>
                         </div>
                         <CampHeader camp={camp} editMode={this.editMode}/>
@@ -72,7 +72,7 @@ class BaseCamp extends React.Component {
                 <Row>
                     <Col md="12">
                         <FlipMove>
-                            {this.editMode ? <CampEdit camp={camp}/> : <CampSiteDetails camp={camp}/>}
+                            {this.editMode ? <CampEdit camp={camp}/> : <CampPublicationDetails camp={camp}/>}
                         </FlipMove>
                     </Col>
                 </Row>
