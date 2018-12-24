@@ -4,10 +4,61 @@
   "arts": "Arts",
   "he": "עברית",
   "en": "English",
-  "search_camps": "Search Camp",
+  "hebrew": "Hebrew",
   "email": "Email",
   "password": "Password",
   "login": "Login",
   "logout": "Log Out",
-  "loginError": "Wrong email or password"
+  "loginError": "Wrong email or password",
+  "description": "Description",
+  "cancel": "Cancel",
+  "phone": "Phone",
+  "ok": "Ok",
+  "N/A": "-",
+  "yes": "Yes",
+  "no": "No",
+  "name": "Name",
+  "campspage": {
+    "title": "Theme Camps",
+    "view": "View",
+    "search": "Search Camp",
+    "join": "Join",
+    "description": "Camp's description",
+    "notfound": "No camps found for matching search term - '{{q}}'",
+    "joinmodal": {
+      "header": "Join camp request",
+      "body": "You're about to request camp {{campname}} to join, are you sure?"
+    },
+    "publication": {
+      "title": "Publication",
+      "body": "The details here will be shown in the web-site, if camp is published.",
+      "contactTitle": "Contact Person",
+      "facebook": "Facebook link",
+      "details": {
+        "title": "Camp Details",
+        "children": "Child friendly",
+        "openMembers": "Open to new members",
+        "art": "Art",
+        "family": "Accept Families",
+        "time": "Time active",
+        "noise": "Noise Level",
+        "street": "Street",
+        "hour": "Time"
+      }
+    },
+    "edit": {
+      "info": "Basic information",
+      "details": "Basic details",
+      "members": "Members",
+      "files": "Files & Forms upload",
+      "suppliers": "Suppliers",
+      "infoEdit": {
+        "nameTitle": "Camp Name & Description",
+        "publicationTitle": "Midburn Website Publication",
+        "contactsTitle": "Camp Contact Personnel",
+        "facebookLink": "Facebook Page Link",
+        "contactPerson": "Contact Person {{type}}"
+      }
+    }
+  }
 }

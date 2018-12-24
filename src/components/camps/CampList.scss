@@ -1,0 +1,10 @@
+.CampList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  .CampResult {
+    height: 20rem;
+    width: 20rem;
+    margin: 1vh 0.3vw;
+  }
+}

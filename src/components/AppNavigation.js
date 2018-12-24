@@ -18,16 +18,14 @@ import Flag from "react-flags";
 import './AppNavigation.scss';
 import { withRouter } from 'react-router-dom';
 import { AuthService } from '../services/auth';
+import { CONSTANTS } from '../models/constants';
 
 class BaseAppNavigation extends Component {
 
     auth = new AuthService();
     state = {
         collapse: false,
-        links: [
-            'camps',
-            'arts'
-        ]
+        links: CONSTANTS.GROUP_TYPES
     };
     changLng = (lng) => {
         i18n.changeLanguage(lng);
@@ -68,7 +66,7 @@ class BaseAppNavigation extends Component {
     render() {
         const { t, lng, location } = this.props;
         return (
-            <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling>
+            <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling fixed="top">
                 <NavbarBrand>
                     <LinkContainer to="/">
                         <div className="nav-home-btn">{t('home')}</div>
@@ -80,7 +78,7 @@ class BaseAppNavigation extends Component {
                         {this.state.links.map((link, index)=> {
                             return (
                                 <NavItem key={link} active={ location.pathname.includes(link) }>
-                                    <NavLink to={link}>{t(link)}</NavLink>
+                                    <NavLink to={`../${link}`}>{t(link)}</NavLink>
                                 </NavItem>
                             )
                         })}
