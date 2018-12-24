@@ -1,0 +1,8 @@
+.CampView {
+  position: relative;
+  .ButtonGroup {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }
+}

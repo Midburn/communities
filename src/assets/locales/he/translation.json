@@ -4,10 +4,29 @@
   "arts": "מיצבים",
   "he": "עברית",
   "en": "English",
-  "search_camps": "חפש מחנה",
   "email": "דואר אלקטרוני",
   "password": "סיסמה",
   "login": "כניסה למערכת",
   "logout": "התנתקות",
-  "loginError": "הדואר אלקטרוני או הסיסמה אינם נכונים"
+  "yes": "כן",
+  "no": "לא",
+  "loginError": "הדואר אלקטרוני או הסיסמה אינם נכונים",
+  "cancel": "ביטול",
+  "ok": "אישור",
+  "campspage": {
+    "view": "צפה",
+    "search": "חפש",
+    "title": "מחנות נושא",
+    "join": "הגש בקשת הצטרפות",
+    "description": "תיאור המחנה",
+    "notfound": "לא נמצאו מחנות נושא המתאימים לחיפוש - '{{q}}'",
+    "joinmodal": {
+      "header": "בקשת הצטרפות למחנה",
+      "body": "אתה הולך לבקש להצטרף למחנה {{camp}}, האם את/ה בטוח/ה?"
+    },
+    "publication": {
+      "title": "Publication",
+      "body": "The details here will be shown in the web-site, if camp is published."
+    }
+  }
 }

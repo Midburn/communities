@@ -1,4 +1,5 @@
 import * as axios from 'axios';
+import { state } from '../models/state';
 
 export class AuthService {
 
@@ -13,7 +14,8 @@ export class AuthService {
 
     async auth() {
         try {
-            await axios.get(`${this.BASE_URL}/en/campsapp/validate`, { withCredentials: true });
+            const response = await axios.get(`/api/v1/user`, { withCredentials: true });
+            state._loggedUser = response.data.body.user
             return true;
         } catch (e) {
             throw e;
