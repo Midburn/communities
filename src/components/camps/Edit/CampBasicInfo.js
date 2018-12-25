@@ -76,12 +76,12 @@ class BaseCampInfoEdit extends React.Component {
                         </Row>
                     </CardBody>
                 </Card>
-                <Row>
-                    <Col xs="12" className="mt-3 mb-3">
-                        <h4 className="h4-responsive">{t(`${this.TRANSLATE_PREFIX}.publicationTitle`)}</h4>
-                    </Col>
-                    <Card className="w-100">
-                        <CardBody>
+                <Col xs="12" className="mt-3 mb-3">
+                    <h4 className="h4-responsive">{t(`${this.TRANSLATE_PREFIX}.publicationTitle`)}</h4>
+                </Col>
+                <Card className="w-100">
+                    <CardBody>
+                        <Col md="12">
                             <Row>
                                 <Col md="8">
                                     <EditableItem title={t(`${this.TRANSLATE_PREFIX}.facebookLink`)}
@@ -98,16 +98,18 @@ class BaseCampInfoEdit extends React.Component {
                                                   onChange={(e) => this.propertyChanged('contact_person_name', e.target.value)}/>
                                 </Col>
                                 <Col md="4">
-                                    <EditableItem title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('email')})}
-                                                  editMode={true}
-                                                  value={this.state.editedCamp.contact_person_email}
-                                                  onChange={(e) => this.propertyChanged('contact_person_email', e.target.value)}/>
+                                    <EditableItem
+                                        title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('email')})}
+                                        editMode={true}
+                                        value={this.state.editedCamp.contact_person_email}
+                                        onChange={(e) => this.propertyChanged('contact_person_email', e.target.value)}/>
                                 </Col>
                                 <Col md="4">
-                                    <EditableItem title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('phone')})}
-                                                  editMode={true}
-                                                  value={this.state.editedCamp.contact_person_phone}
-                                                  onChange={(e) => this.propertyChanged('contact_person_phone', e.target.value)}/>
+                                    <EditableItem
+                                        title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('phone')})}
+                                        editMode={true}
+                                        value={this.state.editedCamp.contact_person_phone}
+                                        onChange={(e) => this.propertyChanged('contact_person_phone', e.target.value)}/>
                                 </Col>
                             </Row>
                             <Row>
@@ -126,9 +128,9 @@ class BaseCampInfoEdit extends React.Component {
                                                   onChange={(e) => this.propertyChanged('accept_families', e.target.checked)}/>
                                 </Col>
                             </Row>
-                        </CardBody>
-                    </Card>
-                </Row>
+                        </Col>
+                    </CardBody>
+                </Card>
                 <Row>
                     <Col xs="12" className="mt-3 mb-3">
                         <h4 className="h4-responsive">{t(`${this.TRANSLATE_PREFIX}.contactsTitle`)}</h4>
