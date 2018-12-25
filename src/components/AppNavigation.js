@@ -40,7 +40,7 @@ class BaseAppNavigation extends Component {
             country={lngToFlagNameDict[lng]}
             name={lngToFlagNameDict[lng]}
             format="png"
-            pngSize={16}
+            pngSize={32}
             basePath="/img/flags"
             shiny={true}
             alt={lngToFlagNameDict[lng] + 'Flag'}
@@ -96,7 +96,7 @@ class BaseAppNavigation extends Component {
                                             name="US"
                                             country="US"
                                             format="png"
-                                            pngSize={16}
+                                            pngSize={32}
                                             basePath="/img/flags"
                                             shiny={true}
                                         />
@@ -107,7 +107,7 @@ class BaseAppNavigation extends Component {
                                             name="IL"
                                             country="IL"
                                             format="png"
-                                            pngSize={16}
+                                            pngSize={32}
                                             basePath="/img/flags"
                                             shiny={true}
                                         />
