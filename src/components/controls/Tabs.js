@@ -1,12 +1,11 @@
 import React from "react";
-import { MDBBtn, Collapse } from "mdbreact";
+import { MDBBtn } from "mdbreact";
 import FlipMove from 'react-flip-move';
-
 /**
  * tabs interface - {
- *     id: number | string;
+ *     key: number | string;
  *     title: string;
- *     component
+ *     component (must contain key)
  * }
  * @param tabs - array of tabs
  * @param selectedId - string | number;
@@ -19,6 +18,7 @@ export const Tabs = ({tabs, selectedId, onSelect, color}) => {
             <div className="d-flex flex-wrap">
                     {(tabs || []).map(tab => {
                         return <MDBBtn
+                            key={tab.id}
                             color={color || 'primary'}
                             outline={tab.id !== selectedId}
                             onClick={() => onSelect(tab.id)}>
@@ -26,13 +26,11 @@ export const Tabs = ({tabs, selectedId, onSelect, color}) => {
                         </MDBBtn>
                     })}
             </div>
-            <div className="Content">
-                <FlipMove>
-                    {(tabs || []).map(tab => {
-                        return tab.id === selectedId ? tab.component : null
-                    })}
-                </FlipMove>
-            </div>
+                {(tabs || []).map((tab, index) => {
+                    return (
+                        tab.id === selectedId ? (<div key={index}>{tab.component}</div>) : (<div key={index} />)
+                    );
+                })}
         </div>
     );
 
