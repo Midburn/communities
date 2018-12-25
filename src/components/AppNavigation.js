@@ -41,7 +41,7 @@ class BaseAppNavigation extends Component {
             name={lngToFlagNameDict[lng]}
             format="png"
             pngSize={16}
-            basePath="img/flags"
+            basePath="/img/flags"
             shiny={true}
             alt={lngToFlagNameDict[lng] + 'Flag'}
         />
@@ -65,7 +65,7 @@ class BaseAppNavigation extends Component {
 
     backToSpark = (e) => {
         window.location.href = 'http://localhost:3000';
-    }
+    };
 
     render() {
         const { t, lng, location } = this.props;
@@ -97,7 +97,7 @@ class BaseAppNavigation extends Component {
                                             country="US"
                                             format="png"
                                             pngSize={16}
-                                            basePath="img/flags"
+                                            basePath="/img/flags"
                                             shiny={true}
                                         />
                                     </DropdownItem>
@@ -108,7 +108,7 @@ class BaseAppNavigation extends Component {
                                             country="IL"
                                             format="png"
                                             pngSize={16}
-                                            basePath="img/flags"
+                                            basePath="/img/flags"
                                             shiny={true}
                                         />
                                     </DropdownItem>
