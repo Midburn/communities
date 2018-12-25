@@ -79,8 +79,8 @@ class BaseAppNavigation extends Component {
                     <NavbarNav left>
                         {this.state.links.map((link, index)=> {
                             return (
-                                <NavItem onClick={this.toggleCollapse}key={link} active={ location.pathname.includes(link) }>
-                                    <NavLink to={`../${lng}/${link}`}>{t(link)}</NavLink>
+                                <NavItem onClick={this.toggleCollapse} key={link} active={ location.pathname.includes(link) }>
+                                    <NavLink to={`/${lng}/${link}`}>{t(link)}</NavLink>
                                 </NavItem>
                             )
                         })}
