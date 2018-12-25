@@ -26,11 +26,11 @@ export const Tabs = ({tabs, selectedId, onSelect, color}) => {
                         </MDBBtn>
                     })}
             </div>
-                {(tabs || []).map((tab, index) => {
-                    return (
-                        tab.id === selectedId ? (<div key={index}>{tab.component}</div>) : (<div key={index} />)
-                    );
-                })}
+            <FlipMove>
+                    {(tabs || []).map((tab, index) => {
+                        return tab.id === selectedId ? tab.component : null
+                    })}
+            </FlipMove>
         </div>
     );
 

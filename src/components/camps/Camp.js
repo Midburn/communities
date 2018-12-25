@@ -10,7 +10,6 @@ import { ButtonGroup } from '../controls/ButtonGroup';
 import './Camp.scss';
 import { CampEdit } from './Edit/CampEdit';
 import { CampPublicationDetails } from './CampPublicationDetails';
-import FlipMove from 'react-flip-move';
 
 @observer
 class BaseCamp extends React.Component {
@@ -71,9 +70,7 @@ class BaseCamp extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <FlipMove>
-                            {this.editMode ? <CampEdit camp={camp}/> : <CampPublicationDetails camp={camp}/>}
-                        </FlipMove>
+                        {this.editMode ? <CampEdit camp={camp}/> : <CampPublicationDetails camp={camp}/>}
                     </Col>
                 </Row>
             </div>
