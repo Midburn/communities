@@ -37,7 +37,12 @@
         "publicationTitle": "Midburn Website Publication",
         "contactsTitle": "Camp Contact Personnel",
         "facebookLink": "Facebook Page Link",
-        "contactPerson": "Contact Person {{type}}"
+        "contactPerson": "Contact Person {{type}}",
+        "mainContact": "Camp Manager",
+        "moopContact": "Moop Contact",
+        "safetyContact": "Safety Contact",
+        "campsOpen": "Is the camp open for new members?",
+        "acceptFamilies": "Accept Families?"
       }
     }
   },

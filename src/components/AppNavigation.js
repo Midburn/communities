@@ -18,6 +18,7 @@ import { withRouter } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { CONSTANTS } from '../models/constants';
 import { withNamespaces } from 'react-i18next';
+import { state } from '../models/state';
 
 class BaseAppNavigation extends Component {
 
@@ -40,8 +41,8 @@ class BaseAppNavigation extends Component {
             country={lngToFlagNameDict[lng]}
             name={lngToFlagNameDict[lng]}
             format="png"
-            pngSize={16}
-            basePath="img/flags"
+            pngSize={32}
+            basePath="/img/flags"
             shiny={true}
             alt={lngToFlagNameDict[lng] + 'Flag'}
         />
@@ -64,8 +65,8 @@ class BaseAppNavigation extends Component {
     };
 
     backToSpark = (e) => {
-        window.location.href = 'http://localhost:3000';
-    }
+        window.location.href = state.configurations.SPARK_HOST;
+    };
 
     render() {
         const { t, lng, location } = this.props;
@@ -79,8 +80,8 @@ class BaseAppNavigation extends Component {
                     <NavbarNav left>
                         {this.state.links.map((link, index)=> {
                             return (
-                                <NavItem onClick={this.toggleCollapse}key={link} active={ location.pathname.includes(link) }>
-                                    <NavLink to={`../${lng}/${link}`}>{t(link)}</NavLink>
+                                <NavItem onClick={this.toggleCollapse} key={link} active={ location.pathname.includes(link) }>
+                                    <NavLink to={`/${lng}/${link}`}>{t(link)}</NavLink>
                                 </NavItem>
                             )
                         })}
@@ -96,8 +97,8 @@ class BaseAppNavigation extends Component {
                                             name="US"
                                             country="US"
                                             format="png"
-                                            pngSize={16}
-                                            basePath="img/flags"
+                                            pngSize={32}
+                                            basePath="/img/flags"
                                             shiny={true}
                                         />
                                     </DropdownItem>
@@ -107,8 +108,8 @@ class BaseAppNavigation extends Component {
                                             name="IL"
                                             country="IL"
                                             format="png"
-                                            pngSize={16}
-                                            basePath="img/flags"
+                                            pngSize={32}
+                                            basePath="/img/flags"
                                             shiny={true}
                                         />
                                     </DropdownItem>

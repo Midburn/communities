@@ -37,7 +37,12 @@
         "publicationTitle": "פרסום המחנה\\מיצב באתר מידברן",
         "contactsTitle": "אנשי קשר",
         "facebookLink": "קישור לעמוד פייסבוק",
-        "contactPerson": "{{type}} איש קשר"
+        "contactPerson": "{{type}} איש קשר",
+        "mainContact": "מנהל מחנה",
+        "moopContact": "אחראי\\ת חשל\"ש",
+        "safetyContact": "איש\\אשת קשר בטיחות",
+        "campsOpen": "האם המחנה פתוח למצטרפים חדשים?",
+        "acceptFamilies": "פתוח למשפחות?"
       }
     }
   },

@@ -16,9 +16,9 @@ import { withI18n } from 'react-i18next';
 const BaseButtonGroup = ({buttons, vertical, lng}) => {
     return (
         <div className={`d-flex ${vertical ? 'flex-column' : null}`}>
-            {(buttons || []).map(button => {
+            {(buttons || []).map((button, i) => {
                 return (
-                    <div onClick={button.onClick}>
+                    <div key={i} onClick={button.onClick}>
                         <MDBTooltip
                             placement={`${lng === 'he' ? 'right' : 'left'}`}
                             component="button"

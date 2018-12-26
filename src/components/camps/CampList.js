@@ -54,29 +54,31 @@ class BaseCampList extends React.Component {
         const {camps, t, query} = this.props;
         const filteredCamps = camps.filter(this.filter);
         return (
-            <FlipMove className="CampList">
+            <div>
                 <JoinCampModal isOpen={this.isJoinCampModal} camp={this.selectedCamp} toggle={this.toggle}/>
-                { filteredCamps.length ? null : <Alert className="w-100" color="danger" >{t('camps:search.notFound', { q: query})}</Alert>}
-                {filteredCamps.map(camp => {
-                    return (
-                        <Card key={camp.id} className="CampResult">
-                            <CardImage
-                                className="img-fluid"
-                                src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
-                                hover
-                            />
-                            <CardBody>
-                                <CardTitle>{this.campService.getPropertyByLang(camp, 'name')}</CardTitle>
-                                <CardText>
-                                    {this.campService.getPropertyByLang(camp, 'description')}
-                                </CardText>
-                                <Button onClick={() => this.viewCamp(camp.id)}>{t('view')}</Button>
-                                <Button onClick={() => this.joinCamp(camp.id)}>{t('join')}</Button>
-                            </CardBody>
-                        </Card>
-                    );
-                })}
-            </FlipMove>
+                <FlipMove className="CampList">
+                    { filteredCamps.length ? null : <Alert className="w-100" color="danger" >{t('camps:search.notFound', { q: query})}</Alert>}
+                    {filteredCamps.map(camp => {
+                        return (
+                            <Card key={camp.id} className="CampResult">
+                                <CardImage
+                                    className="img-fluid"
+                                    src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
+                                    hover
+                                />
+                                <CardBody>
+                                    <CardTitle>{this.campService.getPropertyByLang(camp, 'name')}</CardTitle>
+                                    <CardText>
+                                        {this.campService.getPropertyByLang(camp, 'description')}
+                                    </CardText>
+                                    <Button onClick={() => this.viewCamp(camp.id)}>{t('view')}</Button>
+                                    <Button onClick={() => this.joinCamp(camp.id)}>{t('join')}</Button>
+                                </CardBody>
+                            </Card>
+                        );
+                    })}
+                </FlipMove>
+            </div>
         )
     }
 }

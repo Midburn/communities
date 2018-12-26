@@ -1,7 +1,7 @@
 const Router = require('express').Router;
 const controllers = require('../controllers');
 
-module.exports = class AuthRouter {
+module.exports = class ConfigurationsRouter {
 
     constructor() {
         this.router = new Router();
@@ -15,8 +15,8 @@ module.exports = class AuthRouter {
 
     initRoutes() {
         /**
-         * E.G - /api/VERSION/user
+         * E.G - /api/VERSION/configurations
          */
-        this.router.get('/user', controllers.auth.getUser);
+        this.router.get('/configurations', controllers.configurations.getConfigurations);
     }
 };

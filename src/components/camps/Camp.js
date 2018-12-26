@@ -3,23 +3,26 @@ import { Col, Row } from 'mdbreact';
 import { withI18n } from 'react-i18next';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { mockcamps } from './mockcamps';
 import { withRouter } from 'react-router-dom';
 import { CampHeader } from './CampHeader';
 import { ButtonGroup } from '../controls/ButtonGroup';
 import './Camp.scss';
 import { CampEdit } from './Edit/CampEdit';
 import { CampPublicationDetails } from './CampPublicationDetails';
-import FlipMove from 'react-flip-move';
+import { state } from '../../models/state';
+import { CampsService } from '../../services/camps';
 
 @observer
 class BaseCamp extends React.Component {
 
-    @observable
-    camps = mockcamps;
+    campService = new CampsService();
+    error = null;
 
     @observable
     editMode = false;
+
+    @observable
+    camp = {};
 
     edit = () => {
         this.editMode = true;
@@ -54,11 +57,27 @@ class BaseCamp extends React.Component {
         if (props.location.search.includes('edit=true')) {
             this.edit();
         }
+        this.getCampData();
+    }
+
+    async getCampData() {
+        const {match} = this.props;
+        try {
+            const camp = state.camps.find(camp => camp.id === +match.params.id);
+            if (!camp) {
+                // TODO - 404 camp not found
+                return;
+            }
+            this.camp = camp;
+            this.members = await this.campService.getCampsMembers(camp.id);
+            console.log(this.members);
+        } catch (e) {
+            this.error = e;
+        }
     }
 
     render() {
-        const {match, lng} = this.props;
-        const camp = this.camps.find(camp => camp.id === +match.params.id);
+        const {lng} = this.props;
         return (
             <div className="CampView">
                 <Row>
@@ -66,14 +85,12 @@ class BaseCamp extends React.Component {
                         <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                             <ButtonGroup buttons={this.buttons} vertical={true}/>
                         </div>
-                        <CampHeader camp={camp} editMode={this.editMode}/>
+                        <CampHeader camp={this.camp} editMode={this.editMode}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        <FlipMove>
-                            {this.editMode ? <CampEdit camp={camp}/> : <CampPublicationDetails camp={camp}/>}
-                        </FlipMove>
+                        {this.editMode ? <CampEdit camp={this.camp}/> : <CampPublicationDetails camp={this.camp}/>}
                     </Col>
                 </Row>
             </div>
