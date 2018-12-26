@@ -3,7 +3,7 @@ import { withI18n } from 'react-i18next';
 import { Modal, Button, ModalHeader, ModalBody, ModalFooter } from 'mdbreact';
 import './CampList.scss';
 import { withRouter } from 'react-router-dom';
-import { CampsService } from '../../services/camps';
+import { GroupsService } from '../../services/groups';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import './JoinCampModal.scss';
@@ -11,7 +11,7 @@ import './JoinCampModal.scss';
 @observer
 class BaseJoinCampModal extends React.Component {
 
-    campService = new CampsService();
+    groupsService = new GroupsService();
 
     @observable
     error = null;
@@ -25,7 +25,7 @@ class BaseJoinCampModal extends React.Component {
         }
         try {
             this.loading = true;
-            await this.campService.sendJoinRequest();
+            await this.groupsService.sendJoinRequest();
             this.loading = false;
             this.props.toggle();
         } catch (e) {
@@ -43,7 +43,7 @@ class BaseJoinCampModal extends React.Component {
                     {
                         // TODO - implement loader
                         this.loading ? <div className="loader small"></div> :
-                        this.error ? t(this.error.message) : t('camps:joinModal.body', {campname: this.campService.getPropertyByLang(camp, 'name')})
+                        this.error ? t(this.error.message) : t('camps:joinModal.body', {campname: this.groupsService.getPropertyByLang(camp, 'name')})
                     }
 
                 </ModalBody>

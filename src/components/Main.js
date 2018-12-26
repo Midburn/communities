@@ -1,10 +1,8 @@
-import { AppNavigation } from './AppNavigation';
+import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
-import { AppBreadcrumbs } from './AppBreadcrumbs';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Home } from './Home';
+import { AppBreadcrumbs } from './navigation/AppBreadcrumbs';
+import { Route, Switch, withRouter } from 'react-router-dom';
 import { Camps } from './camps/Camps';
-import { Arts } from './Arts';
 import React from 'react';
 import { withI18n } from 'react-i18next';
 import { Camp } from './camps/Camp';
@@ -37,7 +35,6 @@ class BaseMain extends React.Component {
                             <Card>
                                 <CardBody className="MainPanel">
                                     <Switch>
-                                        {/*<Route exact path="/:lng(en|he)/home" component={Home}/>*/}
                                         <Route path="/:lng(en|he)/camps" component={Camps} exact/>
                                         <Route path="/:lng(en|he)/camps/:id" component={Camp}/>
                                     </Switch>

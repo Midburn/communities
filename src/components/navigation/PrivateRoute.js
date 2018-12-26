@@ -1,10 +1,10 @@
 import { Route } from 'react-router-dom';
 import React from 'react';
-import { state } from '../models/state';
+import { state } from '../../models/state';
 
-export const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
+export const PrivateRoute = ({ component: Component, authenticated, permit, ...rest }) => (
     <Route {...rest} render={(props) => (
-        authenticated === true
+        authenticated === true && (permit === true || permit === undefined)
             ? <Component {...props} />
             : window.location.href = state.configurations.SPARK_HOST
     )} />

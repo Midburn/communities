@@ -1,13 +1,13 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
-import { CampsService } from '../../services/camps';
+import { GroupsService } from '../../services/groups';
 import { Row, Col } from 'mdbreact';
 import Moment from 'react-moment';
 
 class BaseCampBasicHeader extends React.Component {
 
-    campService = new CampsService();
+    groupsService = new GroupsService();
 
     render() {
         const { t, camp } = this.props;
@@ -15,7 +15,7 @@ class BaseCampBasicHeader extends React.Component {
                 <div>
                     <Row>
                         <Col md="11">
-                            <h1 className="h1-responsive">{this.campService.getPropertyByLang(camp, 'name')}</h1>
+                            <h1 className="h1-responsive">{this.groupsService.getPropertyByLang(camp, 'name')}</h1>
                             <label>{t('since')}: <Moment format={'DD/MM/YYYY'}>{camp.created_at}</Moment></label>
                         </Col>
                     </Row>
@@ -23,7 +23,7 @@ class BaseCampBasicHeader extends React.Component {
                         <Col md="11">
                             <h2 className="h2-responsive">{t('camps:camp.header.description')}</h2>
                             <p>
-                                {this.campService.getPropertyByLang(camp, 'description')}
+                                {this.groupsService.getPropertyByLang(camp, 'description')}
                             </p>
                         </Col>
                     </Row>

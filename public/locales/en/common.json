@@ -21,5 +21,33 @@
   "join": "Join",
   "view": "View",
   "since": "Since",
-  "edit": "Edit"
+  "edit": "Edit",
+  "volunteering": "Volunteering",
+  "nav": {
+    "gate": {
+      "manage": "Entry management",
+      "suppliers": "Suppliers entries",
+      "title": "Gate"
+    },
+    "management": {
+      "title": "Manage",
+      "suppliers": "Suppliers management",
+      "files": "Files management",
+      "events": "Events management"
+    },
+    "camps": {
+      "title": "Camps",
+      "search": "Find camps",
+      "my": "My camp",
+      "manage": "Manage my camp",
+      "management": "Manage camps"
+    },
+    "arts": {
+      "title": "Art installations",
+      "search": "Find Art installations",
+      "my": "My Art installation",
+      "manage": "Manage my Art installation",
+      "management": "Manage Art installations"
+    }
+  }
 }

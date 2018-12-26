@@ -1,6 +1,6 @@
 const services = require('../services');
-const GenericResponse = require('../models/generic-response');
-const constants = require('../models/constants');
+const GenericResponse = require('../../models/generic-response');
+const constants = require('../../models/constants');
 
 module.exports = class SparkCampsController {
 
@@ -9,6 +9,7 @@ module.exports = class SparkCampsController {
         this.spark = services.spark;
         this.getOpenCamps = this.getOpenCamps.bind(this);
         this.getCampMembers = this.getCampMembers.bind(this);
+        this.getUsersGroups = this.getUsersGroups.bind(this);
     }
 
     async getOpenCamps(req, res, next) {
@@ -24,6 +25,15 @@ module.exports = class SparkCampsController {
         try {
             const members = (await this.spark.get(`camps/${req.params.id}/members`, req.headers)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
+        }
+    }
+
+    async getUsersGroups(req, res, next) {
+        try {
+            const groups = (await this.spark.get(`my_groups`, req.headers)).data;
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
         }

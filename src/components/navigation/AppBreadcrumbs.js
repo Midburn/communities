@@ -7,7 +7,7 @@ import './AppBreadcrumbs.scss';
 
 const BaseAppBreadcrumbs = (props) => {
     const paths = props.location.pathname.split('/').filter(p => !!p).slice(1);
-    const { t, lng, match } = props;
+    const { t, lng } = props;
     const [ main, id ] = paths;
 
     function getNameFromPath(path) {

@@ -1,13 +1,10 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
-import { CampsService } from '../../services/camps';
 import { Row, Col, ListGroup, MDBIcon , MDBBtn   } from 'mdbreact';
 import { ListItemWithBadge } from '../controls/ListItemWithBadge';
 
 class BaseCampPublicationDetails extends React.Component {
-
-    campService = new CampsService();
 
     get camp() {
         return this.props.camp;
