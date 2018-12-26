@@ -12,6 +12,11 @@ class State {
     @observable
     camps = [];
 
+    @observable
+    configurations = {};
+
 }
 
 export const state = new State();
+
+window.state = state;

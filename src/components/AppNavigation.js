@@ -18,6 +18,7 @@ import { withRouter } from 'react-router-dom';
 import { AuthService } from '../services/auth';
 import { CONSTANTS } from '../models/constants';
 import { withNamespaces } from 'react-i18next';
+import { state } from '../models/state';
 
 class BaseAppNavigation extends Component {
 
@@ -64,7 +65,7 @@ class BaseAppNavigation extends Component {
     };
 
     backToSpark = (e) => {
-        window.location.href = 'http://localhost:3000';
+        window.location.href = state.configurations.SPARK_HOST;
     };
 
     render() {

@@ -3,7 +3,6 @@ import { state } from '../models/state';
 
 export class AuthService {
 
-    BASE_URL = 'http://localhost:3000';
 
     async auth() {
         try {
@@ -16,6 +15,6 @@ export class AuthService {
     }
 
     async logOut() {
-        window.location.href = `${this.BASE_URL}/en/logout`;
+        window.location.href = `${state.configurations.SPARK_HOST}/en/logout`;
     }
 }
