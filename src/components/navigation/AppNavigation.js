@@ -11,21 +11,21 @@ import {
     DropdownMenu,
     NavbarToggler,
     NavLink } from 'mdbreact';
-import i18n from '../services/i18n';
+import i18n from '../../services/i18n';
 import Flag from "react-flags";
 import './AppNavigation.scss';
 import { withRouter } from 'react-router-dom';
-import { AuthService } from '../services/auth';
-import { CONSTANTS } from '../models/constants';
+import { AuthService } from '../../services/auth';
 import { withNamespaces } from 'react-i18next';
-import { state } from '../models/state';
+import { state } from '../../models/state';
+import * as constants from '../../../models/constants';
 
 class BaseAppNavigation extends Component {
 
     auth = new AuthService();
     state = {
         collapse: false,
-        links: CONSTANTS.GROUP_TYPES
+        links: Object.values(constants.GROUP_TYPES)
     };
 
     changLng = (lng) => {

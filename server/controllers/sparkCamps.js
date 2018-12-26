@@ -1,6 +1,6 @@
 const services = require('../services');
-const GenericResponse = require('../models/generic-response');
-const constants = require('../models/constants');
+const GenericResponse = require('../../models/generic-response');
+const constants = require('../../models/constants');
 
 module.exports = class SparkCampsController {
 

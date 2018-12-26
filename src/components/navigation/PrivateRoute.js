@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom';
 import React from 'react';
-import { state } from '../models/state';
+import { state } from '../../models/state';
 
 export const PrivateRoute = ({ component: Component, authenticated, ...rest }) => (
     <Route {...rest} render={(props) => (

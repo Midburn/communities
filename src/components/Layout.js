@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import {Redirect, Route, Switch, withRouter} from 'react-router-dom';
 import { Main } from './Main';
 import { InitilizationService } from '../services/initialization';
 import { Loader } from './Loader';
-import { PrivateRoute } from './PrivateRoute';
+import { PrivateRoute } from './navigation/PrivateRoute';
 import { NotFound } from './NotFound';
 
 export class BaseLayout extends Component {
@@ -40,6 +40,7 @@ export class BaseLayout extends Component {
                 { this.state.loading ? <Loader /> :
                     <Switch>
                         <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
+                        <Redirect path="/" to="/he" />
                         <Route component={NotFound}/>
                     </Switch> }
             </div>
