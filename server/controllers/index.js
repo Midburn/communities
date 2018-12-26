@@ -3,7 +3,9 @@
  * @type {{}}
  */
 const AuthController = require('./auth');
+const SparkCampsController = require('./sparkCamps');
 
 module.exports = {
-    auth: new AuthController()
+    auth: new AuthController(),
+    sparkCamps: new SparkCampsController()
 };

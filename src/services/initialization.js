@@ -1,17 +1,20 @@
 import './i18n';
 import { AuthService } from './auth';
-
+import { CampsService } from './camps';
+import { state } from '../models/state';
 
 export class CookieError extends Error {}
 
 export class InitilizationService {
 
     auth = new AuthService();
+    camps = new CampsService();
 
     async fetchInitialData() {
         /**
          * Put all requests for initial data here.
          */
+        state.camps = await this.camps.getOpenCamps();
     }
 
     async init() {

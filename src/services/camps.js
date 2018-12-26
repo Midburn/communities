@@ -1,6 +1,23 @@
 import i18n from './i18n';
+import axios from 'axios';
 
 export class CampsService {
+
+    async getOpenCamps() {
+        try {
+            return (await axios.get('/api/v1/spark/camps/open', { withCredentials: true })).data.body.camps;
+        } catch (e) {
+            console.warn(`Error fetching camps ${e.stack}`);
+        }
+    }
+
+    async getCampsMembers(campId) {
+        try {
+            return (await axios.get(`/api/v1/spark/camps/${campId}/members`, { withCredentials: true })).data.body;
+        } catch (e) {
+            console.warn(`Error fetching camp members ${e.stack}`);
+        }
+    }
 
     getPropertyByLang(camp, propName) {
         if (!camp || !propName) {

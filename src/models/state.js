@@ -9,6 +9,9 @@ class State {
         return this._loggedUser;
     }
 
+    @observable
+    camps = [];
+
 }
 
 export const state = new State();

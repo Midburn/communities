@@ -4,16 +4,12 @@ import { withI18n } from 'react-i18next';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { CampList } from './CampList';
-import { mockcamps } from './mockcamps';
-
+import { state } from '../../models/state';
 @observer
 class BaseCamps extends React.Component {
 
     @observable
     query = '';
-
-    @observable
-    camps = mockcamps;
 
     @action
     handleChange = (e) => {
@@ -46,7 +42,7 @@ class BaseCamps extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <CampList query={this.query} camps={this.camps}/>
+                        <CampList query={this.query} camps={state.camps}/>
                     </Col>
                 </Row>
             </div>
