@@ -40,7 +40,7 @@ export class BaseLayout extends Component {
                 { this.state.loading ? <Loader /> :
                     <Switch>
                         <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
-                        <Redirect path="/" to="/he" />
+                        <Redirect path="/" to="/he/camps"  exact />
                         <Route component={NotFound}/>
                     </Switch> }
             </div>

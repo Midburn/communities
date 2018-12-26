@@ -1,6 +1,6 @@
 import './i18n';
 import { AuthService } from './auth';
-import { CampsService } from './camps';
+import { GroupsService } from './groups';
 import { state } from '../models/state';
 import { ConfigurationsService } from './configurations';
 
@@ -10,7 +10,7 @@ export class CookieError extends Error {
 export class InitilizationService {
 
     auth = new AuthService();
-    camps = new CampsService();
+    groups = new GroupsService();
     configurations = new ConfigurationsService();
 
     async fetchAppInitialData() {
@@ -24,7 +24,8 @@ export class InitilizationService {
         /**
          * Put all requests for initial business logic data here (logged user, event rules etc...).
          */
-        state.camps = await this.camps.getOpenCamps();
+        state.camps = await this.groups.getOpenCamps();
+        state.userGroups = await this.groups.getUserGroups();
     }
 
     async init() {

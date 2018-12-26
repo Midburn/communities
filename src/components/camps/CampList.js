@@ -7,12 +7,12 @@ import FlipMove from 'react-flip-move';
 import { withRouter } from 'react-router-dom';
 import { JoinCampModal } from './JoinCampModal';
 import { observable } from 'mobx';
-import { CampsService } from '../../services/camps';
+import { GroupsService } from '../../services/groups';
 
 @observer
 class BaseCampList extends React.Component {
 
-    campService = new CampsService();
+    groupsService = new GroupsService();
 
     @observable
     isJoinCampModal = false;
@@ -67,9 +67,9 @@ class BaseCampList extends React.Component {
                                     hover
                                 />
                                 <CardBody>
-                                    <CardTitle>{this.campService.getPropertyByLang(camp, 'name')}</CardTitle>
+                                    <CardTitle>{this.groupsService.getPropertyByLang(camp, 'name')}</CardTitle>
                                     <CardText>
-                                        {this.campService.getPropertyByLang(camp, 'description')}
+                                        {this.groupsService.getPropertyByLang(camp, 'description')}
                                     </CardText>
                                     <Button onClick={() => this.viewCamp(camp.id)}>{t('view')}</Button>
                                     <Button onClick={() => this.joinCamp(camp.id)}>{t('join')}</Button>

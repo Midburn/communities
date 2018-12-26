@@ -10,12 +10,12 @@ import './Camp.scss';
 import { CampEdit } from './Edit/CampEdit';
 import { CampPublicationDetails } from './CampPublicationDetails';
 import { state } from '../../models/state';
-import { CampsService } from '../../services/camps';
+import { GroupsService } from '../../services/groups';
 
 @observer
 class BaseCamp extends React.Component {
 
-    campService = new CampsService();
+    groupsService = new GroupsService();
     error = null;
 
     @observable
@@ -69,7 +69,7 @@ class BaseCamp extends React.Component {
                 return;
             }
             this.camp = camp;
-            this.members = await this.campService.getCampsMembers(camp.id);
+            this.members = await this.groupsService.getCampsMembers(camp.id);
             console.log(this.members);
         } catch (e) {
             this.error = e;

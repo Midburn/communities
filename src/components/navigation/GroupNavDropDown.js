@@ -1,6 +1,9 @@
 import React from 'react';
-import { NavItem, Dropdown, DropdownToggle, DropdownMenu, DropdownItem  } from 'mdbreact';
-import {NavLink} from "react-router-dom";
+import { NavItem, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'mdbreact';
+import { NavLink } from "react-router-dom";
+import { PermissableComponent } from '../controls/PermissableComponent';
+import { PermissionService } from '../../services/permissions';
+import { GroupsService } from '../../services/groups';
 
 /**
  * Renders drop down based on group type
@@ -8,19 +11,21 @@ import {NavLink} from "react-router-dom";
  * @returns {*}
  * @constructor
  */
-export const GroupDropDown = ({ type, t }) => {
+export const GroupDropDown = ({type, t, onClick, lng}) => {
 
-    function getTranslateModule() {
-        return `common.nav.${type}`;
-    }
+    const groupsService = new GroupsService();
+    const permissionsService = new PermissionService();
 
-    function getPloral() {
+    function getPlural() {
         return `${type}s`;
     }
 
+    function getTranslateModule() {
+        return `nav.${getPlural()}`;
+    }
+
     function getMyGroupId() {
-        // TODO - get group id;
-        return;
+        return groupsService.getUsersGroupId(type);
     }
 
     return (
@@ -29,21 +34,30 @@ export const GroupDropDown = ({ type, t }) => {
                 <DropdownToggle nav caret>{t(`${getTranslateModule()}.title`)}</DropdownToggle>
                 <DropdownMenu basic>
                     {/*SEARCH GROUPS LINK*/}
-                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('en')}}>
-                        <NavLink to={`/${getPloral()}/search`}/>
+                    <DropdownItem onClick={onClick}>
+                        <NavLink to={`/${lng}/${getPlural()}`}>{t(`${getTranslateModule()}.search`)}</NavLink>
                     </DropdownItem>
                     {/*MY GROUPS LINK*/}
-                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('en')}}>
-                        <NavLink to={`/${getPloral()}/${getMyGroupId()}`}/>
-                    </DropdownItem>
+                    <PermissableComponent permitted={permissionsService.hasGroup(type)}>
+                        <DropdownItem onClick={onClick}>
+                            <NavLink
+                                to={`/${lng}/${getPlural()}/${getMyGroupId()}`}>{t(`${getTranslateModule()}.my`)}</NavLink>
+                        </DropdownItem>
+                    </PermissableComponent>
                     {/*MANAGE MY GROUP LINK*/}
-                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('en')}}>
-                        <NavLink to={`/${getPloral()}/${getMyGroupId()}/manage`}/>
-                    </DropdownItem>
+                    <PermissableComponent permitted={permissionsService.isGroupManager(type)}>
+                        <DropdownItem onClick={onClick}>
+                            <NavLink
+                                to={`/${lng}/${getPlural()}/${getMyGroupId()}/manage`}>{t(`${getTranslateModule()}.manage`)}</NavLink>
+                        </DropdownItem>
+                    </PermissableComponent>
                     {/*MANAGE GROUPS LINK*/}
-                    <DropdownItem onClick={() => {this.toggleCollapse(); this.changLng('en')}}>
-                        <NavLink to={`/${getPloral()}/management`}/>
-                    </DropdownItem>
+                    <PermissableComponent permitted={permissionsService.isAdmin()}>
+                        <DropdownItem onClick={onClick}>
+                            <NavLink
+                                to={`/${lng}/${getPlural()}/management`}>{t(`${getTranslateModule()}.management`)}</NavLink>
+                        </DropdownItem>
+                    </PermissableComponent>
                 </DropdownMenu>
             </Dropdown>
         </NavItem>
