@@ -1,19 +1,20 @@
 {
   "search": {
-    "title": "Search Camps",
-    "notFound": "No Camps found for term - '{{q}}'"
+    "title": "Search Art installations",
+    "notFound": "No Art installations found for term - '{{q}}'"
   },
   "single": {
+
     "header": {
-      "description": "Camp's description"
+      "description": "Art installation's description"
     },
     "publication":  {
       "title": "Publication",
-      "body": "The details here will be shown in the web-site, if camp is published.",
+      "body": "The details here will be shown in the web-site, if art installation is published.",
       "contactTitle": "Contact Person",
       "facebook": "Facebook link",
       "details": {
-        "title": "Camp Details",
+        "title": "Art installation Details",
         "children": "Child friendly",
         "openMembers": "Open to new members",
         "art": "Art",
@@ -33,21 +34,21 @@
         "suppliers": "Suppliers"
       },
       "info": {
-        "nameTitle": "Camp Name & Description",
+        "nameTitle": "Art installation Name & Description",
         "publicationTitle": "Midburn Website Publication",
-        "contactsTitle": "Camp Contact Personnel",
+        "contactsTitle": "Art installation Contact Personnel",
         "facebookLink": "Facebook Page Link",
         "contactPerson": "Contact Person {{type}}",
-        "mainContact": "Camp Manager",
+        "mainContact": "Art installation Manager",
         "moopContact": "Moop Contact",
         "safetyContact": "Safety Contact",
-        "campsOpen": "Is the camp open for new members?",
+        "campsOpen": "Is the art installation open for new members?",
         "acceptFamilies": "Accept Families?"
       }
     }
   },
   "joinModal": {
-    "header": "Join camp request",
-    "body": "You're about to request camp {{name}} to join, are you sure?"
+    "header": "Join art installation request",
+    "body": "You're about to request art installation {{name}} to join, are you sure?"
   }
 }

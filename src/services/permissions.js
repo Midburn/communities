@@ -20,4 +20,12 @@ export class PermissionService {
         return state.loggedUser.isAdmin;
     }
 
+    canEditThisGroup(group) {
+        if (!state.isUserGroups) {
+            return false;
+        }
+        const currentGroup = state.userGroups.groups.find(g => g.group_id === group.id);
+        return !!currentGroup && currentGroup.can_edit;
+    }
+
 }

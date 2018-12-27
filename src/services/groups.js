@@ -12,6 +12,14 @@ export class GroupsService {
         }
     }
 
+    async getOpenArts() {
+        try {
+            return (await axios.get('/api/v1/spark/camps/arts/open', {withCredentials: true})).data.body.artInstallations;
+        } catch (e) {
+            console.warn(`Error fetching camps ${e.stack}`);
+        }
+    }
+
     async getCampsMembers(campId) {
         try {
             return (await axios.get(`/api/v1/spark/camps/${campId}/members`, {withCredentials: true})).data.body;
@@ -28,8 +36,8 @@ export class GroupsService {
         }
     }
 
-    getPropertyByLang(camp, propName) {
-        if (!camp || !propName) {
+    getPropertyByLang(group, propName) {
+        if (!group || !propName) {
             return '';
         }
         const {lng} = i18n.language;
@@ -44,11 +52,11 @@ export class GroupsService {
             default:
                 break;
         }
-        if (!camp.hasOwnProperty(propName)) {
+        if (!group.hasOwnProperty(propName)) {
             console.warn(`Property ${propName} doesn't exist in Camp! maybe the model changed?`);
             return '';
         }
-        return camp[propName];
+        return group[propName];
     }
 
     sendJoinRequest(camp) {

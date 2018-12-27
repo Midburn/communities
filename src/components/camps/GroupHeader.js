@@ -5,25 +5,25 @@ import { GroupsService } from '../../services/groups';
 import { Row, Col } from 'mdbreact';
 import Moment from 'react-moment';
 
-class BaseCampBasicHeader extends React.Component {
+class BaseGroupBasicHeader extends React.Component {
 
     groupsService = new GroupsService();
 
     render() {
-        const { t, camp } = this.props;
+        const { match, t, group } = this.props;
         return (
                 <div>
                     <Row>
                         <Col md="11">
-                            <h1 className="h1-responsive">{this.groupsService.getPropertyByLang(camp, 'name')}</h1>
-                            <label>{t('since')}: <Moment format={'DD/MM/YYYY'}>{camp.created_at}</Moment></label>
+                            <h1 className="h1-responsive">{this.groupsService.getPropertyByLang(group, 'name')}</h1>
+                            <label>{t('since')}: <Moment format={'DD/MM/YYYY'}>{group.created_at}</Moment></label>
                         </Col>
                     </Row>
                     <Row>
                         <Col md="11">
-                            <h2 className="h2-responsive">{t('camps:camp.header.description')}</h2>
+                            <h2 className="h2-responsive">{t(`${match.params.groupType}:single.header.description`)}</h2>
                             <p>
-                                {this.groupsService.getPropertyByLang(camp, 'description')}
+                                {this.groupsService.getPropertyByLang(group, 'description')}
                             </p>
                         </Col>
                     </Row>
@@ -32,4 +32,4 @@ class BaseCampBasicHeader extends React.Component {
     }
 }
 
-export const CampHeader = withRouter(withI18n()(BaseCampBasicHeader));
+export const GroupHeader = withRouter(withI18n()(BaseGroupBasicHeader));

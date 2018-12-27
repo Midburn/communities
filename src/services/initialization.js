@@ -25,6 +25,7 @@ export class InitilizationService {
          * Put all requests for initial business logic data here (logged user, event rules etc...).
          */
         state.camps = await this.groups.getOpenCamps();
+        state.artInstallations = await this.groups.getOpenArts();
         state.userGroups = await this.groups.getUserGroups();
     }
 

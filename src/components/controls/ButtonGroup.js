@@ -1,5 +1,5 @@
 import React from 'react';
-import { Btn, MDBIcon , MDBTooltip } from "mdbreact";
+import { MDBIcon , MDBTooltip } from "mdbreact";
 import { withI18n } from 'react-i18next';
 
 /**
