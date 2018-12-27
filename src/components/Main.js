@@ -1,7 +1,6 @@
 import React from 'react';
 import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
-import { AppBreadcrumbs } from './navigation/AppBreadcrumbs';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { Groups } from './camps/Groups';
 import { withI18n } from 'react-i18next';
@@ -28,7 +27,6 @@ class BaseMain extends React.Component {
                 <Container fluid={window.innerWidth < 1200} className={`${lng === 'he' ? 'rtl' : ''} MainContainer`}>
                     <Row>
                         <Col>
-                            <AppBreadcrumbs/>
                         </Col>
                     </Row>
                     <Row>

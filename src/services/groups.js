@@ -22,7 +22,7 @@ export class GroupsService {
 
     async getCampsMembers(campId) {
         try {
-            return (await axios.get(`/api/v1/spark/camps/${campId}/members`, {withCredentials: true})).data.body;
+            return (await axios.get(`/api/v1/spark/camps/${campId}/members`, {withCredentials: true})).data.body.members;
         } catch (e) {
             console.warn(`Error fetching camp members ${e.stack}`);
         }

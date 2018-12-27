@@ -8,8 +8,8 @@ import { state } from '../../models/state';
 
 const BaseAppBreadcrumbs = (props) => {
     const paths = props.location.pathname.split('/').filter(p => !!p).slice(1);
-    const { t, lng, match } = props;
-    const [ main, id ] = paths;
+    const {t, lng, match} = props;
+    const [main, id] = paths;
 
     function getNameFromPath(p) {
         if (Number(p)) {
@@ -36,9 +36,10 @@ const BaseAppBreadcrumbs = (props) => {
             {paths.map((p, index) => {
                 const isLast = index === (paths.length - 1);
                 return (
-                        <LinkContainer disabled={isLast} key={index} to={getLinkPath(+index)}>
-                            <BreadcrumbItem active={isLast} className={`${lng === 'he' ? 'pad-left' : null}`}> { p === id ? getNameFromPath(p) : t(p) }</BreadcrumbItem >
-                        </LinkContainer>
+                    <LinkContainer disabled={isLast} key={index} to={getLinkPath(+index)}>
+                        <BreadcrumbItem active={isLast}
+                                        className={`${lng === 'he' ? 'pad-left' : null}`}> {p === id ? getNameFromPath(p) : t(p)}</BreadcrumbItem>
+                    </LinkContainer>
                 );
             })}
         </Breadcrumb>

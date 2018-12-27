@@ -9,6 +9,13 @@ export class PermissionService {
         return state.userGroups.groups.some(g => g.group_type.toLowerCase().includes(groupType) && g.member_status.includes('approved'));
     }
 
+    isGroupMember(groupId) {
+        if (!state.isUserGroups) {
+            return false;
+        }
+        return state.userGroups.groups.some(g => g.group_id === groupId);
+    }
+
     isGroupManager(groupType) {
         if (!state.isUserGroups) {
             return false;

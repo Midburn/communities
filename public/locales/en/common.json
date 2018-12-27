@@ -50,5 +50,13 @@
       "manage": "Manage my Art installation",
       "management": "Manage Art installations"
     }
+  },
+  "members": {
+    "search": "Search members",
+    "columns": {
+      "name": "Full name",
+      "email": "Email address",
+      "phone": "Phone number"
+    }
   }
 }

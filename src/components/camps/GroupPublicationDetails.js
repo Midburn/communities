@@ -1,6 +1,5 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
 import { Row, Col, ListGroup, MDBIcon , MDBBtn   } from 'mdbreact';
 import { ListItemWithBadge } from '../controls/ListItemWithBadge';
 
@@ -95,4 +94,4 @@ class BaseGroupPublicationDetails extends React.Component {
     }
 }
 
-export const GroupPublicationDetails = withRouter(withI18n()(BaseGroupPublicationDetails));
+export const GroupPublicationDetails = withI18n()(BaseGroupPublicationDetails);
