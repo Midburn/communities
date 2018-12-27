@@ -11,11 +11,13 @@ import FlipMove from 'react-flip-move';
  * @param selectedId - string | number;
  * @constructor
  */
-export const Tabs = ({tabs, selectedId, onSelect, color}) => {
+export class Tabs extends React.Component {
 
-    return (
-        <div>
-            <div className="d-flex flex-wrap">
+    render() {
+        const {tabs, selectedId, onSelect, color} = this.props;
+        return (
+            <div>
+                <div className="d-flex flex-wrap">
                     {(tabs || []).map(tab => {
                         return <MDBBtn
                             key={tab.id}
@@ -25,13 +27,15 @@ export const Tabs = ({tabs, selectedId, onSelect, color}) => {
                             {tab.title}
                         </MDBBtn>
                     })}
-            </div>
-            <FlipMove>
+                </div>
+                <FlipMove>
                     {(tabs || []).map((tab, index) => {
                         return tab.id === selectedId ? tab.component : null
                     })}
-            </FlipMove>
-        </div>
-    );
+                </FlipMove>
+            </div>
+        );
+    }
+
 
 };

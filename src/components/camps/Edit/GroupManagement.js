@@ -6,7 +6,6 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tabs } from '../../controls/Tabs';
 import { CampFiles } from './CampFiles';
-import { CampMembers } from './CampMembers';
 import { CampSuppliers } from './CampSuppliers';
 
 @observer
@@ -41,20 +40,20 @@ class BaseGroupManagement extends React.Component {
     render() {
         const {t, group, match} = this.props;
         const tabs = [
-            {
-                id: 1,
-                title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <CampMembers key={3} group={group} onSave={this.saveChanges} />
-            },
+            // {
+            //     id: 1,
+            //     title: t(`${match.params.groupType}:single.edit.tabs.members`),
+            //     component: <GroupMembers key={3} group={group} onSave={this.saveChanges} />
+            // },
             {
                 id: 2,
                 title: t(`${match.params.groupType}:single.edit.tabs.files`),
-                component: <CampFiles key={4} group={group} onSave={this.saveChanges} />
+                component: <CampFiles key={2} group={group} onSave={this.saveChanges} />
             },
             {
                 id: 3,
                 title: t(`${match.params.groupType}:single.edit.tabs.suppliers`),
-                component: <CampSuppliers key={5} group={group} onSave={this.saveChanges} />
+                component: <CampSuppliers key={3} group={group} onSave={this.saveChanges} />
             }
         ];
 

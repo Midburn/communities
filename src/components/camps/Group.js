@@ -13,12 +13,17 @@ import { state } from '../../models/state';
 import { PermissableComponent } from '../../components/controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { ParsingService } from '../../services/parsing';
+import { GroupMembers } from './Edit/GroupMembers';
+import { Tabs } from '../controls/Tabs';
+import { GroupsService } from '../../services/groups';
 
 @observer
 class BaseGroup extends React.Component {
 
     permissionService = new PermissionService();
     parsingService = new ParsingService();
+    groupService = new GroupsService();
+
     error = null;
 
     @observable
@@ -26,6 +31,9 @@ class BaseGroup extends React.Component {
 
     @observable
     group = {};
+
+    @observable
+    members = [];
 
     edit = () => {
         this.editMode = true;
@@ -38,6 +46,17 @@ class BaseGroup extends React.Component {
         this.buttons = [this.editButton];
         this.props.history.push({search: ''});
     };
+
+    @observable
+    activeTab = 1;
+
+    setActiveTab(tab) {
+        tab = +tab;
+        if (this.activeTab !== tab) {
+            this.activeTab = tab;
+            this.props.history.push({hash: `#${tab}`, search: this.props.location.search})
+        }
+    }
 
     editButton = {
         icon: 'pencil',
@@ -60,10 +79,13 @@ class BaseGroup extends React.Component {
         if (props.location.search.includes('edit=true')) {
             this.edit();
         }
-        this.getCampData();
+        if (props.location.hash) {
+            this.setActiveTab(props.location.hash.replace('#', ''))
+        }
+        this.getGroupData();
     }
 
-    getCampData() {
+    async getGroupData() {
         const {match} = this.props;
         try {
             const group = state.getSelectedGroup(this.parsingService.getGroupTypeFromString(match.params.groupType), +match.params.id);
@@ -72,13 +94,45 @@ class BaseGroup extends React.Component {
                 return;
             }
             this.group = group;
+            if (this.permissionService.isGroupMember(this.group.id)) {
+                try {
+                    this.members = await this.groupService.getCampsMembers(this.group.id);
+                } catch (e) {
+                    // TODO - what do we do with errors ?
+                    this.error = e;
+                    this.members = null;
+                }
+
+            }
         } catch (e) {
             this.error = e;
         }
     }
 
+    get memberTabs() {
+        const {match, t} = this.props;
+        return [
+            {
+                id: 1,
+                title: t(`${match.params.groupType}:single.edit.tabs.info`),
+                component: <GroupPublicationDetails key={1} group={this.group} match={match}/>
+            },
+            {
+                id: 2,
+                title: t(`${match.params.groupType}:single.edit.tabs.members`),
+                component: <GroupMembers match={match} key={2} members={this.members} onSave={this.saveChanges} />
+            }
+        ];
+    }
+
     render() {
-        const {lng} = this.props;
+        const {lng, match} = this.props;
+        const MemberView = (
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
+        );
+        const BasicView = (
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.group}/>
+        );
         return (
             <div className="CampView">
                 <Row>
@@ -93,7 +147,7 @@ class BaseGroup extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        {this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <GroupPublicationDetails group={this.group}/>}
+                        {this.permissionService.isGroupMember(this.group.id) && !!this.members ? MemberView : BasicView}
                     </Col>
                 </Row>
             </div>
