@@ -4,21 +4,18 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { withI18n } from 'react-i18next';
 import './AppBreadcrumbs.scss';
+import { state } from '../../models/state';
 
 const BaseAppBreadcrumbs = (props) => {
     const paths = props.location.pathname.split('/').filter(p => !!p).slice(1);
-    const { t, lng } = props;
+    const { t, lng, match } = props;
     const [ main, id ] = paths;
 
-    function getNameFromPath(path) {
-        switch (main) {
-            case 'camps':
-                // TODO - get names service
-            case 'arts':
-                // TODO - get names service
-            default:
-                return path;
+    function getNameFromPath(p) {
+        if (Number(p)) {
+            return state.getGroupName(+p, main);
         }
+        return t(p);
     }
 
     function getLinkPath(index) {
@@ -33,7 +30,7 @@ const BaseAppBreadcrumbs = (props) => {
         return path;
     }
 
-
+    console.log({match, paths})
     return (
         <Breadcrumb>
             {paths.map((p, index) => {

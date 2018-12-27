@@ -8,7 +8,7 @@ i18n.use(detector)
     .use(backend)
     .use(reactI18nextModule) // passes i18n down to react-i18next
     .init({
-        ns: ['common', 'camps'],
+        ns: ['common', 'camps', 'arts'],
         defaultNS: 'common',
         react: {
             wait: true,

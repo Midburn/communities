@@ -1,12 +1,13 @@
+import React from 'react';
 import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
 import { AppBreadcrumbs } from './navigation/AppBreadcrumbs';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { Camps } from './camps/Camps';
-import React from 'react';
+import { Groups } from './camps/Groups';
 import { withI18n } from 'react-i18next';
-import { Camp } from './camps/Camp';
+import { Group } from './camps/Group';
 import i18n from '../services/i18n';
+import { GroupManagement } from './camps/Edit/GroupManagement';
 
 class BaseMain extends React.Component {
 
@@ -35,8 +36,9 @@ class BaseMain extends React.Component {
                             <Card>
                                 <CardBody className="MainPanel">
                                     <Switch>
-                                        <Route path="/:lng(en|he)/camps" component={Camps} exact/>
-                                        <Route path="/:lng(en|he)/camps/:id" component={Camp}/>
+                                        <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/:id/manage" component={GroupManagement} exact/>
                                     </Switch>
                                 </CardBody>
                             </Card>

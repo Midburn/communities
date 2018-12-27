@@ -1,15 +1,14 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
 import { Modal, Button, ModalHeader, ModalBody, ModalFooter } from 'mdbreact';
-import './CampList.scss';
 import { withRouter } from 'react-router-dom';
 import { GroupsService } from '../../services/groups';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import './JoinCampModal.scss';
+import './JoinGroupModal.scss';
 
 @observer
-class BaseJoinCampModal extends React.Component {
+class BaseJoinGroupModal extends React.Component {
 
     groupsService = new GroupsService();
 
@@ -35,15 +34,15 @@ class BaseJoinCampModal extends React.Component {
     };
 
     render() {
-        const {isOpen, camp, toggle, t} = this.props;
+        const {isOpen, group, toggle, t, match} = this.props;
         return (
             <Modal className="JoinModal" isOpen={isOpen} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{t('camps:joinModal.header')}</ModalHeader>
+                <ModalHeader toggle={toggle}>{t(`${match.params.groupType}:joinModal.header`)}</ModalHeader>
                 <ModalBody>
                     {
                         // TODO - implement loader
                         this.loading ? <div className="loader small"></div> :
-                        this.error ? t(this.error.message) : t('camps:joinModal.body', {campname: this.groupsService.getPropertyByLang(camp, 'name')})
+                        this.error ? t(this.error.message) : t(`${match.params.groupType}:joinModal.body`, {name: this.groupsService.getPropertyByLang(group, 'name')})
                     }
 
                 </ModalBody>
@@ -56,4 +55,4 @@ class BaseJoinCampModal extends React.Component {
     }
 }
 
-export const JoinCampModal = withRouter(withI18n()(BaseJoinCampModal));
+export const JoinGroupModal = withRouter(withI18n()(BaseJoinGroupModal));

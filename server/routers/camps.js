@@ -18,6 +18,7 @@ module.exports = class CampsRouter {
          * E.G - /api/VERSION/spark/camps/open
          */
         this.router.get('/spark/camps/open', controllers.sparkCamps.getOpenCamps);
+        this.router.get('/spark/camps/arts/open', controllers.sparkCamps.getOpenArts);
         this.router.get('/spark/camps/:id/members', controllers.sparkCamps.getCampMembers);
         this.router.get('/spark/usersGroups', controllers.sparkCamps.getUsersGroups);
     }

@@ -5,14 +5,12 @@ import { Row, Col } from 'mdbreact';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tabs } from '../../controls/Tabs';
-import { CampBasicInfo } from './CampBasicInfo';
-import { CampBasicDetails } from './CampBasicDetails';
 import { CampFiles } from './CampFiles';
 import { CampMembers } from './CampMembers';
 import { CampSuppliers } from './CampSuppliers';
 
 @observer
-class BaseCampEdit extends React.Component {
+class BaseGroupManagement extends React.Component {
 
     @observable
     activeTab = 1;
@@ -32,41 +30,31 @@ class BaseCampEdit extends React.Component {
         }
     }
 
-    saveChanges(editedCamp) {
-        const savedCamp = {
-            ...this.props.camp,
-            ...editedCamp
+    saveChanges(editedGroup) {
+        const groupToSave = {
+            ...this.props.editedGroup,
+            ...editedGroup
         }
         // TODO - send to BE.
     }
 
     render() {
-        const {t, camp} = this.props;
+        const {t, group, match} = this.props;
         const tabs = [
             {
                 id: 1,
-                title: t('camps:camp.edit.tabs.info'),
-                component: <CampBasicInfo key={1} camp={camp} onSave={this.saveChanges} />
+                title: t(`${match.params.groupType}:single.edit.tabs.members`),
+                component: <CampMembers key={3} group={group} onSave={this.saveChanges} />
             },
             {
                 id: 2,
-                title: t('camps:camp.edit.tabs.details'),
-                component: <CampBasicDetails key={2} camp={camp} onSave={this.saveChanges} />
+                title: t(`${match.params.groupType}:single.edit.tabs.files`),
+                component: <CampFiles key={4} group={group} onSave={this.saveChanges} />
             },
             {
                 id: 3,
-                title: t('camps:camp.edit.tabs.members'),
-                component: <CampMembers key={3} camp={camp} onSave={this.saveChanges} />
-            },
-            {
-                id: 4,
-                title: t('camps:camp.edit.tabs.files'),
-                component: <CampFiles key={4} camp={camp} onSave={this.saveChanges} />
-            },
-            {
-                id: 5,
-                title: t('camps:camp.edit.tabs.suppliers'),
-                component: <CampSuppliers key={5} camp={camp} onSave={this.saveChanges} />
+                title: t(`${match.params.groupType}:single.edit.tabs.suppliers`),
+                component: <CampSuppliers key={5} group={group} onSave={this.saveChanges} />
             }
         ];
 
@@ -82,4 +70,4 @@ class BaseCampEdit extends React.Component {
     }
 }
 
-export const CampEdit = withRouter(withI18n()(BaseCampEdit));
+export const GroupManagement = withRouter(withI18n()(BaseGroupManagement));

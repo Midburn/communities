@@ -1,16 +1,16 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
 import { Card, CardImage, CardBody, CardText, CardTitle, Button, Alert } from 'mdbreact';
-import './CampList.scss';
+import './GroupList.scss';
 import { observer } from 'mobx-react';
 import FlipMove from 'react-flip-move';
 import { withRouter } from 'react-router-dom';
-import { JoinCampModal } from './JoinCampModal';
+import { JoinGroupModal } from './JoinGroupModal';
 import { observable } from 'mobx';
 import { GroupsService } from '../../services/groups';
 
 @observer
-class BaseCampList extends React.Component {
+class BaseGroupList extends React.Component {
 
     groupsService = new GroupsService();
 
@@ -36,13 +36,13 @@ class BaseCampList extends React.Component {
         return heb.toLowerCase().includes(q) || en.toLowerCase().includes(q);
     }
 
-    viewCamp = (id) => {
-        const {history} = this.props;
-        history.push({pathname: `camps/${id}` });
+    viewGroup = (id) => {
+        const {history, match} = this.props;
+        history.push({pathname: `${match.params.groupType}/${id}` });
     };
 
     joinCamp = (id) => {
-        this.selectedCamp = this.props.camps.find(camp => camp.id === id);
+        this.selectedGroup = this.props.groups.find(g => g.id === id);
         this.isJoinCampModal = true;
     };
 
@@ -51,28 +51,28 @@ class BaseCampList extends React.Component {
     };
 
     render() {
-        const {camps, t, query} = this.props;
-        const filteredCamps = camps.filter(this.filter);
+        const {groups, t, query, match} = this.props;
+        const filteredGroups = groups.filter(this.filter);
         return (
             <div>
-                <JoinCampModal isOpen={this.isJoinCampModal} camp={this.selectedCamp} toggle={this.toggle}/>
+                <JoinGroupModal isOpen={this.isJoinCampModal} group={this.selectedGroup} toggle={this.toggle}/>
                 <FlipMove className="CampList">
-                    { filteredCamps.length ? null : <Alert className="w-100" color="danger" >{t('camps:search.notFound', { q: query})}</Alert>}
-                    {filteredCamps.map(camp => {
+                    { filteredGroups.length ? null : <Alert className="w-100" color="danger" >{t(`${match.params.groupType}:search.notFound`, { q: query})}</Alert>}
+                    {filteredGroups.map(group => {
                         return (
-                            <Card key={camp.id} className="CampResult">
+                            <Card key={group.id} className="CampResult">
                                 <CardImage
                                     className="img-fluid"
                                     src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg"
                                     hover
                                 />
                                 <CardBody>
-                                    <CardTitle>{this.groupsService.getPropertyByLang(camp, 'name')}</CardTitle>
+                                    <CardTitle>{this.groupsService.getPropertyByLang(group, 'name')}</CardTitle>
                                     <CardText>
-                                        {this.groupsService.getPropertyByLang(camp, 'description')}
+                                        {this.groupsService.getPropertyByLang(group, 'description')}
                                     </CardText>
-                                    <Button onClick={() => this.viewCamp(camp.id)}>{t('view')}</Button>
-                                    <Button onClick={() => this.joinCamp(camp.id)}>{t('join')}</Button>
+                                    <Button onClick={() => this.viewGroup(group.id)}>{t('view')}</Button>
+                                    <Button onClick={() => this.joinCamp(group.id)}>{t('join')}</Button>
                                 </CardBody>
                             </Card>
                         );
@@ -83,4 +83,4 @@ class BaseCampList extends React.Component {
     }
 }
 
-export const CampList = withRouter(withI18n()(BaseCampList));
+export const GroupList = withRouter(withI18n()(BaseGroupList));
