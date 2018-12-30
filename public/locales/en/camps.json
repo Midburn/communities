@@ -49,5 +49,21 @@
   "joinModal": {
     "header": "Join camp request",
     "body": "You're about to request camp {{name}} to join, are you sure?"
+  },
+  "allocations": {
+    "dgsAdmin": {
+      "header": "Manage camps DGS tickets quota",
+      "description": "Allocate Directed Group Sale tickets quota to camps participating in the last event",
+      "table": {
+        "search": "Search camps",
+        "groupName": "Camp name",
+        "leaderName": "Camp leader",
+        "leaderEmail": "Leader's Email",
+        "leaderPhone": "Leader phone",
+        "totalMembers": "Total members",
+        "totalPurchased": "Total purchased",
+        "quota": "Quota"
+      }
+    }
   }
 }

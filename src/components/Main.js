@@ -2,20 +2,18 @@ import React from 'react';
 import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import { Groups } from './camps/Groups';
+import { Groups } from './groups/Groups';
 import { withI18n } from 'react-i18next';
-import { Group } from './camps/Group';
+import { Group } from './groups/Group';
 import i18n from '../services/i18n';
-import { GroupManagement } from './camps/Edit/GroupManagement';
+import { GroupManagement } from './groups/Edit/GroupManagement';
+import { DGSAdmin } from './allocations/DGSAdmin';
 
 class BaseMain extends React.Component {
 
     constructor(props) {
         super(props);
         const lng = props.match.params.lng;
-        if (!lng || !['he', 'en'].includes(lng)) {
-           // window.location.href = '/he';
-        }
         i18n.changeLanguage(lng);
     }
 
@@ -35,6 +33,7 @@ class BaseMain extends React.Component {
                                 <CardBody className="MainPanel">
                                     <Switch>
                                         <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/dgs" component={DGSAdmin} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/manage" component={GroupManagement} exact/>
                                     </Switch>

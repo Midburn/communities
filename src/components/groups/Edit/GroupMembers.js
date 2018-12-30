@@ -1,6 +1,6 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Table, TableHead, TableBody, Input } from 'mdbreact';
+import { Table, TableHead, TableBody, Input, Row } from 'mdbreact';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
@@ -11,6 +11,7 @@ class BaseGroupMembers extends React.Component {
 
     @observable
     query = '';
+
     @action
     handleChange = (e) => {
         this.query = e.target.value;

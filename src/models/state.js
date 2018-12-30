@@ -8,12 +8,13 @@ class State {
     parsingService = new ParsingService();
 
     @observable
-    _loggedUser = '';
+    loggedUser = {};
 
-    @computed
-    get loggedUser() {
-        return this._loggedUser;
-    }
+    @observable
+    currentEventId = '';
+
+    @observable
+    currentEvent = {};
 
     _data = {};
 
