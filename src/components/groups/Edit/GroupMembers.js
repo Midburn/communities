@@ -36,7 +36,6 @@ class BaseGroupMembers extends React.Component {
 
     render() {
         const {t, members} = this.props;
-        console.log(members);
         return (
             <div>
                 <Input

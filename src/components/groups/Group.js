@@ -23,30 +23,32 @@ class BaseGroup extends React.Component {
 
     error = null;
 
-    state = {
-        editMode: false,
-        group: {},
-        members: {},
-        activeTab: 1
-    };
+    @observable
+    editMode = false;
+    @observable
+    group = {};
+    @observable
+    members = [];
+    @observable
+    activeTab = 1;
 
     edit = () => {
-        this.setState({ editMode: true });
+        this.editMode = true;
         this.editMode = true;
         this.buttons = [this.viewButton];
         this.props.history.push({search: '?edit=true'});
     };
 
     view = () => {
-        this.setState({ editMode: false });
+        this.editMode = false;
         this.buttons = [this.editButton];
         this.props.history.push({search: ''});
     };
 
     setActiveTab(tab) {
         tab = +tab;
-        if (this.state.activeTab !== tab) {
-            this.setState({activeTab: tab});
+        if (this.activeTab !== tab) {
+            this.activeTab = tab;
             this.props.history.push({hash: `#${tab}`, search: this.props.location.search})
         }
     }
@@ -90,27 +92,19 @@ class BaseGroup extends React.Component {
                 // TODO - 404 group not found
                 return;
             }
-            this.setState({
-                group
-            });
-            if (this.permissionService.isGroupMember(this.group.id)) {
+            this.group = group;
+            if (this.permissionService.isGroupMember(group.id)) {
                 try {
-
-                    const members = await this.groupService.getCampsMembers(this.group.id);
-                    this.setState({members});
+                    this.members = await this.groupService.getCampsMembers(this.group.id);
                 } catch (e) {
                     // TODO - what do we do with errors ?
-                    this.setState({
-                        error: e,
-                        members: null
-                    });
+                    this.members = [];
+                    this.error = e;
                 }
 
             }
         } catch (e) {
-            this.setState({
-                error: e
-            });
+            this.error = e;
         }
     }
 
@@ -120,12 +114,12 @@ class BaseGroup extends React.Component {
             {
                 id: 1,
                 title: t(`${match.params.groupType}:single.edit.tabs.info`),
-                component: <GroupPublicationDetails key={1} group={this.state.group} match={match}/>
+                component: <GroupPublicationDetails key={1} group={this.group} match={match}/>
             },
             {
                 id: 2,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers match={match} key={2} members={this.state.members} onSave={this.saveChanges} />
+                component: <GroupMembers match={match} key={2} members={this.members} onSave={this.saveChanges} />
             }
         ];
     }
@@ -133,26 +127,26 @@ class BaseGroup extends React.Component {
     render() {
         const {lng, match} = this.props;
         const MemberView = (
-            this.editMode ? <GroupBasicInfo group={this.state.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.state.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
         );
         const BasicView = (
-            this.editMode ? <GroupBasicInfo group={this.state.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.state.group}/>
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.group}/>
         );
         return (
             <div className="CampView">
                 <Row>
                     <Col md="12">
-                        <PermissableComponent permitted={this.permissionService.canEditThisGroup(this.state.group)}>
+                        <PermissableComponent permitted={this.permissionService.canEditThisGroup(this.group)}>
                             <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                                 <ButtonGroup buttons={this.buttons} vertical={true}/>
                             </div>
                         </PermissableComponent>
-                        <GroupHeader group={this.state.group} editMode={this.editMode}/>
+                        <GroupHeader group={this.group} editMode={this.editMode}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        {this.permissionService.isGroupMember(this.state.group.id) && !!this.state.members ? MemberView : BasicView}
+                        {this.permissionService.isGroupMember(this.group.id) && !!this.members ? MemberView : BasicView}
                     </Col>
                 </Row>
             </div>
