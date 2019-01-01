@@ -62,7 +62,9 @@
         "leaderPhone": "טלפון מוביל המיצב",
         "totalMembers": "כמות חברי מיצב",
         "totalPurchased": "כרטיסים שנרכשו",
-        "quota": "מכסה"
+        "totalEntered": "נכנסו לאירוע הקודם",
+        "quota": "מכסה",
+        "noQuota": "הקצה"
       }
     }
   }

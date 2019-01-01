@@ -62,7 +62,9 @@
         "leaderPhone": "טלפון מוביל המחנה",
         "totalMembers": "כמות חברי מחנה",
         "totalPurchased": "כרטיסים שנרכשו",
-        "quota": "מכסה"
+        "totalEntered": "נכנסו לאירוע הקודם",
+        "quota": "מכסה",
+        "noQuota": "הקצה"
       }
     }
   }

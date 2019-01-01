@@ -76,12 +76,16 @@ class BaseGroup extends React.Component {
 
     constructor(props) {
         super(props);
-        if (props.location.search.includes('edit=true')) {
+        this.getGroupData();
+        if (this.props.location.search.includes('edit=true')) {
             this.edit();
         }
-        if (props.location.hash) {
-            this.setActiveTab(props.location.hash.replace('#', ''))
+        if (this.props.location.hash) {
+            this.setActiveTab(this.props.location.hash.replace('#', ''))
         }
+    }
+
+    componentWillReceiveProps() {
         this.getGroupData();
     }
 

@@ -3,9 +3,11 @@ import { withI18n } from 'react-i18next';
 import { withRouter } from 'react-router-dom';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Table, TableHead, TableBody, Input } from 'mdbreact';
+import { Table, TableHead, TableBody, Input, Button } from 'mdbreact';
 import { action } from 'mobx/lib/mobx';
 import { GroupsService } from '../../services/groups';
+import { ButtonGroup } from '../controls/ButtonGroup';
+import { state } from '../../models/state';
 
 @observer
 class BaseDGSGroupsTable extends React.Component {
@@ -51,6 +53,32 @@ class BaseDGSGroupsTable extends React.Component {
         return false;
     }
 
+    updateGroupsQuota(group, quota) {
+        // TODO - should we update manually.
+        group.quota = quota;
+    }
+
+    getFormerEventEntries(group) {
+        if (!group || !group.former_tickets || !group.former_tickets.length) {
+            return 0;
+        }
+        return group.former_tickets.filter(ticket => !!ticket.entrance_timestamp || !!ticket.first_entrance_timestamp).length;
+    }
+
+    view = (e, group) => {
+        const SPARK_HOST = state.configurations.SPARK_HOST ||
+        process.env.NODE_ENV === 'production' ? 'https://spark.midburn.org' : 'http://localhost:3000';
+        window.location.href = `${SPARK_HOST}/he/camps/${group.id}`;
+    };
+
+    buttons = [
+        {
+            icon: 'eye',
+            onClick: this.view,
+            tooltip: this.props.t('view')
+        }
+    ];
+
     render() {
         const {t, groups} = this.props;
         return (
@@ -64,7 +92,7 @@ class BaseDGSGroupsTable extends React.Component {
                     value={this.query}
                     onChange={this.handleChange}
                 />
-                <Table responsive>
+                <Table hover responsive btn>
                     <TableHead>
                         <tr>
                             <th>{t(`${this.TRANSLATE_PREFIX}.groupName`)}</th>
@@ -73,6 +101,7 @@ class BaseDGSGroupsTable extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.leaderPhone`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.totalMembers`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.totalPurchased`)}</th>
+                            <th>{t(`${this.TRANSLATE_PREFIX}.totalEntered`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.quota`)}</th>
                             <th>{t(`actions`)}</th>
                         </tr>
@@ -99,7 +128,21 @@ class BaseDGSGroupsTable extends React.Component {
                                     <td>
                                         {(g.tickets || []).length}
                                     </td>
-                                    <td></td>
+                                    <td>
+                                        {this.getFormerEventEntries(g)}
+                                    </td>
+                                    <td>
+                                        <Input
+                                            type="number"
+                                            hint={t(`${this.TRANSLATE_PREFIX}.noQuota`)}
+                                            placeholder={t(`${this.TRANSLATE_PREFIX}.noQuota`)}
+                                            aria-label={t(`${this.TRANSLATE_PREFIX}.noQuota`)}
+                                            value={g.quota || ''}
+                                            onChange={(e) => this.updateGroupsQuota(g, e.target.value)}/>
+                                    </td>
+                                    <td>
+                                        <ButtonGroup context={g} buttons={this.buttons}/>
+                                    </td>
                                 </tr>
                             );
                         })}

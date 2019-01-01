@@ -62,7 +62,9 @@
         "leaderPhone": "Leader phone",
         "totalMembers": "Total members",
         "totalPurchased": "Total purchased",
-        "quota": "Quota"
+        "totalEntered": "Total entered former event",
+        "quota": "Quota",
+        "noQuota": "Allocate"
       }
     }
   }

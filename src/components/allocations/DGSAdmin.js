@@ -33,6 +33,7 @@ class BaseDGSAdmin extends React.Component {
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
             this.getGroupsMembersCount();
             this.getGroupsTickets();
+            this.getGroupsFormerEventTickets();
         } catch (e) {
             this.groups = [];
             // TODO - what do we do with errors?
@@ -40,6 +41,10 @@ class BaseDGSAdmin extends React.Component {
         }
     }
 
+    /**
+     * For displaying member count (for former event)
+     * @returns {Promise<void>}
+     */
     async getGroupsMembersCount() {
         for (const group of this.groups) {
             try {
@@ -56,6 +61,10 @@ class BaseDGSAdmin extends React.Component {
         }
     }
 
+    /**
+     * For displaying ticket count (for this event)
+     * @returns {Promise<void>}
+     */
     async getGroupsTickets() {
         for (const group of this.groups) {
             try {
@@ -64,6 +73,27 @@ class BaseDGSAdmin extends React.Component {
                     group.tickets = [];
                 } else {
                     group.tickets = tickets;
+                }
+            } catch (e) {
+                // TODO - what do we do with errors?
+                group.members_count = 0;
+            }
+        }
+    }
+
+    /**
+     * For displaying entered count (for former event)
+     * @returns {Promise<void>}
+     */
+    async getGroupsFormerEventTickets() {
+        for (const group of this.groups) {
+            try {
+                const tickets = await this.groupService.getCampsMembersTickets(group.id, this.eventsService.getFormerEventId());
+                if (!tickets || !tickets.length) {
+                    group.former_tickets = [];
+                } else {
+                    group.former_tickets = tickets;
+                    console.log(tickets)
                 }
             } catch (e) {
                 // TODO - what do we do with errors?
