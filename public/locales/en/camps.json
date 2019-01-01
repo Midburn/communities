@@ -65,6 +65,12 @@
         "totalEntered": "Total entered former event",
         "quota": "Quota",
         "noQuota": "Allocate"
+      },
+      "sums": {
+        "groups": "Camps",
+        "members": "Members",
+        "ticketsAll": "Purchased tickets",
+        "allocated": "Allocated"
       }
     },
     "groupLeader": {

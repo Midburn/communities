@@ -65,6 +65,12 @@
         "totalEntered": "נכנסו לאירוע הקודם",
         "quota": "מכסה",
         "noQuota": "הקצה"
+      },
+      "sums": {
+        "groups": "מיצבים",
+        "members": "חברים",
+        "ticketsAll": "כרטיסים שנרכשו",
+        "allocated": "הוקצאו"
       }
     }
   },

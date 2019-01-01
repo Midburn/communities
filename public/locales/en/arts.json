@@ -65,7 +65,13 @@
         "totalPurchased": "Total purchased",
         "totalEntered": "Total entered former event",
         "quota": "Quota",
-        "noQuota": "Allocate"
+        "noQuota": "Allocate",
+        "sums": {
+          "groups": "Art Installations",
+          "members": "Members",
+          "ticketsAll": "Purchased tickets",
+          "allocated": "Allocated"
+        }
       }
     },
     "groupLeader": {

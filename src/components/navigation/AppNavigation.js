@@ -155,7 +155,7 @@ class BaseAppNavigation extends Component {
                                         </PermissableComponent>
                                         {this.state.links.map(groupType => {
                                             return (
-                                                <PermissableComponent permitted={this.permissionsService.isAdmin()}>
+                                                <PermissableComponent key={groupType} permitted={this.permissionsService.isAdmin()}>
                                                     <DropdownItem onClick={this.toggleCollapse}>
                                                         <NavLink
                                                             to={`/${lng}/${this.parsingService.getPlural(groupType)}/management`}>{t(`nav.${this.parsingService.getPlural(groupType)}.management`)}</NavLink>

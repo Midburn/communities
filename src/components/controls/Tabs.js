@@ -1,6 +1,5 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
-import FlipMove from 'react-flip-move';
 /**
  * tabs interface - {
  *     key: number | string;
@@ -28,11 +27,9 @@ export class Tabs extends React.Component {
                         </MDBBtn>
                     })}
                 </div>
-                <FlipMove>
-                    {(tabs || []).map((tab, index) => {
-                        return tab.id === selectedId ? tab.component : null
-                    })}
-                </FlipMove>
+                {(tabs || []).map((tab, index) => {
+                    return tab.id === selectedId ? tab.component : null
+                })}
             </div>
         );
     }
