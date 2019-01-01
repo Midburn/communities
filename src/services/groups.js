@@ -4,6 +4,7 @@ import { state } from '../models/state';
 
 export class GroupsService {
 
+
     async getGroup(id) {
         try {
             return (await axios.get(`/api/v1/spark/camps/${id}`, {withCredentials: true})).data.body.camp;

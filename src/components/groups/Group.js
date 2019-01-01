@@ -9,10 +9,8 @@ import { ButtonGroup } from '../controls/ButtonGroup';
 import './Group.scss';
 import { GroupBasicInfo } from './Edit/GroupBasicInfo';
 import { GroupPublicationDetails } from './GroupPublicationDetails';
-import { state } from '../../models/state';
 import { PermissableComponent } from '../../components/controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
-import { ParsingService } from '../../services/parsing';
 import { GroupMembers } from './Edit/GroupMembers';
 import { Tabs } from '../controls/Tabs';
 import { GroupsService } from '../../services/groups';
@@ -21,39 +19,34 @@ import { GroupsService } from '../../services/groups';
 class BaseGroup extends React.Component {
 
     permissionService = new PermissionService();
-    parsingService = new ParsingService();
     groupService = new GroupsService();
 
     error = null;
 
-    @observable
-    editMode = false;
-
-    @observable
-    group = {};
-
-    @observable
-    members = [];
+    state = {
+        editMode: false,
+        group: {},
+        members: {},
+        activeTab: 1
+    };
 
     edit = () => {
+        this.setState({ editMode: true });
         this.editMode = true;
         this.buttons = [this.viewButton];
         this.props.history.push({search: '?edit=true'});
     };
 
     view = () => {
-        this.editMode = false;
+        this.setState({ editMode: false });
         this.buttons = [this.editButton];
         this.props.history.push({search: ''});
     };
 
-    @observable
-    activeTab = 1;
-
     setActiveTab(tab) {
         tab = +tab;
-        if (this.activeTab !== tab) {
-            this.activeTab = tab;
+        if (this.state.activeTab !== tab) {
+            this.setState({activeTab: tab});
             this.props.history.push({hash: `#${tab}`, search: this.props.location.search})
         }
     }
@@ -76,7 +69,7 @@ class BaseGroup extends React.Component {
 
     constructor(props) {
         super(props);
-        this.getGroupData();
+        this.getGroupData(props);
         if (this.props.location.search.includes('edit=true')) {
             this.edit();
         }
@@ -85,32 +78,39 @@ class BaseGroup extends React.Component {
         }
     }
 
-    componentWillReceiveProps() {
-        this.getGroupData();
+    componentWillReceiveProps(props) {
+        this.getGroupData(props);
     }
 
-    async getGroupData() {
-        const {match} = this.props;
+    async getGroupData(props) {
+        const {match} = props;
         try {
             const group = await this.groupService.getGroup(match.params.id);
-            console.log(group)
             if (!group) {
                 // TODO - 404 group not found
                 return;
             }
-            this.group = group;
+            this.setState({
+                group
+            });
             if (this.permissionService.isGroupMember(this.group.id)) {
                 try {
-                    this.members = await this.groupService.getCampsMembers(this.group.id);
+
+                    const members = await this.groupService.getCampsMembers(this.group.id);
+                    this.setState({members});
                 } catch (e) {
                     // TODO - what do we do with errors ?
-                    this.error = e;
-                    this.members = null;
+                    this.setState({
+                        error: e,
+                        members: null
+                    });
                 }
 
             }
         } catch (e) {
-            this.error = e;
+            this.setState({
+                error: e
+            });
         }
     }
 
@@ -120,12 +120,12 @@ class BaseGroup extends React.Component {
             {
                 id: 1,
                 title: t(`${match.params.groupType}:single.edit.tabs.info`),
-                component: <GroupPublicationDetails key={1} group={this.group} match={match}/>
+                component: <GroupPublicationDetails key={1} group={this.state.group} match={match}/>
             },
             {
                 id: 2,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers match={match} key={2} members={this.members} onSave={this.saveChanges} />
+                component: <GroupMembers match={match} key={2} members={this.state.members} onSave={this.saveChanges} />
             }
         ];
     }
@@ -133,26 +133,26 @@ class BaseGroup extends React.Component {
     render() {
         const {lng, match} = this.props;
         const MemberView = (
-            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
+            this.editMode ? <GroupBasicInfo group={this.state.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.state.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
         );
         const BasicView = (
-            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.group}/>
+            this.editMode ? <GroupBasicInfo group={this.state.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.state.group}/>
         );
         return (
             <div className="CampView">
                 <Row>
                     <Col md="12">
-                        <PermissableComponent permitted={this.permissionService.canEditThisGroup(this.group)}>
+                        <PermissableComponent permitted={this.permissionService.canEditThisGroup(this.state.group)}>
                             <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                                 <ButtonGroup buttons={this.buttons} vertical={true}/>
                             </div>
                         </PermissableComponent>
-                        <GroupHeader group={this.group} editMode={this.editMode}/>
+                        <GroupHeader group={this.state.group} editMode={this.editMode}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        {this.permissionService.isGroupMember(this.group.id) && !!this.members ? MemberView : BasicView}
+                        {this.permissionService.isGroupMember(this.state.group.id) && !!this.state.members ? MemberView : BasicView}
                     </Col>
                 </Row>
             </div>

@@ -8,6 +8,8 @@ import { DGSGroupsTable } from './DGSGroupsTable';
 import { GroupsService } from '../../services/groups';
 import { ParsingService } from '../../services/parsing';
 import { EventsService } from '../../services/events';
+import { ButtonGroup } from '../controls/ButtonGroup';
+import './DGSAdmin.scss';
 
 @observer
 class BaseDGSAdmin extends React.Component {
@@ -21,6 +23,13 @@ class BaseDGSAdmin extends React.Component {
 
     @observable
     groups = [];
+
+    saveButton = {
+        icon: 'save',
+        onClick: this.saveChanges,
+        tooltip: this.props.t('saveChanges')
+    };
+
 
     constructor(props) {
         super(props);
@@ -93,12 +102,19 @@ class BaseDGSAdmin extends React.Component {
                     group.former_tickets = [];
                 } else {
                     group.former_tickets = tickets;
-                    console.log(tickets)
                 }
             } catch (e) {
                 // TODO - what do we do with errors?
                 group.members_count = 0;
             }
+        }
+    }
+
+    async saveChanges() {
+        try {
+            // TODO - save changes to allocations.
+        }catch (e) {
+
         }
     }
 
@@ -108,12 +124,15 @@ class BaseDGSAdmin extends React.Component {
     }
 
     render() {
-        const {t} = this.props;
+        const {t,lng} = this.props;
         return (
-            <div>
+            <div className="DGSAdmin">
                 <Row>
                     <Col md="12">
                         <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} ({this.eventsService.getFormerEventId()})</h1>
+                        <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
+                            <ButtonGroup buttons={[this.saveButton]} vertical={true}/>
+                        </div>
                     </Col>
                 </Row>
                 <Row>

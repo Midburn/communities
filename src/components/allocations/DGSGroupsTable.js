@@ -6,7 +6,6 @@ import { observer } from 'mobx-react';
 import { Table, TableHead, TableBody, Input } from 'mdbreact';
 import { action } from 'mobx/lib/mobx';
 import { GroupsService } from '../../services/groups';
-import { state } from '../../models/state';
 
 @observer
 class BaseDGSGroupsTable extends React.Component {
@@ -64,10 +63,6 @@ class BaseDGSGroupsTable extends React.Component {
         }
         return group.former_tickets.filter(ticket => !!ticket.entrance_timestamp || !!ticket.first_entrance_timestamp).length;
     }
-
-    view = async (group) => {
-
-    };
 
     render() {
         const {t, groups} = this.props;
