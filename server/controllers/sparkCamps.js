@@ -14,6 +14,16 @@ module.exports = class SparkCampsController {
         this.getAllByType = this.getAllByType.bind(this);
         this.getCampMembersCount = this.getCampMembersCount.bind(this);
         this.getCampMembersTickets = this.getCampMembersTickets.bind(this);
+        this.getCamp = this.getCamp.bind(this);
+    }
+
+    async getCamp(req, res, next) {
+        try {
+            const camp = (await this.spark.get(`camps/${req.params.id}/get`, req.headers)).data;
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, camp));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting open camps')));
+        }
     }
 
     async getOpenCamps(req, res, next) {

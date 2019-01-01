@@ -18,5 +18,6 @@ module.exports = class CampsRouter {
          * E.G - /api/VERSION/spark/camps/open
          */
         this.router.get('/spark/events/:id', controllers.sparkEvents.getEvent);
+        this.router.post('/spark/events/change', controllers.sparkEvents.changeEvent);
     }
 };

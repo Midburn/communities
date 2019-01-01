@@ -92,7 +92,8 @@ class BaseGroup extends React.Component {
     async getGroupData() {
         const {match} = this.props;
         try {
-            const group = state.getSelectedGroup(this.parsingService.getGroupTypeFromString(match.params.groupType), +match.params.id);
+            const group = await this.groupService.getGroup(match.params.id);
+            console.log(group)
             if (!group) {
                 // TODO - 404 group not found
                 return;

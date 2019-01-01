@@ -1,9 +1,16 @@
 import i18n from './i18n';
 import axios from 'axios';
 import { state } from '../models/state';
-import * as constants from '../../models/constants';
 
 export class GroupsService {
+
+    async getGroup(id) {
+        try {
+            return (await axios.get(`/api/v1/spark/camps/${id}`, {withCredentials: true})).data.body.camp;
+        } catch (e) {
+            console.warn(`Error fetching camps ${e.stack}`);
+        }
+    }
 
     async getOpenCamps() {
         try {

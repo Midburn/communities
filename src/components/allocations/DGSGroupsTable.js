@@ -1,18 +1,18 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Table, TableHead, TableBody, Input, Button } from 'mdbreact';
+import { Table, TableHead, TableBody, Input } from 'mdbreact';
 import { action } from 'mobx/lib/mobx';
 import { GroupsService } from '../../services/groups';
-import { ButtonGroup } from '../controls/ButtonGroup';
 import { state } from '../../models/state';
 
 @observer
 class BaseDGSGroupsTable extends React.Component {
 
     groupsService = new GroupsService();
+
     @observable
     query = '';
 
@@ -65,19 +65,9 @@ class BaseDGSGroupsTable extends React.Component {
         return group.former_tickets.filter(ticket => !!ticket.entrance_timestamp || !!ticket.first_entrance_timestamp).length;
     }
 
-    view = (e, group) => {
-        const SPARK_HOST = state.configurations.SPARK_HOST ||
-        process.env.NODE_ENV === 'production' ? 'https://spark.midburn.org' : 'http://localhost:3000';
-        window.location.href = `${SPARK_HOST}/he/camps/${group.id}`;
-    };
+    view = async (group) => {
 
-    buttons = [
-        {
-            icon: 'eye',
-            onClick: this.view,
-            tooltip: this.props.t('view')
-        }
-    ];
+    };
 
     render() {
         const {t, groups} = this.props;
@@ -103,7 +93,6 @@ class BaseDGSGroupsTable extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.totalPurchased`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.totalEntered`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.quota`)}</th>
-                            <th>{t(`actions`)}</th>
                         </tr>
                     </TableHead>
                     <TableBody>
@@ -111,7 +100,7 @@ class BaseDGSGroupsTable extends React.Component {
                             return (
                                 <tr key={g.id}>
                                     <td>
-                                        {this.groupsService.getPropertyByLang(g, 'name')}
+                                        <NavLink to={`${g.id}`}>{this.groupsService.getPropertyByLang(g, 'name')}</NavLink>
                                     </td>
                                     <td>
                                         {g.contact_person_name}
@@ -139,9 +128,6 @@ class BaseDGSGroupsTable extends React.Component {
                                             aria-label={t(`${this.TRANSLATE_PREFIX}.noQuota`)}
                                             value={g.quota || ''}
                                             onChange={(e) => this.updateGroupsQuota(g, e.target.value)}/>
-                                    </td>
-                                    <td>
-                                        <ButtonGroup context={g} buttons={this.buttons}/>
                                     </td>
                                 </tr>
                             );
