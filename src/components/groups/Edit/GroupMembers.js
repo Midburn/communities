@@ -1,8 +1,9 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Table, TableHead, TableBody, Input, Row } from 'mdbreact';
+import { Table, TableHead, TableBody, Input } from 'mdbreact';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { PermissableComponent } from '../../controls/PermissableComponent';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -11,6 +12,12 @@ class BaseGroupMembers extends React.Component {
 
     @observable
     query = '';
+
+    @observable
+    presaleAllocations = {};
+
+    @observable
+    tickets = [];
 
     @action
     handleChange = (e) => {
@@ -34,8 +41,20 @@ class BaseGroupMembers extends React.Component {
             phone.toLowerCase().includes(this.query);
     }
 
+    changePresaleAllocation = (memberId, e) => {
+        this.presaleAllocations[memberId] = e.target.checked;
+    };
+
+    getMemberTicketCount(tickets, memberId) {
+        return tickets.filter(ticket => ticket.buyer_id === memberId).length;
+    }
+
+    getMemberTransfferedTicketCount(tickets, memberId) {
+        return tickets.filter(ticket => ticket.buyer_id === memberId && ticket.holder_id !== memberId).length;
+    }
+
     render() {
-        const {t, members} = this.props;
+        const {t, members, presale, tickets, ticketCount} = this.props;
         return (
             <div>
                 <Input
@@ -47,12 +66,21 @@ class BaseGroupMembers extends React.Component {
                     value={this.query}
                     onChange={this.handleChange}
                 />
-                <Table responsive>
+                <Table responsive btn>
                     <TableHead>
                         <tr>
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.name`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.email`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.phone`)}</th>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.tickets`)}</th>
+                            </PermissableComponent>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>
+                            </PermissableComponent>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.presale`)}</th>
+                            </PermissableComponent>
                         </tr>
                     </TableHead>
                     <TableBody>
@@ -62,6 +90,22 @@ class BaseGroupMembers extends React.Component {
                                     <td>{member.name}</td>
                                     <td>{member.email}</td>
                                     <td>{member.cell_phone}</td>
+                                    <PermissableComponent permitted={ticketCount}>
+                                        <td>
+                                            {this.getMemberTicketCount(tickets, member.user_id)}
+                                        </td>
+                                    </PermissableComponent>
+                                    <PermissableComponent permitted={ticketCount}>
+                                        <td>
+                                            {this.getMemberTransfferedTicketCount(tickets, member.user_id)}
+                                        </td>
+                                    </PermissableComponent>
+                                    <PermissableComponent permitted={presale}>
+                                        <td>
+                                            <input onChange={(e) => this.changePresaleAllocation(member.user_id, e)}
+                                                   checked={this.presaleAllocations[member.user_id]} type="checkbox"/>
+                                        </td>
+                                    </PermissableComponent>
                                 </tr>
                             );
                         })}
