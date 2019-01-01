@@ -17,6 +17,9 @@ class BaseGroupMembers extends React.Component {
     presaleAllocations = {};
 
     @observable
+    memberPermissions = {};
+
+    @observable
     tickets = [];
 
     @action
@@ -53,6 +56,41 @@ class BaseGroupMembers extends React.Component {
         return tickets.filter(ticket => ticket.buyer_id === memberId && ticket.holder_id !== memberId).length;
     }
 
+    getMemberAllocationPermission(memberId) {
+        if (!this.memberPermissions[memberId]) {
+            return false;
+        }
+        // TODO - replace
+        return this.memberPermissions[memberId].includes('allocatePresale');
+    }
+
+    changeMembersAllocatingPermission(memberId, e) {
+        // TODO - implement saving changes + permissions from DB.
+        if (e.target.checked) {
+            this.addPermission(memberId, 'allocatePresale');
+        } else {
+            this.removePermission(memberId, 'allocatePresale');
+        }
+    }
+
+    addPermission(memberId, permission) {
+        if (!this.memberPermissions[memberId]) {
+            this.memberPermissions[memberId] = [permission]
+        } else {
+            this.memberPermissions[memberId].push(permission);
+        }
+    }
+
+    removePermission(memberId, permission) {
+        if (!this.memberPermissions[memberId]) {
+            return;
+        }
+        const index = this.memberPermissions[memberId].indexOf(permission);
+        if (index > -1) {
+            this.memberPermissions[memberId].splice(index, 1);
+        }
+    }
+
     render() {
         const {t, members, presale, tickets, ticketCount} = this.props;
         return (
@@ -81,6 +119,9 @@ class BaseGroupMembers extends React.Component {
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.presale`)}</th>
                             </PermissableComponent>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)}</th>
+                            </PermissableComponent>
                         </tr>
                     </TableHead>
                     <TableBody>
@@ -104,6 +145,12 @@ class BaseGroupMembers extends React.Component {
                                         <td>
                                             <input onChange={(e) => this.changePresaleAllocation(member.user_id, e)}
                                                    checked={this.presaleAllocations[member.user_id]} type="checkbox"/>
+                                        </td>
+                                    </PermissableComponent>
+                                    <PermissableComponent permitted={presale}>
+                                        <td>
+                                            <input onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
+                                                   checked={this.getMemberAllocationPermission(member.user_id)} type="checkbox"/>
                                         </td>
                                     </PermissableComponent>
                                 </tr>

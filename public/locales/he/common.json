@@ -62,7 +62,8 @@
       "phone": "מספר טלפון",
       "presale": "הוקצה כרטיס הוקרה?",
       "tickets": "כרטיסים שנרכשו",
-      "ticketsTransferred": "כרטיסים שהועברו"
+      "ticketsTransferred": "כרטיסים שהועברו",
+      "allowToAllocate": "אשר לחבר זה להקצות כרטיסים"
     }
   }
 }

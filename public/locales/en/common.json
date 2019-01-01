@@ -61,7 +61,8 @@
       "phone": "Phone number",
       "presale": "Presale ticket allocated?",
       "tickets": "Purchased tickets",
-      "ticketsTransferred": "Transferred tickets"
+      "ticketsTransferred": "Transferred tickets",
+      "allowToAllocate": "Allow this member to allocate tickets"
     }
   }
 }
