@@ -13,12 +13,12 @@ import { withI18n } from 'react-i18next';
  * @param buttons - array of buttons
  * @constructor
  */
-const BaseButtonGroup = ({buttons, vertical, lng}) => {
+const BaseButtonGroup = ({buttons, vertical, lng, context}) => {
     return (
         <div className={`d-flex ${vertical ? 'flex-column' : null}`}>
             {(buttons || []).map((button, i) => {
                 return (
-                    <div key={i} onClick={button.onClick}>
+                    <div key={i} onClick={(e) => button.onClick(e, context)}>
                         <MDBTooltip
                             placement={`${lng === 'he' ? 'right' : 'left'}`}
                             component="button"

@@ -50,5 +50,23 @@
   "joinModal": {
     "header": "Join art installation request",
     "body": "You're about to request art installation {{name}} to join, are you sure?"
+  },
+  "allocations": {
+    "dgsAdmin": {
+      "header": "Manage art installations DGS tickets quota",
+      "description": "Allocate Directed Group Sale tickets quota to art installations participating in the last event",
+      "table": {
+        "search": "Search art installations",
+        "groupName": "Installation name",
+        "leaderName": "Installation leader",
+        "leaderEmail": "Leader's Email",
+        "leaderPhone": "Leader's phone",
+        "totalMembers": "Total members",
+        "totalPurchased": "Total purchased",
+        "totalEntered": "Total entered former event",
+        "quota": "Quota",
+        "noQuota": "Allocate"
+      }
+    }
   }
 }

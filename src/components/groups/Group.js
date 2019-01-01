@@ -9,10 +9,8 @@ import { ButtonGroup } from '../controls/ButtonGroup';
 import './Group.scss';
 import { GroupBasicInfo } from './Edit/GroupBasicInfo';
 import { GroupPublicationDetails } from './GroupPublicationDetails';
-import { state } from '../../models/state';
 import { PermissableComponent } from '../../components/controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
-import { ParsingService } from '../../services/parsing';
 import { GroupMembers } from './Edit/GroupMembers';
 import { Tabs } from '../controls/Tabs';
 import { GroupsService } from '../../services/groups';
@@ -21,21 +19,21 @@ import { GroupsService } from '../../services/groups';
 class BaseGroup extends React.Component {
 
     permissionService = new PermissionService();
-    parsingService = new ParsingService();
     groupService = new GroupsService();
 
     error = null;
 
     @observable
     editMode = false;
-
     @observable
     group = {};
-
     @observable
     members = [];
+    @observable
+    activeTab = 1;
 
     edit = () => {
+        this.editMode = true;
         this.editMode = true;
         this.buttons = [this.viewButton];
         this.props.history.push({search: '?edit=true'});
@@ -46,9 +44,6 @@ class BaseGroup extends React.Component {
         this.buttons = [this.editButton];
         this.props.history.push({search: ''});
     };
-
-    @observable
-    activeTab = 1;
 
     setActiveTab(tab) {
         tab = +tab;
@@ -76,31 +71,35 @@ class BaseGroup extends React.Component {
 
     constructor(props) {
         super(props);
-        if (props.location.search.includes('edit=true')) {
+        this.getGroupData(props);
+        if (this.props.location.search.includes('edit=true')) {
             this.edit();
         }
-        if (props.location.hash) {
-            this.setActiveTab(props.location.hash.replace('#', ''))
+        if (this.props.location.hash) {
+            this.setActiveTab(this.props.location.hash.replace('#', ''))
         }
-        this.getGroupData();
     }
 
-    async getGroupData() {
-        const {match} = this.props;
+    componentWillReceiveProps(props) {
+        this.getGroupData(props);
+    }
+
+    async getGroupData(props) {
+        const {match} = props;
         try {
-            const group = state.getSelectedGroup(this.parsingService.getGroupTypeFromString(match.params.groupType), +match.params.id);
+            const group = await this.groupService.getGroup(match.params.id);
             if (!group) {
                 // TODO - 404 group not found
                 return;
             }
             this.group = group;
-            if (this.permissionService.isGroupMember(this.group.id)) {
+            if (this.permissionService.isGroupMember(group.id)) {
                 try {
                     this.members = await this.groupService.getCampsMembers(this.group.id);
                 } catch (e) {
                     // TODO - what do we do with errors ?
+                    this.members = [];
                     this.error = e;
-                    this.members = null;
                 }
 
             }

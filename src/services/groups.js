@@ -4,6 +4,15 @@ import { state } from '../models/state';
 
 export class GroupsService {
 
+
+    async getGroup(id) {
+        try {
+            return (await axios.get(`/api/v1/spark/camps/${id}`, {withCredentials: true})).data.body.camp;
+        } catch (e) {
+            console.warn(`Error fetching camps ${e.stack}`);
+        }
+    }
+
     async getOpenCamps() {
         try {
             return (await axios.get('/api/v1/spark/camps/open', {withCredentials: true})).data.body.camps;
@@ -28,11 +37,38 @@ export class GroupsService {
         }
     }
 
+    async getCampsMembersCount(campId) {
+        try {
+            return (await axios.get(`/api/v1/spark/camps/${campId}/members/count`, {withCredentials: true})).data.body.members;
+        } catch (e) {
+            console.warn(`Error fetching camp members ${e.stack}`);
+        }
+    }
+
+    async getCampsMembersTickets(campId, eventId) {
+        try {
+            return (await axios.get(`/api/v1/spark/camps/${campId}/members/tickets?eventId=${eventId || ''}`, {withCredentials: true})).data.body.tickets;
+        } catch (e) {
+            console.warn(`Error fetching camp members ${e.stack}`);
+        }
+    }
+
     async getUserGroups() {
         try {
             return (await axios.get(`/api/v1/spark/usersGroups`, {withCredentials: true})).data.body;
         } catch (e) {
             console.warn(`Error fetching camp members ${e.stack}`);
+        }
+    }
+
+    async getAllGroups(type, eventId) {
+        try {
+            if (!type) {
+                throw new Error('You must specify type when fetching all camps/arts');
+            }
+            return (await axios.get(`/api/v1/spark/camps/all/${type}?eventId=${eventId || ''}`, {withCredentials: true})).data.body;
+        } catch (e) {
+            console.warn(`Error fetching all ${type}s ${e.stack}`);
         }
     }
 
