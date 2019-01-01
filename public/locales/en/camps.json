@@ -66,6 +66,10 @@
         "quota": "Quota",
         "noQuota": "Allocate"
       }
+    },
+    "groupLeader": {
+      "header": "Allocate pre-sale tickets",
+      "description": "Allocate pre-sale tickets for your camp members from former event"
     }
   }
 }

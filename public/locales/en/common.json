@@ -58,7 +58,11 @@
     "columns": {
       "name": "Full name",
       "email": "Email address",
-      "phone": "Phone number"
+      "phone": "Phone number",
+      "presale": "Presale ticket allocated?",
+      "tickets": "Purchased tickets",
+      "ticketsTransferred": "Transferred tickets",
+      "allowToAllocate": "Allow this member to allocate tickets"
     }
   }
 }

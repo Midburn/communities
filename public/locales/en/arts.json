@@ -67,6 +67,10 @@
         "quota": "Quota",
         "noQuota": "Allocate"
       }
+    },
+    "groupLeader": {
+      "header": "Allocate pre-sale tickets",
+      "description": "Allocate pre-sale tickets for your art installation members from former event"
     }
   }
 }
