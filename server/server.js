@@ -102,14 +102,14 @@ class Server {
     }
 
     initDatabase() {
-        const db_name = 'spark_camps_arts';
+        const db_name = process.env.MYSQL_DB_NAME || 'dev_camps_arts';
         const sequelize = new Sequelize({
-            dialect: "mysql",
-            host:"localhost",
-            port:"3306",
-            username: "root",
-            password: "admin",
-            database: db_name,
+            dialect:    "mysql",
+            host:       process.env.MYSQL_DB_HOST || 'localhost',
+            port:       process.env.MYSQL_DB_PORT || '3306',
+            username:   process.env.MYSQL_DB_USERNAME || 'root',
+            password:   process.env.MYSQL_DB_PASSWORD || 'admin',
+            database:   db_name,
             modelPaths: [path.join(__dirname + "/models")]
         });
         console.log('Attempting to connect to MYSQL DB: ', db_name)
