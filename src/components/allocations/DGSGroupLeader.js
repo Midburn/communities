@@ -4,11 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Row, Col } from 'mdbreact';
-import { DGSGroupsTable } from './DGSGroupsTable';
 import { GroupsService } from '../../services/groups';
-import { ParsingService } from '../../services/parsing';
 import { EventsService } from '../../services/events';
-import { ButtonGroup } from '../controls/ButtonGroup';
 import './DGSAdmin.scss';
 import { GroupMembers } from '../groups/Edit/GroupMembers';
 
@@ -26,12 +23,6 @@ class BaseDGSGroupLeader extends React.Component {
     members = [];
     @observable
     tickets = [];
-
-    saveButton = {
-        icon: 'save',
-        onClick: this.saveChanges,
-        tooltip: this.props.t('saveChanges')
-    };
 
     componentWillReceiveProps(props) {
         this.getGroupData(props);
@@ -84,25 +75,22 @@ class BaseDGSGroupLeader extends React.Component {
     }
 
     render() {
-        const {t, lng, match} = this.props;
+        const {t, match} = this.props;
         return (
-            <div className="DGSAdmin">
+            <div>
                 <Row>
                     <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} ({this.eventsService.getFormerEventId()})</h1>
-                        <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
-                            <ButtonGroup buttons={[this.saveButton]} vertical={true}/>
-                        </div>
+                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)}</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)}</p>
+                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers presale={true} ticketCount={true} match={match} tickets={this.tickets || []} members={this.members || []}/>
+                        <GroupMembers group={this.group} presale={true} ticketCount={true} match={match} tickets={this.tickets || []} members={this.members || []}/>
                     </Col>
                 </Row>
             </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { Groups } from './groups/Groups';
 import { withI18n } from 'react-i18next';
 import { Group } from './groups/Group';

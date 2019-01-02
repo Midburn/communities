@@ -23,10 +23,15 @@ import * as constants from '../../../models/constants';
 import { GroupDropDown } from './GroupNavDropDown';
 import { AbsoluteNavLink } from './AbsoluteNavLink';
 import { PermissableComponent } from '../controls/PermissableComponent';
+import { ParsingService } from '../../services/parsing';
+import { PermissionService } from '../../services/permissions';
 
 class BaseAppNavigation extends Component {
 
     auth = new AuthService();
+    parsingService = new ParsingService();
+    permissionsService = new PermissionService();
+
     state = {
         collapse: false,
         links: Object.values(constants.GROUP_TYPES)
@@ -148,7 +153,16 @@ class BaseAppNavigation extends Component {
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
-
+                                        {this.state.links.map(groupType => {
+                                            return (
+                                                <PermissableComponent key={groupType} permitted={this.permissionsService.isAdmin()}>
+                                                    <DropdownItem onClick={this.toggleCollapse}>
+                                                        <NavLink
+                                                            to={`/${lng}/${this.parsingService.getPlural(groupType)}/management`}>{t(`nav.${this.parsingService.getPlural(groupType)}.management`)}</NavLink>
+                                                    </DropdownItem>
+                                                </PermissableComponent>
+                                            );
+                                        })}
                                     </DropdownMenu>
                                 </Dropdown>
                             </NavItem>

@@ -119,7 +119,7 @@ class BaseGroup extends React.Component {
             {
                 id: 2,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers match={match} key={2} members={this.members} />
+                component: <GroupMembers group={this.group} match={match} key={2} members={this.members} />
             }
         ];
     }

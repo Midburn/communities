@@ -1,5 +1,9 @@
 export class ParsingService {
 
+    getPlural(term) {
+        return `${term}s`;
+    }
+
     getGroupTypeFromString(groupType) {
         // Handle Plural values (from url)
         if (groupType[groupType.length - 1] === 's') {

@@ -4,6 +4,7 @@ import { Table, TableHead, TableBody, Input } from 'mdbreact';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
+import { TableSummery } from '../../controls/TableSummery';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -48,11 +49,19 @@ class BaseGroupMembers extends React.Component {
         this.presaleAllocations[memberId] = e.target.checked;
     };
 
-    getMemberTicketCount(tickets, memberId) {
+    getMemberTicketCount(memberId) {
+        const {tickets} = this.props;
+        if (!tickets) {
+            return;
+        }
         return tickets.filter(ticket => ticket.buyer_id === memberId).length;
     }
 
-    getMemberTransfferedTicketCount(tickets, memberId) {
+    getMemberTransfferedTicketCount(memberId) {
+        const {tickets} = this.props;
+        if (!tickets) {
+            return;
+        }
         return tickets.filter(ticket => ticket.buyer_id === memberId && ticket.holder_id !== memberId).length;
     }
 
@@ -91,8 +100,51 @@ class BaseGroupMembers extends React.Component {
         }
     }
 
+    get tableSums() {
+        const {t, members, presale, group} = this.props;
+        let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
+        for (const member of members) {
+            allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
+            allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
+            totalAllocated += this.presaleAllocations[member.user_id] ? 1 : 0;
+        }
+        const baseSums = {
+            [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
+        };
+        const preSaleSums = presale ? {
+            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: allPurchasedTicketsCount,
+            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
+            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: totalAllocated,
+            [t(`${this.TRANSLATE_PREFIX}.sums.quota`)]: group.pre_sale_tickets_quota || 0,
+        } : {};
+        return {
+            ...baseSums,
+            ...preSaleSums
+
+        }
+    }
+
+
+    get CSVdata() {
+        const {presale, t, members} = this.props;
+        return members.map(member => {
+            const baseData = {
+                [t(`${this.TRANSLATE_PREFIX}.columns.name`)]: member.name,
+                [t(`${this.TRANSLATE_PREFIX}.columns.email`)]: member.email,
+                [t(`${this.TRANSLATE_PREFIX}.columns.phone`)]: member.cell_phone
+            };
+            const preSaleData = presale ? {
+                [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
+                [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
+                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.presaleAllocations[member.user_id],
+                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberAllocationPermission(member.user_id)
+            } : {};
+            return { ...baseData, ...preSaleData}
+        })
+    }
+
     render() {
-        const {t, members, presale, tickets, ticketCount} = this.props;
+        const {t, members, presale, ticketCount} = this.props;
         return (
             <div>
                 <Input
@@ -133,12 +185,12 @@ class BaseGroupMembers extends React.Component {
                                     <td>{member.cell_phone}</td>
                                     <PermissableComponent permitted={ticketCount}>
                                         <td>
-                                            {this.getMemberTicketCount(tickets, member.user_id)}
+                                            {this.getMemberTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={ticketCount}>
                                         <td>
-                                            {this.getMemberTransfferedTicketCount(tickets, member.user_id)}
+                                            {this.getMemberTransfferedTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
@@ -158,6 +210,7 @@ class BaseGroupMembers extends React.Component {
                         })}
                     </TableBody>
                 </Table>
+                <TableSummery csvName={`GroupMembersSummery - ${(new Date).toDateString()}.csv`} sums={this.tableSums} csvData={this.CSVdata}/>
             </div>
 
 

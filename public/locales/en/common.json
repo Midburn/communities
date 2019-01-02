@@ -26,6 +26,7 @@
   "manage": "Manage",
   "actions": "Actions",
   "saveChanges": "Save changes",
+  "export": "Export to Excel",
   "nav": {
     "gate": {
       "manage": "Entry management",
@@ -63,6 +64,13 @@
       "tickets": "Purchased tickets",
       "ticketsTransferred": "Transferred tickets",
       "allowToAllocate": "Allow this member to allocate tickets"
+    },
+    "sums": {
+      "ticketsAll": "Purchased tickets",
+      "ticketsTransferred": "Transferred tickets",
+      "members": "Members",
+      "allocated": "Allocated",
+      "quota": "Quota"
     }
   }
 }

@@ -64,7 +64,13 @@
         "totalPurchased": "כרטיסים שנרכשו",
         "totalEntered": "נכנסו לאירוע הקודם",
         "quota": "מכסה",
-        "noQuota": "הקצה"
+        "noQuota": "הקצה",
+        "sums": {
+          "groups": "מחנות נושא",
+          "members": "חברים",
+          "ticketsAll": "כרטיסים שנרכשו",
+          "allocated": "הוקצאו"
+        }
       }
     },
     "groupLeader": {

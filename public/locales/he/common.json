@@ -27,6 +27,7 @@
   "manage": "נהל",
   "actions": "פעולות",
   "saveChanges": "שמור שינויים",
+  "export": "ייצא לאקסל",
   "nav": {
     "gate": {
       "manage": "ניהול כניסות",
@@ -63,7 +64,14 @@
       "presale": "הוקצה כרטיס הוקרה?",
       "tickets": "כרטיסים שנרכשו",
       "ticketsTransferred": "כרטיסים שהועברו",
-      "allowToAllocate": "אשר לחבר זה להקצות כרטיסים"
+      "allowToAllocate": "אשר להקצות כרטיסים"
+    },
+    "sums": {
+      "ticketsAll": "כרטיסים שנרכשו",
+      "ticketsTransferred": "כרטיסים שהועברו",
+      "members": "חברים",
+      "allocated": "הוקצאו",
+      "quota": "מכסה"
     }
   }
 }
