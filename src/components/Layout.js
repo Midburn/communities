@@ -38,11 +38,14 @@ export class BaseLayout extends Component {
         return (
             <div className="Layout">
                 { this.state.loading ? <Loader /> :
-                    <Switch>
-                        <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
-                        <Redirect path="/" to="/he/camps"  exact />
-                        <Route component={NotFound}/>
-                    </Switch> }
+                    <div>
+                        <Switch>
+                            <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
+                            <Redirect path="/" to="/he/camps"  exact />
+                            <Route component={NotFound}/>
+                        </Switch>
+                    </div>
+                     }
             </div>
         );
     }

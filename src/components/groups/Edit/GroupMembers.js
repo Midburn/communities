@@ -101,22 +101,21 @@ class BaseGroupMembers extends React.Component {
     }
 
     get tableSums() {
-        const {t, members, presale} = this.props;
-        let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, quota = 0;
+        const {t, members, presale, group} = this.props;
+        let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
         for (const member of members) {
             allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
             allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            quota += this.presaleAllocations[member.user_id] ? 1 : 0;
+            totalAllocated += this.presaleAllocations[member.user_id] ? 1 : 0;
         }
-        const allocated = Object.keys(this.presaleAllocations).filter(key => !!this.presaleAllocations[key]).length;
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
         };
         const preSaleSums = presale ? {
             [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: allPurchasedTicketsCount,
             [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
-            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: allocated,
-            [t(`${this.TRANSLATE_PREFIX}.sums.quota`)]: quota
+            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: totalAllocated,
+            [t(`${this.TRANSLATE_PREFIX}.sums.quota`)]: group.pre_sale_tickets_quota || 0,
         } : {};
         return {
             ...baseSums,

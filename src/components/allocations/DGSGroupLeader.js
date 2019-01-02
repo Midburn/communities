@@ -90,7 +90,7 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers presale={true} ticketCount={true} match={match} tickets={this.tickets || []} members={this.members || []}/>
+                        <GroupMembers group={this.group} presale={true} ticketCount={true} match={match} tickets={this.tickets || []} members={this.members || []}/>
                     </Col>
                 </Row>
             </div>
