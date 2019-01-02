@@ -1,6 +1,5 @@
 import React from "react";
 import { MDBBtn } from "mdbreact";
-import FlipMove from 'react-flip-move';
 /**
  * tabs interface - {
  *     key: number | string;
@@ -11,11 +10,13 @@ import FlipMove from 'react-flip-move';
  * @param selectedId - string | number;
  * @constructor
  */
-export const Tabs = ({tabs, selectedId, onSelect, color}) => {
+export class Tabs extends React.Component {
 
-    return (
-        <div>
-            <div className="d-flex flex-wrap">
+    render() {
+        const {tabs, selectedId, onSelect, color} = this.props;
+        return (
+            <div>
+                <div className="d-flex flex-wrap">
                     {(tabs || []).map(tab => {
                         return <MDBBtn
                             key={tab.id}
@@ -25,13 +26,13 @@ export const Tabs = ({tabs, selectedId, onSelect, color}) => {
                             {tab.title}
                         </MDBBtn>
                     })}
+                </div>
+                {(tabs || []).map((tab, index) => {
+                    return tab.id === selectedId ? tab.component : null
+                })}
             </div>
-            <FlipMove>
-                    {(tabs || []).map((tab, index) => {
-                        return tab.id === selectedId ? tab.component : null
-                    })}
-            </FlipMove>
-        </div>
-    );
+        );
+    }
+
 
 };

@@ -21,5 +21,56 @@
   "join": "Join",
   "view": "View",
   "since": "Since",
-  "edit": "Edit"
+  "edit": "Edit",
+  "volunteering": "Volunteering",
+  "manage": "Manage",
+  "actions": "Actions",
+  "saveChanges": "Save changes",
+  "export": "Export to Excel",
+  "nav": {
+    "gate": {
+      "manage": "Entry management",
+      "suppliers": "Suppliers entries",
+      "title": "Gate"
+    },
+    "management": {
+      "title": "Manage",
+      "suppliers": "Suppliers management",
+      "files": "Files management",
+      "events": "Events management"
+    },
+    "camps": {
+      "title": "Camps",
+      "search": "Find camps",
+      "my": "My camp",
+      "manage": "Manage my camp",
+      "management": "Manage camps"
+    },
+    "arts": {
+      "title": "Art installations",
+      "search": "Find Art installations",
+      "my": "My Art installation",
+      "manage": "Manage my Art installation",
+      "management": "Manage Art installations"
+    }
+  },
+  "members": {
+    "search": "Search members",
+    "columns": {
+      "name": "Full name",
+      "email": "Email address",
+      "phone": "Phone number",
+      "presale": "Presale ticket allocated?",
+      "tickets": "Purchased tickets",
+      "ticketsTransferred": "Transferred tickets",
+      "allowToAllocate": "Allow this member to allocate tickets"
+    },
+    "sums": {
+      "ticketsAll": "Purchased tickets",
+      "ticketsTransferred": "Transferred tickets",
+      "members": "Members",
+      "allocated": "Allocated",
+      "quota": "Quota"
+    }
+  }
 }

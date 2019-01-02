@@ -7,8 +7,11 @@ export class AuthService {
     async auth() {
         try {
             const response = await axios.get(`/api/v1/user`, { withCredentials: true });
-            state._loggedUser = response.data.body.user;
-            return true;
+            const { user, currentEventId } = response.data.body;
+            return {
+                loggedUser: user,
+                currentEventId
+            };
         } catch (e) {
             throw e;
         }

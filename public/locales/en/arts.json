@@ -1,19 +1,19 @@
 {
   "search": {
-    "title": "Search Camps",
-    "notFound": "No Camps found for term - '{{q}}'"
+    "title": "Search Art installations",
+    "notFound": "No Art installations found for term - '{{q}}'"
   },
   "single": {
     "header": {
-      "description": "Camp's description"
+      "description": "Art installation's description"
     },
     "publication": {
       "title": "Publication",
-      "body": "The details here will be shown in the web-site, if camp is published.",
+      "body": "The details here will be shown in the web-site, if art installation is published.",
       "contactTitle": "Contact Person",
       "facebook": "Facebook link",
       "details": {
-        "title": "Camp Details",
+        "title": "Art installation Details",
         "children": "Child friendly",
         "openMembers": "Open to new members",
         "art": "Art",
@@ -33,39 +33,39 @@
         "suppliers": "Suppliers"
       },
       "info": {
-        "nameTitle": "Camp Name & Description",
+        "nameTitle": "Art installation Name & Description",
         "publicationTitle": "Midburn Website Publication",
-        "contactsTitle": "Camp Contact Personnel",
+        "contactsTitle": "Art installation Contact Personnel",
         "facebookLink": "Facebook Page Link",
         "contactPerson": "Contact Person {{type}}",
-        "mainContact": "Camp Manager",
+        "mainContact": "Art installation Manager",
         "moopContact": "Moop Contact",
         "safetyContact": "Safety Contact",
-        "campsOpen": "Is the camp open for new members?",
+        "campsOpen": "Is the art installation open for new members?",
         "acceptFamilies": "Accept Families?"
       }
     }
   },
   "joinModal": {
-    "header": "Join camp request",
-    "body": "You're about to request camp {{name}} to join, are you sure?"
+    "header": "Join art installation request",
+    "body": "You're about to request art installation {{name}} to join, are you sure?"
   },
   "management": {
-    "header": "Manage Camps",
+    "header": "Manage Art Installations",
     "tabs": {
-      "groups": "Camps management",
+      "groups": "Art installations management",
       "presale": "Appreciation tickets management"
     },
     "allocations": {
-      "header": "Manage camps appreciation tickets quota",
-      "description": "Allocate appreciation tickets quota to camps participating in the last event",
+      "header": "Manage art installations appreciation tickets quota",
+      "description": "Allocate appreciation  tickets quota to art installations participating in the last event"
     },
     "table": {
-      "search": "Search camps",
-      "groupName": "Camp name",
-      "leaderName": "Camp leader",
+      "search": "Search art installations",
+      "groupName": "Installation name",
+      "leaderName": "Installation leader",
       "leaderEmail": "Leader's Email",
-      "leaderPhone": "Leader phone",
+      "leaderPhone": "Leader's phone",
       "totalMembers": "Total members",
       "totalPurchased": "Total purchased",
       "totalEntered": "Total entered former event",
@@ -73,7 +73,7 @@
       "noQuota": "Allocate"
     },
     "sums": {
-      "groups": "Camps",
+      "groups": "Art Installations",
       "members": "Members",
       "ticketsAll": "Purchased tickets",
       "allocated": "Allocated"
@@ -81,6 +81,6 @@
   },
   "groupLeader": {
     "header": "Allocate pre-sale tickets",
-    "description": "Allocate pre-sale tickets for your camp members from former event"
+    "description": "Allocate pre-sale tickets for your art installation members from former event"
   }
 }
