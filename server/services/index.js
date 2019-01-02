@@ -3,9 +3,11 @@
  * @type {{}}
  */
 const configService = require('./config'),
-    sparkService = require('./spark');
+    sparkService = require('./spark'),
+    dbService = require('./database');
 
 module.exports = {
     config: configService,
-    spark: sparkService
+    spark: sparkService,
+    db: dbService
 };
