@@ -19,7 +19,7 @@ const CSV = (props) => {
                     tag="div"
                     color={'primary'}
                     tooltipContent={t('export')}>
-                    <MDBIcon icon="file-excel-o"></MDBIcon>
+                    <MDBIcon size="lg" icon="file-excel-o"></MDBIcon>
                 </MDBTooltip>
             </CSVLink>
 
