@@ -30,6 +30,7 @@ export class InitilizationService {
         state.artInstallations = await this.groups.getOpenArts();
         state.userGroups = await this.groups.getUserGroups();
         state.currentEvent = await this.events.getEvent(state.currentEventId);
+        state.allocationGroups = (await this.groups.getPresaleAllocationGroups(state.loggedUser.id)) || [];
     }
 
     async init() {

@@ -5,6 +5,7 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
 import { TableSummery } from '../../controls/TableSummery';
+import { WarningModal } from '../../controls/WarningModal';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -15,13 +16,13 @@ class BaseGroupMembers extends React.Component {
     query = '';
 
     @observable
-    presaleAllocations = {};
-
-    @observable
     memberPermissions = {};
 
     @observable
     tickets = [];
+
+    @observable
+    allocationWarning = false;
 
     @action
     handleChange = (e) => {
@@ -46,7 +47,24 @@ class BaseGroupMembers extends React.Component {
     }
 
     changePresaleAllocation = (memberId, e) => {
-        this.presaleAllocations[memberId] = e.target.checked;
+        const {group, members} = this.props;
+        let totalAllocated = 0;
+        const quota = group.pre_sale_tickets_quota || 0;
+        for (const member of members) {
+            totalAllocated += member.pre_sale_allocation ? 1 : 0;
+        }
+        if (!!e.target.checked && quota <= totalAllocated) {
+            // There no more allocations
+            this.toggleAllocationWarning();
+            setTimeout(() => {
+                if (this.allocationWarning) {
+                    this.toggleAllocationWarning();
+                }
+            }, 5000);
+            return;
+        }
+        const member = members.find(m => m.user_id === memberId);
+        member.pre_sale_ticket = e.target.checked;
     };
 
     getMemberTicketCount(memberId) {
@@ -67,7 +85,7 @@ class BaseGroupMembers extends React.Component {
 
     getMemberAllocationPermission(memberId) {
         if (!this.memberPermissions[memberId]) {
-            return false;
+            return this.memberPermissions[memberId];
         }
         // TODO - replace
         return this.memberPermissions[memberId].includes('allocatePresale');
@@ -106,7 +124,7 @@ class BaseGroupMembers extends React.Component {
         for (const member of members) {
             allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
             allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            totalAllocated += this.presaleAllocations[member.user_id] ? 1 : 0;
+            totalAllocated += member.pre_sale_ticket ? 1 : 0;
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
@@ -136,17 +154,26 @@ class BaseGroupMembers extends React.Component {
             const preSaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
-                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.presaleAllocations[member.user_id],
+                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: member.pre_sale_ticket,
                 [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberAllocationPermission(member.user_id)
             } : {};
-            return { ...baseData, ...preSaleData}
+            return {...baseData, ...preSaleData}
         })
+    }
+
+    toggleAllocationWarning = () => {
+        this.allocationWarning = !this.allocationWarning;
     }
 
     render() {
         const {t, members, presale, ticketCount} = this.props;
         return (
             <div>
+                <WarningModal
+                    isOpen={this.allocationWarning}
+                    title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
+                    toggle={this.toggleAllocationWarning}
+                    text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
                 <Input
                     className="form-control"
                     type="text"
@@ -196,13 +223,15 @@ class BaseGroupMembers extends React.Component {
                                     <PermissableComponent permitted={presale}>
                                         <td>
                                             <input onChange={(e) => this.changePresaleAllocation(member.user_id, e)}
-                                                   checked={this.presaleAllocations[member.user_id]} type="checkbox"/>
+                                                   checked={member.pre_sale_ticket} type="checkbox"/>
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
                                         <td>
-                                            <input onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
-                                                   checked={this.getMemberAllocationPermission(member.user_id)} type="checkbox"/>
+                                            <input
+                                                onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
+                                                checked={this.getMemberAllocationPermission(member.user_id)}
+                                                type="checkbox"/>
                                         </td>
                                     </PermissableComponent>
                                 </tr>
@@ -210,7 +239,8 @@ class BaseGroupMembers extends React.Component {
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums} csvData={this.CSVdata}/>
+                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
+                              csvData={this.CSVdata}/>
             </div>
 
 

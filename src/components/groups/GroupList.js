@@ -8,11 +8,16 @@ import { withRouter } from 'react-router-dom';
 import { JoinGroupModal } from './JoinGroupModal';
 import { observable } from 'mobx';
 import { GroupsService } from '../../services/groups';
+import { PermissableComponent } from '../controls/PermissableComponent';
+import { PermissionService } from '../../services/permissions';
+import { ParsingService } from '../../services/parsing';
 
 @observer
 class BaseGroupList extends React.Component {
 
     groupsService = new GroupsService();
+    permissionService = new PermissionService();
+    parsingService = new ParsingService();
 
     @observable
     isJoinCampModal = false;
@@ -72,7 +77,10 @@ class BaseGroupList extends React.Component {
                                         {this.groupsService.getPropertyByLang(group, 'description')}
                                     </CardText>
                                     <Button onClick={() => this.viewGroup(group.id)}>{t('view')}</Button>
-                                    <Button onClick={() => this.joinCamp(group.id)}>{t('join')}</Button>
+                                    <PermissableComponent
+                                        permitted={!this.permissionService.hasGroup(this.parsingService.getGroupTypeFromString(match.params.groupType))}>
+                                        <Button onClick={() => this.joinCamp(group.id)}>{t('join')}</Button>
+                                    </PermissableComponent>
                                 </CardBody>
                             </Card>
                         );

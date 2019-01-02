@@ -16,6 +16,9 @@ class State {
     @observable
     currentEvent = {};
 
+    @observable
+    allocationGroups = [];
+
     _data = {};
 
     set camps(val) {

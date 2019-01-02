@@ -23,6 +23,11 @@ class BaseDGSGroupLeader extends React.Component {
     @observable
     tickets = [];
 
+    constructor(props) {
+        super(props);
+        this.getGroupData(props);
+    }
+
     componentWillReceiveProps(props) {
         this.getGroupData(props);
     }
@@ -37,8 +42,9 @@ class BaseDGSGroupLeader extends React.Component {
             }
             this.group = group;
             try {
-                this.members = await this.groupService.getCampsMembers(this.group.id);
+                this.members = await this.groupService.getCampsMembers(this.group.id, this.eventsService.getFormerEventId());
             } catch (e) {
+                console.warn(e.stack);
                 // TODO - what do we do with errors ?
                 this.members = [];
                 this.error = e;
@@ -51,10 +57,12 @@ class BaseDGSGroupLeader extends React.Component {
                     this.tickets = tickets;
                 }
             } catch (e) {
+                console.warn(e.stack);
                 // TODO - what do we do with errors?
                 this.tickets = [];
             }
         } catch (e) {
+            console.warn(e.stack);
             this.error = e;
         }
     }
@@ -70,7 +78,7 @@ class BaseDGSGroupLeader extends React.Component {
 
     get TRANSLATE_PREFIX() {
         const {match} = this.props;
-        return `${match.params.groupType}:allocations.groupLeader`;
+        return `${match.params.groupType}:groupLeader`;
     }
 
     render() {
