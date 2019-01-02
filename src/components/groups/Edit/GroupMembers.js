@@ -24,6 +24,8 @@ class BaseGroupMembers extends React.Component {
     @observable
     allocationWarning = false;
 
+    allocationTimeout = null
+
     @action
     handleChange = (e) => {
         this.query = e.target.value;
@@ -55,6 +57,9 @@ class BaseGroupMembers extends React.Component {
         }
         if (!!e.target.checked && quota <= totalAllocated) {
             // There no more allocations
+            if (this.allocationTimeout) {
+                clearTimeout(this.allocationTimeout);
+            }
             this.toggleAllocationWarning();
             setTimeout(() => {
                 if (this.allocationWarning) {

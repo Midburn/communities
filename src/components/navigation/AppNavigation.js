@@ -25,12 +25,14 @@ import { AbsoluteNavLink } from './AbsoluteNavLink';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { ParsingService } from '../../services/parsing';
 import { PermissionService } from '../../services/permissions';
+import { EventRulesService } from '../../services/event-rules';
 
 class BaseAppNavigation extends Component {
 
     auth = new AuthService();
     parsingService = new ParsingService();
     permissionsService = new PermissionService();
+    eventRules = new EventRulesService();
 
     state = {
         collapse: false,
@@ -173,7 +175,7 @@ class BaseAppNavigation extends Component {
                         {state.allocationGroups.map(group => {
                             return (
                                 <PermissableComponent key={group.id}
-                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype]}>
+                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] && this.eventRules.isPresaleAvailable}>
                                     <NavItem onClick={this.toggleCollapse}>
                                         <NavLink
                                             to={`/${lng}/${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
