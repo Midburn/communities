@@ -45,7 +45,8 @@
       "my": "My camp",
       "manage": "Manage my camp",
       "management": "Manage camps",
-      "allocate": "Allocate tickets for my camp"
+      "allocate": "Allocate tickets for my camp",
+      "allocateAdmin": "Manage camps allocations"
     },
     "arts": {
       "title": "Art installations",
@@ -53,7 +54,8 @@
       "my": "My Art installation",
       "manage": "Manage my Art installation",
       "management": "Manage Art installations",
-      "allocate": "Allocate tickets for my art installation"
+      "allocate": "Allocate tickets for my art installation",
+      "allocateAdmin": "Manage art installations allocations"
     }
   },
   "members": {

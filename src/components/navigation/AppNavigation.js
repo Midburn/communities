@@ -185,6 +185,20 @@ class BaseAppNavigation extends Component {
                                 </PermissableComponent>
                             );
                         })}
+                        {this.state.links.map(groupType => {
+                            // TODO - not only admin - more roles needed.
+                            return (
+                                <PermissableComponent key={groupType}
+                                                      permitted={!!this.permissionsService.isAdmin() && this.eventRules.isPresaleAvailable}>
+                                    <NavItem onClick={this.toggleCollapse}>
+                                        <NavLink
+                                            to={`/${lng}/${this.parsingService.getPlural(groupType)}/allocations`}>
+                                            {t(`nav.${this.parsingService.getPlural(groupType)}.allocateAdmin`)}
+                                        </NavLink>
+                                    </NavItem>
+                                </PermissableComponent>
+                            );
+                        })}
                         <NavItem>
                             <Dropdown id="basic-nav-dropdown">
                                 <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
