@@ -7,7 +7,7 @@
     "header": {
       "description": "תיאור המחנה"
     },
-    "publication":  {
+    "publication": {
       "title": "פרסום המחנה",
       "body": "הפרטים הרשומים מטה יופיעו באתר במידה והמחנה מפורסם.",
       "contactTitle": "איש קשר",
@@ -50,28 +50,33 @@
     "header": "בקשת הצטרפות למחנה",
     "body": "אתה הולך לבקש להצטרף למחנה {{name}}, האם את/ה בטוח/ה?"
   },
-  "allocations": {
-    "dgsAdmin": {
+  "management": {
+    "header": "נהל מחנות נושא",
+    "tabs": {
+      "groups": "ניהול מחנות נושא",
+      "presale": "ניהול כרטיסי הוקרה"
+    },
+    "allocations": {
       "header": "ניהול הקצאות כרטיסי הוקרה למחנות נושא",
-      "description": "הקצה כמות כרטיסי הוקרה לשימוש מחנות אשר השתתפו באירוע הקודם",
-      "table": {
-        "search": "חפש מחנות",
-        "groupName": "שם המחנה",
-        "leaderName": "מוביל המחנה",
-        "leaderEmail": "אימייל מוביל המחנה",
-        "leaderPhone": "טלפון מוביל המחנה",
-        "totalMembers": "כמות חברי מחנה",
-        "totalPurchased": "כרטיסים שנרכשו",
-        "totalEntered": "נכנסו לאירוע הקודם",
-        "quota": "מכסה",
-        "noQuota": "הקצה"
-      },
-      "sums": {
-        "groups": "מיצבים",
-        "members": "חברים",
-        "ticketsAll": "כרטיסים שנרכשו",
-        "allocated": "הוקצאו"
-      }
+      "description": "הקצה כמות כרטיסי הוקרה לשימוש מחנות אשר השתתפו באירוע הקודם"
+    },
+    "table": {
+      "search": "חפש מחנות",
+      "groupName": "שם המחנה",
+      "leaderName": "מוביל המחנה",
+      "leaderEmail": "אימייל מוביל המחנה",
+      "leaderPhone": "טלפון מוביל המחנה",
+      "totalMembers": "כמות חברי מחנה",
+      "totalPurchased": "כרטיסים שנרכשו",
+      "totalEntered": "נכנסו לאירוע הקודם",
+      "quota": "מכסה",
+      "noQuota": "הקצה"
+    },
+    "sums": {
+      "groups": "מחנות נושא",
+      "members": "חברים",
+      "ticketsAll": "כרטיסים שנרכשו",
+      "allocated": "הוקצאו"
     }
   },
   "groupLeader": {

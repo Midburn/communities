@@ -7,7 +7,7 @@
     "header": {
       "description": "תיאור המיצב"
     },
-    "publication":  {
+    "publication": {
       "title": "פרסום המיצב",
       "body": "הפרטים הרשומים מטה יופיעו באתר במידה והמיצב מפורסם.",
       "contactTitle": "איש קשר",
@@ -50,32 +50,37 @@
     "header": "בקשת הצטרפות למיצב",
     "body": "אתה הולך לבקש להצטרף למיצב {{name}}, האם את/ה בטוח/ה?"
   },
-  "allocations": {
-    "dgsAdmin": {
-      "header": "ניהול הקצאות כרטיסי הוקרה למיצבים",
-      "description": "הקצה כמות כרטיסי הוקרה לשימוש מיצבים אשר השתתפו באירוע הקודם",
-      "table": {
-        "search": "חפש מיצב",
-        "groupName": "שם המיצב",
-        "leaderName": "מוביל המיצב",
-        "leaderEmail": "אימייל מוביל המיצב",
-        "leaderPhone": "טלפון מוביל המיצב",
-        "totalMembers": "כמות חברי מיצב",
-        "totalPurchased": "כרטיסים שנרכשו",
-        "totalEntered": "נכנסו לאירוע הקודם",
-        "quota": "מכסה",
-        "noQuota": "הקצה",
-        "sums": {
-          "groups": "מחנות נושא",
-          "members": "חברים",
-          "ticketsAll": "כרטיסים שנרכשו",
-          "allocated": "הוקצאו"
-        }
-      }
+  "management": {
+    "header": "נהל מיצבים",
+    "tabs": {
+      "groups": "ניהול מיצבים",
+      "presale": "ניהול כרטיסי הוקרה"
     },
-    "groupLeader": {
-      "header": "הקצאת כרטיסי הוקרה",
-      "description": "הקצה כרטיסי הוקרה לחברי המיצב שלך מהאירוע הקודם"
+    "allocations": {
+      "header": "ניהול הקצאות כרטיסי הוקרה למיצבים",
+      "description": "הקצה כמות כרטיסי הוקרה לשימוש מיצבים אשר השתתפו באירוע הקודם"
+    },
+    "table": {
+      "search": "חפש מיצב",
+      "groupName": "שם המיצב",
+      "leaderName": "מוביל המיצב",
+      "leaderEmail": "אימייל מוביל המיצב",
+      "leaderPhone": "טלפון מוביל המיצב",
+      "totalMembers": "כמות חברי מיצב",
+      "totalPurchased": "כרטיסים שנרכשו",
+      "totalEntered": "נכנסו לאירוע הקודם",
+      "quota": "מכסה",
+      "noQuota": "הקצה"
+    },
+    "sums": {
+      "groups": "מיצבים",
+      "members": "חברים",
+      "ticketsAll": "כרטיסים שנרכשו",
+      "allocated": "הוקצאו"
     }
+  },
+  "groupLeader": {
+    "header": "הקצאת כרטיסי הוקרה",
+    "description": "הקצה כרטיסי הוקרה לחברי המיצב שלך מהאירוע הקודם"
   }
 }
