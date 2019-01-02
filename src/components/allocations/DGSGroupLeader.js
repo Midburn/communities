@@ -80,12 +80,12 @@ class BaseDGSGroupLeader extends React.Component {
             <div>
                 <Row>
                     <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} ({this.eventsService.getFormerEventId()})</h1>
+                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)}</h1>
                     </Col>
                 </Row>
                 <Row>
                     <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)}</p>
+                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
                     </Col>
                 </Row>
                 <Row>
