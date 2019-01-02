@@ -49,6 +49,7 @@
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "mysql2": "^1.6.4",
+    "moment": "^2.23.0",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.1.0",

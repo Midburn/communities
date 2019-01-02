@@ -25,12 +25,14 @@ import { AbsoluteNavLink } from './AbsoluteNavLink';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { ParsingService } from '../../services/parsing';
 import { PermissionService } from '../../services/permissions';
+import { EventRulesService } from '../../services/event-rules';
 
 class BaseAppNavigation extends Component {
 
     auth = new AuthService();
     parsingService = new ParsingService();
     permissionsService = new PermissionService();
+    eventRules = new EventRulesService();
 
     state = {
         collapse: false,
@@ -155,7 +157,8 @@ class BaseAppNavigation extends Component {
                                         </PermissableComponent>
                                         {this.state.links.map(groupType => {
                                             return (
-                                                <PermissableComponent key={groupType} permitted={this.permissionsService.isAdmin()}>
+                                                <PermissableComponent key={groupType}
+                                                                      permitted={this.permissionsService.isAdmin()}>
                                                     <DropdownItem onClick={this.toggleCollapse}>
                                                         <NavLink
                                                             to={`/${lng}/${this.parsingService.getPlural(groupType)}/management`}>{t(`nav.${this.parsingService.getPlural(groupType)}.management`)}</NavLink>
@@ -169,6 +172,33 @@ class BaseAppNavigation extends Component {
                         </PermissableComponent>
                     </NavbarNav>
                     <NavbarNav className="right-nav" right>
+                        {state.allocationGroups.map(group => {
+                            return (
+                                <PermissableComponent key={group.id}
+                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] && this.eventRules.isPresaleAvailable}>
+                                    <NavItem onClick={this.toggleCollapse}>
+                                        <NavLink
+                                            to={`/${lng}/${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
+                                            {t(`nav.${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}.allocate`)}
+                                        </NavLink>
+                                    </NavItem>
+                                </PermissableComponent>
+                            );
+                        })}
+                        {this.state.links.map(groupType => {
+                            // TODO - not only admin - more roles needed.
+                            return (
+                                <PermissableComponent key={groupType}
+                                                      permitted={!!this.permissionsService.isAdmin() && this.eventRules.isPresaleAvailable}>
+                                    <NavItem onClick={this.toggleCollapse}>
+                                        <NavLink
+                                            to={`/${lng}/${this.parsingService.getPlural(groupType)}/allocations`}>
+                                            {t(`nav.${this.parsingService.getPlural(groupType)}.allocateAdmin`)}
+                                        </NavLink>
+                                    </NavItem>
+                                </PermissableComponent>
+                            );
+                        })}
                         <NavItem>
                             <Dropdown id="basic-nav-dropdown">
                                 <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>

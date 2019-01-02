@@ -5,6 +5,7 @@ import { PermissableComponent } from '../controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { GroupsService } from '../../services/groups';
 import { ParsingService } from '../../services/parsing';
+import { EventRulesService } from '../../services/event-rules';
 
 /**
  * Renders drop down based on group type
@@ -17,6 +18,7 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
     const groupsService = new GroupsService();
     const permissionsService = new PermissionService();
     const parsingService = new ParsingService();
+    const eventRulesService = new EventRulesService();
 
     function getTranslateModule() {
         return `nav.${parsingService.getPlural(type)}`;
@@ -43,7 +45,7 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
                         </DropdownItem>
                     </PermissableComponent>
                     {/*MANAGE MY GROUP LINK*/}
-                    <PermissableComponent permitted={permissionsService.isGroupManager(type)}>
+                    <PermissableComponent permitted={permissionsService.isGroupManager(type) && !eventRulesService.isGroupEditingDisabled(type)}>
                         <DropdownItem onClick={onClick}>
                             <NavLink
                                 to={`/${lng}/${parsingService.getPlural(type)}/${getMyGroupId()}/manage`}>{t(`${getTranslateModule()}.manage`)}</NavLink>

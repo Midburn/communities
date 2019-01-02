@@ -44,18 +44,26 @@
       "search": "Find camps",
       "my": "My camp",
       "manage": "Manage my camp",
-      "management": "Manage camps"
+      "management": "Manage camps",
+      "allocate": "Allocate tickets for my camp",
+      "allocateAdmin": "Manage camps allocations"
     },
     "arts": {
       "title": "Art installations",
       "search": "Find Art installations",
       "my": "My Art installation",
       "manage": "Manage my Art installation",
-      "management": "Manage Art installations"
+      "management": "Manage Art installations",
+      "allocate": "Allocate tickets for my art installation",
+      "allocateAdmin": "Manage art installations allocations"
     }
   },
   "members": {
     "search": "Search members",
+    "allocationWarning": {
+      "title": "Quota full",
+      "text": "You have reached the allocated quota."
+    },
     "columns": {
       "name": "Full name",
       "email": "Email address",

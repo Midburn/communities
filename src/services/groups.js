@@ -1,9 +1,11 @@
 import i18n from './i18n';
 import axios from 'axios';
 import { state } from '../models/state';
+import { EventsService } from './events';
 
 export class GroupsService {
 
+    eventService = new EventsService();
 
     async getGroup(id) {
         try {
@@ -29,9 +31,9 @@ export class GroupsService {
         }
     }
 
-    async getCampsMembers(campId) {
+    async getCampsMembers(campId, eventId) {
         try {
-            return (await axios.get(`/api/v1/spark/camps/${campId}/members`, {withCredentials: true})).data.body.members;
+            return (await axios.get(`/api/v1/spark/camps/${campId}/members?eventId=${eventId || ''}`, {withCredentials: true})).data.body.members;
         } catch (e) {
             console.warn(`Error fetching camp members ${e.stack}`);
         }
@@ -53,9 +55,9 @@ export class GroupsService {
         }
     }
 
-    async getUserGroups() {
+    async getUserGroups(eventId) {
         try {
-            return (await axios.get(`/api/v1/spark/usersGroups`, {withCredentials: true})).data.body;
+            return (await axios.get(`/api/v1/spark/usersGroups?eventId=${eventId || ''}`, {withCredentials: true})).data.body;
         } catch (e) {
             console.warn(`Error fetching camp members ${e.stack}`);
         }
@@ -109,6 +111,15 @@ export class GroupsService {
             if (g.group_type.toLowerCase().includes(type)) {
                 return g.group_id;
             }
+        }
+    }
+
+    async getPresaleAllocationGroups(memberId) {
+        try {
+            const groups = (await this.getUserGroups(this.eventService.getFormerEventId())).groups;
+            return await Promise.all(groups.map(group => this.getGroup(group.group_id)));
+        } catch (e) {
+            console.warn('Error getting allocation data');
         }
     }
 }

@@ -35,7 +35,7 @@ class BaseMain extends React.Component {
                                 <CardBody className="MainPanel">
                                     <Switch>
                                         <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
-                                        <Route path="/:lng(en|he)/:groupType/allocations/admin" component={PresaleAdmin} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/allocations" component={PresaleAdmin} exact/>
                                         <Route path="/:lng(en|he)/:groupType/management" component={GroupsManagement} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/allocations" component={PresaleGroupLeader} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id" component={Group} exact/>

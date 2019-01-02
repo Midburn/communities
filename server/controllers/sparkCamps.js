@@ -81,7 +81,11 @@ module.exports = class SparkCampsController {
 
     async getUsersGroups(req, res, next) {
         try {
-            const groups = (await this.spark.get(`my_groups`, req.headers)).data;
+            let path = `my_groups`;
+            if (req.query.eventId) {
+                path += `?eventId=${req.query.eventId}`;
+            }
+            const groups = (await this.spark.get(path, req.headers)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
