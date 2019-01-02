@@ -1,13 +1,11 @@
 import React from 'react';
-import { FormInline, Fa, Input, Col, Row } from 'mdbreact';
+import { Col, Row } from 'mdbreact';
 import { withI18n } from 'react-i18next';
-import { observable, action, computed } from 'mobx';
+import { observable, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { GroupList } from './GroupList';
 import { state } from '../../models/state';
 import * as constants from '../../../models/constants';
 import { GroupsTable } from './GroupsTable';
-import { EventsService } from '../../services/events';
 import { ParsingService } from '../../services/parsing';
 import { GroupsService } from '../../services/groups';
 import { Tabs } from '../controls/Tabs';
@@ -132,10 +130,6 @@ class BaseGroupsManagement extends React.Component {
                 <Row>
                     <Col md="12">
                         <h1>{t(`${this.getTranslatePath(type)}.header`)}</h1>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="12">
                     </Col>
                 </Row>
                 <Row>

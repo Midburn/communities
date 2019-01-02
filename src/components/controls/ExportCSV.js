@@ -1,15 +1,13 @@
 import React from 'react';
 import { CSVLink } from 'react-csv';
-import { Button, MDBIcon, MDBTooltip } from 'mdbreact';
+import { MDBIcon, MDBTooltip } from 'mdbreact';
 import { withI18n } from 'react-i18next';
 
 const CSV = (props) => {
-    let csvLink;
     const {t, data, filename} = props;
     return (
         <div>
-            <CSVLink ref={csv => csvLink = csv}
-                     data={data}
+            <CSVLink data={data}
                      filename={filename}
                      target="_blank">
                 <MDBTooltip

@@ -210,7 +210,7 @@ class BaseGroupMembers extends React.Component {
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date).toDateString()}.csv`} sums={this.tableSums} csvData={this.CSVdata}/>
+                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums} csvData={this.CSVdata}/>
             </div>
 
 
