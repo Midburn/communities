@@ -58,6 +58,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.6.3",
     "react-app-polyfill": "^0.1.3",
+    "react-csv": "^1.0.19",
     "react-dev-utils": "^6.1.1",
     "react-dom": "^16.6.3",
     "react-flags": "^0.1.17",
@@ -72,13 +73,14 @@
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.1",
+    "uuid": "^3.3.2",
     "webpack": "4.19.1",
     "webpack-dev-server": "3.1.9",
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "3.6.3"
   },
   "scripts": {
-    "start": "cross-env PORT=3006 node scripts/start.js",
+    "start": "cross-env NODE_ENV=production node server/server.js",
     "start:server": "cross-env NODE_ENV=production node server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"

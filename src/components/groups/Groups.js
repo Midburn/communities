@@ -1,12 +1,14 @@
 import React from 'react';
 import { FormInline, Fa, Input, Col, Row } from 'mdbreact';
 import { withI18n } from 'react-i18next';
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { CampList } from './CampList';
+import { GroupList } from './GroupList';
 import { state } from '../../models/state';
+import * as constants from '../../../models/constants';
+
 @observer
-class BaseCamps extends React.Component {
+class BaseGroups extends React.Component {
 
     @observable
     query = '';
@@ -16,13 +18,25 @@ class BaseCamps extends React.Component {
         this.query = e.target.value;
     };
 
+    getTranslatePath(type) {
+        return `${type}:`;
+    }
+
+    @computed
+    get listData() {
+        const {match} = this.props;
+        const type = match.params.groupType;
+        return type.includes(constants.GROUP_TYPES.CAMP) ? state.camps : state.artInstallations
+    }
+
     render() {
-        const {t} = this.props;
+        const {t, match} = this.props;
+        const type = match.params.groupType;
         return (
             <div>
                 <Row>
                     <Col md="12">
-                        <h1>{t('camps:search.title')}</h1>
+                        <h1>{t(`${this.getTranslatePath(type)}search.title`)}</h1>
                     </Col>
                 </Row>
                 <Row>
@@ -31,9 +45,9 @@ class BaseCamps extends React.Component {
                             <Input
                                 className="form-control form-control-sm ml-3"
                                 type="text"
-                                hint={t('camps:search.title')}
-                                placeholder={t('camps:search.title')}
-                                aria-label={t('camps:search.title')}
+                                hint={t(`${this.getTranslatePath(type)}search.title`)}
+                                placeholder={t(`${this.getTranslatePath(type)}search.title`)}
+                                aria-label={t(`${this.getTranslatePath(type)}search.title`)}
                                 onChange={this.handleChange}
                             />
                             <Fa icon="search"/>
@@ -42,7 +56,7 @@ class BaseCamps extends React.Component {
                 </Row>
                 <Row>
                     <Col>
-                        <CampList query={this.query} camps={state.camps}/>
+                        <GroupList query={this.query} groups={this.listData} />
                     </Col>
                 </Row>
             </div>
@@ -51,4 +65,4 @@ class BaseCamps extends React.Component {
     }
 }
 
-export const Camps = withI18n()(BaseCamps);
+export const Groups = withI18n()(BaseGroups);

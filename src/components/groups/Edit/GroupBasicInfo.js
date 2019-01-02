@@ -2,28 +2,32 @@ import React from 'react';
 import { withI18n } from 'react-i18next';
 import { Col, Row, Card, CardBody } from 'mdbreact';
 import { EditableItem } from '../../controls/EditableItem/EditableItem';
+import { withRouter } from 'react-router-dom';
 
-class BaseCampInfoEdit extends React.Component {
+class BaseGroupInfoEdit extends React.Component {
 
-    TRANSLATE_PREFIX = 'camps:camp.edit.info';
+    get TRANSLATE_PREFIX() {
+        const {match} = this.props;
+        return `${match.params.groupType}:single.edit.info`;
+    }
 
     state = {
-        editedCamp: {...this.props.camp}
+        editedGroup: {...this.props.group}
     };
 
     save() {
-        this.props.onSave(this.state.editedCamp);
+        this.props.onSave(this.state.editedGroup);
     }
 
     propertyChanged(prop, value, parsingFn) {
-        if (!prop || !this.state.editedCamp[prop]) {
+        if (!prop || !this.state.editedGroup[prop]) {
             console.warn(`Property ${prop} doesn't exist on camp model! maybe the model changed`);
         }
         if (parsingFn && parsingFn.constructor && parsingFn.call && parsingFn.apply) {
             value = parsingFn(value)
         }
-        const editedCamp = {...this.state.editedCamp, [prop]: value};
-        this.setState({editedCamp});
+        const editedGroup = {...this.state.editedGroup, [prop]: value};
+        this.setState({ editedGroup });
     }
 
     parseCampStatus(value) {
@@ -47,14 +51,14 @@ class BaseCampInfoEdit extends React.Component {
                                 <Col xs="12">
                                     <EditableItem title={`${t('name')} (${t('hebrew')})`}
                                                   editMode={true}
-                                                  value={this.state.editedCamp.camp_name_he}
+                                                  value={this.state.editedGroup.camp_name_he}
                                                   onChange={(e) => this.propertyChanged('camp_name_he', e.target.value)}/>
                                 </Col>
                                 <Col xs="12">
                                     <EditableItem title={`${t('description')} (${t('hebrew')})`}
                                                   type="textarea"
                                                   editMode={true}
-                                                  value={this.state.editedCamp.camp_desc_he}
+                                                  value={this.state.editedGroup.camp_desc_he}
                                                   onChange={(e) => this.propertyChanged('camp_desc_he', e.target.value)}/>
                                 </Col>
                             </Col>
@@ -62,7 +66,7 @@ class BaseCampInfoEdit extends React.Component {
                                 <Col xs="12">
                                     <EditableItem title={`${t('name')} (${t('english')})`}
                                                   editMode={true}
-                                                  value={this.state.editedCamp.camp_name_en}
+                                                  value={this.state.editedGroup.camp_name_en}
                                                   onChange={(e) => this.propertyChanged('camp_name_en', e.target.value)}/>
                                 </Col>
                                 <Col xs="12">
@@ -70,7 +74,7 @@ class BaseCampInfoEdit extends React.Component {
                                                   type="textarea"
                                                   editMode={true}
                                                   onChange={(e) => this.propertyChanged('camp_desc_en', e.target.value)}
-                                                  value={this.state.editedCamp.camp_desc_en}/>
+                                                  value={this.state.editedGroup.camp_desc_en}/>
                                 </Col>
                             </Col>
                         </Row>
@@ -86,7 +90,7 @@ class BaseCampInfoEdit extends React.Component {
                                 <Col md="8">
                                     <EditableItem title={t(`${this.TRANSLATE_PREFIX}.facebookLink`)}
                                                   editMode={true}
-                                                  value={this.state.editedCamp.facebook_page_url}
+                                                  value={this.state.editedGroup.facebook_page_url}
                                                   onChange={(e) => this.propertyChanged('facebook_page_url', e.target.value)}/>
                                 </Col>
                             </Row>
@@ -94,21 +98,21 @@ class BaseCampInfoEdit extends React.Component {
                                 <Col md="4">
                                     <EditableItem title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('name')})}
                                                   editMode={true}
-                                                  value={this.state.editedCamp.contact_person_name}
+                                                  value={this.state.editedGroup.contact_person_name}
                                                   onChange={(e) => this.propertyChanged('contact_person_name', e.target.value)}/>
                                 </Col>
                                 <Col md="4">
                                     <EditableItem
                                         title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('email')})}
                                         editMode={true}
-                                        value={this.state.editedCamp.contact_person_email}
+                                        value={this.state.editedGroup.contact_person_email}
                                         onChange={(e) => this.propertyChanged('contact_person_email', e.target.value)}/>
                                 </Col>
                                 <Col md="4">
                                     <EditableItem
                                         title={t(`${this.TRANSLATE_PREFIX}.contactPerson`, {type: t('phone')})}
                                         editMode={true}
-                                        value={this.state.editedCamp.contact_person_phone}
+                                        value={this.state.editedGroup.contact_person_phone}
                                         onChange={(e) => this.propertyChanged('contact_person_phone', e.target.value)}/>
                                 </Col>
                             </Row>
@@ -117,14 +121,14 @@ class BaseCampInfoEdit extends React.Component {
                                     <EditableItem title={t(`${this.TRANSLATE_PREFIX}.campsOpen`)}
                                                   type="checkbox"
                                                   editMode={true}
-                                                  value={this.state.editedCamp.status === 'open'}
+                                                  value={this.state.editedGroup.status === 'open'}
                                                   onChange={(e) => this.propertyChanged('status', e.target.checked, this.parseCampStatus)}/>
                                 </Col>
                                 <Col md="4">
                                     <EditableItem title={t(`${this.TRANSLATE_PREFIX}.acceptFamilies`)}
                                                   type="checkbox"
                                                   editMode={true}
-                                                  value={this.state.editedCamp.accept_families}
+                                                  value={this.state.editedGroup.accept_families}
                                                   onChange={(e) => this.propertyChanged('accept_families', e.target.checked)}/>
                                 </Col>
                             </Row>
@@ -145,7 +149,7 @@ class BaseCampInfoEdit extends React.Component {
                                               type="options"
                                               editMode={true}
                                               options={[]}
-                                              value={this.state.editedCamp.contact_person_phone}
+                                              value={this.state.editedGroup.contact_person_phone}
                                               onChange={(e) => this.propertyChanged('contact_person_phone', e.target.contact_person_phone)}/>
                             </Col>
                             <Col md="4">
@@ -153,7 +157,7 @@ class BaseCampInfoEdit extends React.Component {
                                               type="options"
                                               editMode={true}
                                               options={[]}
-                                              value={this.state.editedCamp.contact_person_phone}
+                                              value={this.state.editedGroup.contact_person_phone}
                                               onChange={(e) => this.propertyChanged('contact_person_phone', e.target.contact_person_phone)}/>
                             </Col>
                             <Col md="4">
@@ -161,7 +165,7 @@ class BaseCampInfoEdit extends React.Component {
                                               type="options"
                                               editMode={true}
                                               options={[]}
-                                              value={this.state.editedCamp.contact_person_phone}
+                                              value={this.state.editedGroup.contact_person_phone}
                                               onChange={(e) => this.propertyChanged('contact_person_phone', e.target.contact_person_phone)}/>
                             </Col>
                         </Row>
@@ -173,4 +177,4 @@ class BaseCampInfoEdit extends React.Component {
 
 }
 
-export const CampBasicInfo = withI18n()(BaseCampInfoEdit);
+export const GroupBasicInfo = withRouter(withI18n()(BaseGroupInfoEdit));

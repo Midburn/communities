@@ -1,23 +1,21 @@
-import { AppNavigation } from './AppNavigation';
-import { Col, Container, Card, Row, CardBody } from 'mdbreact';
-import { AppBreadcrumbs } from './AppBreadcrumbs';
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
-import { Home } from './Home';
-import { Camps } from './camps/Camps';
-import { Arts } from './Arts';
 import React from 'react';
+import { AppNavigation } from './navigation/AppNavigation';
+import { Col, Container, Card, Row, CardBody } from 'mdbreact';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { Groups } from './groups/Groups';
 import { withI18n } from 'react-i18next';
-import { Camp } from './camps/Camp';
+import { Group } from './groups/Group';
 import i18n from '../services/i18n';
+import { GroupManagement } from './groups/Edit/GroupManagement';
+import { PresaleAdmin } from './allocations/PresaleAdmin';
+import { PresaleGroupLeader } from './allocations/PresaleGroupLeader';
+import { GroupsManagement } from './groups/GroupsManagement';
 
 class BaseMain extends React.Component {
 
     constructor(props) {
         super(props);
         const lng = props.match.params.lng;
-        if (!lng || !['he', 'en'].includes(lng)) {
-           // window.location.href = '/he';
-        }
         i18n.changeLanguage(lng);
     }
 
@@ -29,7 +27,6 @@ class BaseMain extends React.Component {
                 <Container fluid={window.innerWidth < 1200} className={`${lng === 'he' ? 'rtl' : ''} MainContainer`}>
                     <Row>
                         <Col>
-                            <AppBreadcrumbs/>
                         </Col>
                     </Row>
                     <Row>
@@ -37,9 +34,12 @@ class BaseMain extends React.Component {
                             <Card>
                                 <CardBody className="MainPanel">
                                     <Switch>
-                                        {/*<Route exact path="/:lng(en|he)/home" component={Home}/>*/}
-                                        <Route path="/:lng(en|he)/camps" component={Camps} exact/>
-                                        <Route path="/:lng(en|he)/camps/:id" component={Camp}/>
+                                        <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/allocations/admin" component={PresaleAdmin} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/management" component={GroupsManagement} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/:id/allocations" component={PresaleGroupLeader} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/:id/manage" component={GroupManagement} exact/>
                                     </Switch>
                                 </CardBody>
                             </Card>
