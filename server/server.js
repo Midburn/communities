@@ -11,6 +11,7 @@ const constants = require('./models/constants');
 const services = require('./services');
 const routers = require('./routers');
 const GenericResponse = require('./models/generic-response');
+const Sequelize = require('sequelize');
 
 class Server {
 
@@ -21,6 +22,7 @@ class Server {
         this.initMiddlewares();
         this.initRouters();
         this.initStaticServer();
+        this.initDatabase();
         this.handleGenericReposnse();
         if (this.config.isDevMode) {
             this.initWebpackDevServer();
@@ -97,6 +99,27 @@ class Server {
             }
         });
         server.listen(3006);
+    }
+
+    initDatabase() {
+        const db_name = 'spark_camps_arts';
+        const sequelize = new Sequelize({
+            dialect: "mysql",
+            host:"localhost",
+            port:"3306",
+            username: "root",
+            password: "admin",
+            database: db_name,
+            modelPaths: [path.join(__dirname + "/models")]
+        });
+        console.log('Attempting to connect to MYSQL DB: ', db_name)
+        sequelize.authenticate()
+        .then(() => {
+            console.log('Sequelize MYSQL connection has been established successfully.');
+        })
+        .catch(err => {
+            console.error('Sequelize error: unable to connect to the MYSQL database:', err);
+        });
     }
 
     sendHTMLIndexFile(res) {
