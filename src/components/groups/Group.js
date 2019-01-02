@@ -14,13 +14,16 @@ import { PermissionService } from '../../services/permissions';
 import { GroupMembers } from './Edit/GroupMembers';
 import { Tabs } from '../controls/Tabs';
 import { GroupsService } from '../../services/groups';
+import { EventRulesService } from '../../services/event-rules';
+import { ParsingService } from '../../services/parsing';
 
 @observer
 class BaseGroup extends React.Component {
 
     permissionService = new PermissionService();
     groupService = new GroupsService();
-
+    eventRulesService = new EventRulesService();
+    parsingService = new ParsingService();
     error = null;
 
     @observable
@@ -119,24 +122,32 @@ class BaseGroup extends React.Component {
             {
                 id: 2,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers group={this.group} match={match} key={2} members={this.members} />
+                component: <GroupMembers group={this.group} match={match} key={2} members={this.members}/>
             }
         ];
+    }
+
+    get isGroupEditable() {
+        const {match} = this.props;
+        return this.permissionService.isAdmin() || (this.permissionService.canEditThisGroup(this.group) &&
+            !this.eventRulesService.isGroupEditingDisabled(this.parsingService.getGroupTypeFromString(match.params.groupType)));
     }
 
     render() {
         const {lng, match} = this.props;
         const MemberView = (
-            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <Tabs tabs={this.memberTabs} selectedId={this.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges}/> :
+                <Tabs tabs={this.memberTabs} selectedId={this.activeTab} onSelect={(e) => this.setActiveTab(e)}/>
         );
         const BasicView = (
-            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} /> : <GroupPublicationDetails match={match} group={this.group}/>
+            this.editMode ? <GroupBasicInfo group={this.group} onSave={this.saveChanges}/> :
+                <GroupPublicationDetails match={match} group={this.group}/>
         );
         return (
             <div className="CampView">
                 <Row>
                     <Col md="12">
-                        <PermissableComponent permitted={this.permissionService.canEditThisGroup(this.group)}>
+                        <PermissableComponent permitted={this.isGroupEditable}>
                             <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                                 <ButtonGroup buttons={this.buttons} vertical={true}/>
                             </div>
