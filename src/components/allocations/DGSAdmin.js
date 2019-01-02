@@ -129,7 +129,7 @@ class BaseDGSAdmin extends React.Component {
             <div className="DGSAdmin">
                 <Row>
                     <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} ({this.eventsService.getFormerEventId()})</h1>
+                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)}</h1>
                         <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
                             <ButtonGroup buttons={[this.saveButton]} vertical={true}/>
                         </div>
@@ -137,7 +137,7 @@ class BaseDGSAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)}</p>
+                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
                     </Col>
                 </Row>
                 <Row>
