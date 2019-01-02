@@ -12,8 +12,8 @@ import { PermissableComponent } from './PermissableComponent';
 export const TableSummery = ({sums, csvData, csvName}) => {
     return (
         <Container fluid className="TableSummeryContainer  d-flex justify-content-center">
-            <Card className="TableSummery d-flex justify-content-center align-items-center">
-                <CardBody className="SummeryContent" className="d-flex justify-content-center align-items-center">
+            <Card className="TableSummery d-flex">
+                <CardBody className="SummeryContent d-flex justify-content-even font-small align-items-center">
                     {Object.keys(sums || {}).map(key => {
                         return (
                             <span key={key}>
@@ -29,7 +29,6 @@ export const TableSummery = ({sums, csvData, csvName}) => {
                                 filename={csvName}
                             ></ExportCSV>
                         </PermissableComponent>
-
                     </div>
                 </CardBody>
             </Card>

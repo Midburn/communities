@@ -1,12 +1,14 @@
 .TableSummeryContainer {
     position: fixed;
-    width: 80vw;
-    left: 10vw;
+    width: 90vw;
+    left: 5vw;
     bottom: 1vh;
     .TableSummery {
-        max-height: 10vh;
         .SummeryContent {
-
+            max-height: 12vh;
+            overflow-y: hidden;
+            overflow-x: auto;
+            width: 100%;
         }
     }
 }
