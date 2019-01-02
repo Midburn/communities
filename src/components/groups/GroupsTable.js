@@ -22,10 +22,6 @@ class BaseGroupsTable extends React.Component {
         return `${match.params.groupType}:management`;
     }
 
-    constructor(params) {
-        super(params);
-    }
-
     @action
     handleChange = (e) => {
         this.query = e.target.value;
@@ -186,7 +182,7 @@ class BaseGroupsTable extends React.Component {
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupsAllocationSummery - ${(new Date).toDateString()}.csv`}
+                <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
                               sums={this.tableSums} csvData={this.CSVdata}/>
             </div>
         );
