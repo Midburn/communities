@@ -10,7 +10,7 @@ const compression = require('compression');
 const constants = require('../models/constants');
 const services = require('./services');
 const routers = require('./routers');
-const GenericResponse = require('./models/generic-response');
+const GenericResponse = require('../models/generic-response');
 const dbService = require('./services/database')
 
 class Server {
