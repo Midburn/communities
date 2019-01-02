@@ -4,11 +4,10 @@
     "notFound": "No Art installations found for term - '{{q}}'"
   },
   "single": {
-
     "header": {
       "description": "Art installation's description"
     },
-    "publication":  {
+    "publication": {
       "title": "Publication",
       "body": "The details here will be shown in the web-site, if art installation is published.",
       "contactTitle": "Contact Person",
@@ -51,32 +50,37 @@
     "header": "Join art installation request",
     "body": "You're about to request art installation {{name}} to join, are you sure?"
   },
-  "allocations": {
-    "dgsAdmin": {
-      "header": "Manage art installations DGS tickets quota",
-      "description": "Allocate Directed Group Sale tickets quota to art installations participating in the last event",
-      "table": {
-        "search": "Search art installations",
-        "groupName": "Installation name",
-        "leaderName": "Installation leader",
-        "leaderEmail": "Leader's Email",
-        "leaderPhone": "Leader's phone",
-        "totalMembers": "Total members",
-        "totalPurchased": "Total purchased",
-        "totalEntered": "Total entered former event",
-        "quota": "Quota",
-        "noQuota": "Allocate",
-        "sums": {
-          "groups": "Art Installations",
-          "members": "Members",
-          "ticketsAll": "Purchased tickets",
-          "allocated": "Allocated"
-        }
-      }
+  "management": {
+    "header": "Manage Art Installations",
+    "tabs": {
+      "groups": "Art installations management",
+      "presale": "Appreciation tickets management"
     },
-    "groupLeader": {
-      "header": "Allocate pre-sale tickets",
-      "description": "Allocate pre-sale tickets for your art installation members from former event"
+    "allocations": {
+      "header": "Manage art installations appreciation tickets quota",
+      "description": "Allocate appreciation  tickets quota to art installations participating in the last event"
+    },
+    "table": {
+      "search": "Search art installations",
+      "groupName": "Installation name",
+      "leaderName": "Installation leader",
+      "leaderEmail": "Leader's Email",
+      "leaderPhone": "Leader's phone",
+      "totalMembers": "Total members",
+      "totalPurchased": "Total purchased",
+      "totalEntered": "Total entered former event",
+      "quota": "Quota",
+      "noQuota": "Allocate"
+    },
+    "sums": {
+      "groups": "Art Installations",
+      "members": "Members",
+      "ticketsAll": "Purchased tickets",
+      "allocated": "Allocated"
     }
+  },
+  "groupLeader": {
+    "header": "Allocate pre-sale tickets",
+    "description": "Allocate pre-sale tickets for your art installation members from former event"
   }
 }

@@ -6,7 +6,6 @@ import { observer } from 'mobx-react';
 import { Row, Col } from 'mdbreact';
 import { GroupsService } from '../../services/groups';
 import { EventsService } from '../../services/events';
-import './DGSAdmin.scss';
 import { GroupMembers } from '../groups/Edit/GroupMembers';
 
 @observer
@@ -98,4 +97,4 @@ class BaseDGSGroupLeader extends React.Component {
     }
 }
 
-export const DGSGroupLeader = withRouter(withI18n()(BaseDGSGroupLeader));
+export const PresaleGroupLeader = withRouter(withI18n()(BaseDGSGroupLeader));
