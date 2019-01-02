@@ -22,7 +22,7 @@ class Server {
         this.initMiddlewares();
         this.initRouters();
         this.initStaticServer();
-        this.sequelize = dbService.initDatabase();
+        this.sequelize = services.db.initDatabase();
         this.handleGenericReposnse();
         if (this.config.isDevMode) {
             this.initWebpackDevServer();
