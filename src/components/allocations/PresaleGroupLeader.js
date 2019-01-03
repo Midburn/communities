@@ -129,7 +129,7 @@ class BaseDGSGroupLeader extends React.Component {
             <div>
                 <Row>
                     <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)}</h1>
+                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} - {this.groupService.getPropertyByLang(this.group, 'name')}</h1>
                     </Col>
                 </Row>
                 <PermissableComponent permitted={this.lastAudit}>
