@@ -2,7 +2,7 @@
 const constants = require('../../models/constants');
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('DataUpdates', {
+        return queryInterface.createTable('Audits', {
             record_status: {
                 type: Sequelize.ENUM,
                 values: [constants.DB_RECORD_STATUS_TYPES.ACTIVE, constants.DB_RECORD_STATUS_TYPES.DELETED],
@@ -28,7 +28,8 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
-            }
+            },
+            related_entity: Sequelize.INTEGER
         });
     },
     down: (queryInterface, Sequelize) => {

@@ -1,4 +1,4 @@
-const DataUpdatesModel = require('./dataupdate');
+const Audits = require('./audit');
 module.exports = {
-    DataUpdatesModel
+    Audits
 };

@@ -21,9 +21,9 @@ module.exports = {
         ACTIVE: 'active'
     },
     /**
-     * Used to save record of updates done by users.
+     * Used to save record of audits done by users.
      */
-    DATA_UPDATE_TYPES: {
+    AUDIT_TYPES: {
         // Save the time admin allocated presale tickets
         PRESALE_ALLOCATIONS_ADMIN: 'presale_allocation_update'
     },
