@@ -72,7 +72,7 @@ class BasePresaleAdmin extends React.Component {
         try {
             this.audits = await this.auditService.getAudits(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
             if (this.audits && this.audits[0]) {
-                this.auditedUser = (await this.usersService.getUserById(this.audits[0].updated_by)) || {};
+                this.auditedUser = (await this.usersService.getUserNameById(this.audits[0].updated_by)) || {};
             }
         } catch (e) {
             // TODO - what do we do with errors

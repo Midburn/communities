@@ -95,6 +95,9 @@ class BaseGroupMembers extends React.Component {
 
     getMemberAllocationId = (memberId, allocationType, bool) => {
         const {allocations} = this.props;
+        if (!allocations) {
+            return false;
+        }
         const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
         if (bool) {
             return !!allocation;
@@ -104,6 +107,9 @@ class BaseGroupMembers extends React.Component {
 
     isAllocatedByDifferentGroup(memberId, allocationType, returnType) {
         const {group, allocations} = this.props;
+        if (!allocations) {
+            return false;
+        }
         const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
         if (!allocation || allocation.related_group === group.id) {
             return false;
@@ -173,12 +179,14 @@ class BaseGroupMembers extends React.Component {
     get tableSums() {
         const {t, members, presale, group} = this.props;
         let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
-        for (const member of members) {
-            allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
-            allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+        if (presale) {
+            for (const member of members) {
+                allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
+                allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
+                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
                 && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
-                ? 1 : 0;
+                    ? 1 : 0;
+            }
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
@@ -276,7 +284,7 @@ class BaseGroupMembers extends React.Component {
                                             {this.getMemberTransfferedTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
-                                    <PermissableComponent permitted={presale}>
+                                    <PermissableComponent permitted={!!presale}>
                                         <td>
                                             <MDBTooltip
                                                 placement="top"

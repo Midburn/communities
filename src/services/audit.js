@@ -3,9 +3,9 @@ import { state } from '../models/state';
 
 export class AuditService {
 
-    async setAudit(type) {
+    async setAudit(type, moreData) {
         try {
-            return (await axios.post(`/api/v1/audit/${type}`, { updated_by: state.loggedUser.user_id }, {withCredentials: true})).data.body;
+            return (await axios.post(`/api/v1/audit/${type}`, { updated_by: state.loggedUser.user_id, ...moreData }, {withCredentials: true})).data.body;
         } catch (e) {
             console.warn(`Error fetching camps ${e.stack}`);
         }

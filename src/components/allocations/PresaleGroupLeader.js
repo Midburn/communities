@@ -8,6 +8,11 @@ import { GroupsService } from '../../services/groups';
 import { EventsService } from '../../services/events';
 import { GroupMembers } from '../groups/Edit/GroupMembers';
 import { AllocationService } from '../../services/allocations';
+import Moment from 'react-moment';
+import { UsersService } from '../../services/users';
+import { AuditService } from '../../services/audit';
+import * as constants from '../../../models/constants';
+import { PermissableComponent } from '../controls/PermissableComponent';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -15,7 +20,8 @@ class BaseDGSGroupLeader extends React.Component {
     groupService = new GroupsService();
     eventsService = new EventsService();
     allocationsService = new AllocationService();
-
+    auditService = new AuditService();
+    usersService = new UsersService();
     @observable
     error;
     @observable
@@ -26,6 +32,15 @@ class BaseDGSGroupLeader extends React.Component {
     tickets = [];
     @observable
     allocations = [];
+    @observable
+    auditedUser = [];
+
+    get lastAudit() {
+        if (!this.audits || !this.audits[0]) {
+            return;
+        }
+        return this.audits[0].createdAt;
+    }
 
     constructor(props) {
         super(props);
@@ -66,29 +81,40 @@ class BaseDGSGroupLeader extends React.Component {
                 this.tickets = [];
             }
             await this.getGroupAllocations();
+            await this.getAudits();
         } catch (e) {
             console.warn(e.stack);
             this.error = e;
         }
     }
 
-    allocationsChanged = () => {
-        this.getGroupAllocations();
+    allocationsChanged = async () => {
+        try {
+            await this.getGroupAllocations();
+            await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP, {related_entity: this.group.id});
+            await this.getAudits();
+        } catch (e) {
+            console.warn(e.stack);
+        }
     };
+
+    async getAudits() {
+        try {
+            this.audits = await this.auditService.getAuditsForEntity(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP, this.group.id);
+            if (this.audits && this.audits[0]) {
+                this.auditedUser = (await this.usersService.getUserNameById(this.audits[0].updated_by)) || {};
+            }
+        } catch (e) {
+            // TODO - what do we do with errors
+            console.warn(e.stack);
+        }
+    }
 
     async getGroupAllocations() {
         try {
             this.allocations = (await this.allocationsService.getMembersAllocations([this.members.map(member => member.user_id)])) || [];
         } catch (e) {
             console.warn(e);
-        }
-    }
-
-    async saveChanges() {
-        try {
-            // TODO - save changes to allocations.
-        } catch (e) {
-
         }
     }
 
@@ -106,6 +132,16 @@ class BaseDGSGroupLeader extends React.Component {
                         <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)}</h1>
                     </Col>
                 </Row>
+                <PermissableComponent permitted={this.lastAudit}>
+                    <Row>
+                        <Col md="12">
+                            <span>{t(`lastUpdate`)}: </span>
+                            <Moment className="pl-2 pr-2"
+                                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
+                            <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                        </Col>
+                    </Row>
+                </PermissableComponent>
                 <Row>
                     <Col md="12">
                         <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
@@ -113,7 +149,8 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers allocationsChanged={this.allocationsChanged} allocations={this.allocations}
+                        <GroupMembers allocationsChanged={this.allocationsChanged}
+                                      allocations={this.allocations}
                                       group={this.group} presale={true} ticketCount={true} match={match}
                                       tickets={this.tickets || []} members={this.members || []}/>
                     </Col>
