@@ -29,6 +29,8 @@
   "saveChanges": "שמור שינויים",
   "export": "ייצא לאקסל",
   "lastUpdate": "עודכן לאחרונה ב",
+  "theme_camps": "מחנה נושא",
+  "art_installations": "מיצב",
   "by": "ע\"י",
   "nav": {
     "gate": {
@@ -63,6 +65,10 @@
   },
   "members": {
     "search": "חפש חברים",
+    "tooltips": {
+      "allocate": "הוסף\\הסר הקצאה",
+      "allocatedByOtherGroup": "בעל הקצאה מ{{groupType}} אחר"
+    },
     "allocationWarning": {
       "title": "מכסה מלאה",
       "text": "הגעת למכסה שהוקצבה לך, אתה יכול להעביר הקצאות אך לא להוסיף."

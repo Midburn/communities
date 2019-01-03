@@ -28,6 +28,8 @@
   "saveChanges": "Save changes",
   "export": "Export to Excel",
   "lastUpdate": "Last updated at",
+  "theme_camps": "Camp",
+  "art_installations": "Art installation",
   "by": "By",
   "nav": {
     "gate": {
@@ -62,6 +64,10 @@
   },
   "members": {
     "search": "Search members",
+    "tooltips": {
+      "allocate": "Add/Remove allocation",
+      "allocatedByOtherGroup": "Has ticket allocated by another {{groupType}}"
+    },
     "allocationWarning": {
       "title": "Quota full",
       "text": "You have reached the allocated quota."

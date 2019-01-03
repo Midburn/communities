@@ -78,8 +78,7 @@ class BaseDGSGroupLeader extends React.Component {
 
     async getGroupAllocations() {
         try {
-            console.log('GETTING GROUP ALLOC')
-            this.allocations = (await this.allocationsService.getGroupsAllocations([this.group.id])) || [];
+            this.allocations = (await this.allocationsService.getMembersAllocations([this.members.map(member => member.user_id)])) || [];
         } catch (e) {
             console.warn(e);
         }

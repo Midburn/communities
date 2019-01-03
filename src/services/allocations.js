@@ -32,7 +32,7 @@ export class AllocationService {
 
     async getMembersAllocations(ids) {
         try {
-            return (await axios.get(`/api/v1/allocations/members`, {ids}, {withCredentials: true})).data.body.allocations;
+            return (await axios.post(`/api/v1/allocations/members`, {ids}, {withCredentials: true})).data.body.allocations;
         } catch (e) {
             console.warn(`Error fetching camps ${e.stack}`);
         }

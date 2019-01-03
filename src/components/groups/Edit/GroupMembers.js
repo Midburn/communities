@@ -1,22 +1,18 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Table, TableHead, TableBody, Input } from 'mdbreact';
+import { Table, TableHead, TableBody, Input, MDBTooltip } from 'mdbreact';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
 import { TableSummery } from '../../controls/TableSummery';
 import { WarningModal } from '../../controls/WarningModal';
-import { GroupsService } from '../../../services/groups';
 import * as constants from '../../../../models/constants';
-import { EventsService } from '../../../services/events';
 import { AllocationService } from '../../../services/allocations';
 import { ParsingService } from '../../../services/parsing';
 
 @observer
 class BaseGroupMembers extends React.Component {
 
-    groupService = new GroupsService();
-    eventsService = new EventsService();
     allocationsService = new AllocationService();
     parsingService = new ParsingService();
     TRANSLATE_PREFIX = `members`;
@@ -99,11 +95,28 @@ class BaseGroupMembers extends React.Component {
 
     getMemberAllocationId = (memberId, allocationType, bool) => {
         const {allocations} = this.props;
-        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type)
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
         if (bool) {
             return !!allocation;
         }
         return allocation ? allocation.id : null
+    };
+
+    isAllocatedByDifferentGroup(memberId, allocationType, returnType) {
+        const {group, allocations} = this.props;
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
+        if (!allocation || allocation.related_group === group.id) {
+            return false;
+        }
+        return returnType ? allocation.allocation_group : allocation.related_group !== group.id;
+    }
+
+    getMemberAllocationTooltip(memberId, allocationType) {
+        const {t} = this.props;
+        const isAllocatedByOtherGroup = this.isAllocatedByDifferentGroup(memberId, allocationType, true);
+        return  isAllocatedByOtherGroup ?
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, { groupType: t(isAllocatedByOtherGroup) }) :
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocate`);
     };
 
     getMemberTicketCount(memberId) {
@@ -163,7 +176,9 @@ class BaseGroupMembers extends React.Component {
         for (const member of members) {
             allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
             allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true) ? 1 : 0;
+            totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
+                ? 1 : 0;
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
@@ -263,12 +278,20 @@ class BaseGroupMembers extends React.Component {
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
                                         <td>
-                                            <input onChange={(e) => this.changeAllocation(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, e)}
-                                                   checked={this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)} type="checkbox"/>
+                                            <MDBTooltip
+                                                placement="top"
+                                                className="d-flex justify-content-center"
+                                                tooltipContent={this.getMemberAllocationTooltip(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)}>
+                                                <input
+                                                    onChange={(e) => this.changeAllocation(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, e)}
+                                                    disabled={this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)}
+                                                    checked={this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)}
+                                                    type="checkbox"/>
+                                            </MDBTooltip>
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
-                                        <td>
+                                        <td className="d-flex justify-content-center">
                                             <input
                                                 onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
                                                 checked={this.getMemberAllocationPermission(member.user_id)}
