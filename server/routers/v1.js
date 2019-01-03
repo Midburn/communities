@@ -3,6 +3,8 @@ const AuthRouter = require('./auth');
 const CampsRouter = require('./camps');
 const ConfigurationsRouter = require('./configurations');
 const EventsRouter = require('./events');
+const AuditRouter = require('./audit');
+const UserRouter = require('./users');
 
 module.exports = class V1Router {
 
@@ -13,6 +15,8 @@ module.exports = class V1Router {
         this.camps = new CampsRouter();
         this.configurations = new ConfigurationsRouter();
         this.events = new EventsRouter();
+        this.audit = new AuditRouter();
+        this.users = new UserRouter();
         this.VERSION = '/v1';
         this.initMiddleware();
         this.initRoutes();
@@ -27,5 +31,7 @@ module.exports = class V1Router {
         this.router.use(this.VERSION, this.camps.router);
         this.router.use(this.VERSION, this.configurations.router);
         this.router.use(this.VERSION, this.events.router);
+        this.router.use(this.VERSION, this.audit.router);
+        this.router.use(this.VERSION, this.users.router);
     }
 };

@@ -58,7 +58,7 @@
     },
     "allocations": {
       "header": "Manage camps appreciation tickets quota",
-      "description": "Allocate appreciation tickets quota to camps participating in the last event",
+      "description": "Allocate appreciation tickets quota to camps participating in the last event"
     },
     "table": {
       "search": "Search camps",

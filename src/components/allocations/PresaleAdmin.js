@@ -8,8 +8,12 @@ import { GroupsTable } from '../groups/GroupsTable';
 import { GroupsService } from '../../services/groups';
 import { ParsingService } from '../../services/parsing';
 import { EventsService } from '../../services/events';
+import { AuditService } from '../../services/audit';
 import { ButtonGroup } from '../controls/ButtonGroup';
+import * as constants from '../../../models/constants';
 import './PresaleAdmin.scss';
+import Moment from 'react-moment';
+import { UsersService } from '../../services/users';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -17,6 +21,13 @@ class BasePresaleAdmin extends React.Component {
     parsingService = new ParsingService();
     groupService = new GroupsService();
     eventsService = new EventsService();
+    auditService = new AuditService();
+    usersService = new UsersService();
+    /**
+     * We'll keep track of groups changed in order to send them on save.
+     */
+    @observable
+    changes = {};
 
     @observable
     error;
@@ -24,12 +35,18 @@ class BasePresaleAdmin extends React.Component {
     @observable
     groups = [];
 
-    saveButton = {
-        icon: 'save',
-        onClick: this.saveChanges,
-        tooltip: this.props.t('saveChanges')
-    };
+    @observable
+    audits = [];
 
+    @observable
+    auditedUser = [];
+
+    get lastAudit() {
+        if (!this.audits || !this.audits[0]) {
+            return;
+        }
+        return this.audits[0].createdAt;
+    }
 
     constructor(props) {
         super(props);
@@ -43,10 +60,23 @@ class BasePresaleAdmin extends React.Component {
             this.getGroupsMembersCount();
             this.getGroupsTickets();
             this.getGroupsFormerEventTickets();
+            this.getAudits();
         } catch (e) {
             this.groups = [];
             // TODO - what do we do with errors?
             this.error = e;
+        }
+    }
+
+    async getAudits() {
+        try {
+            this.audits = await this.auditService.getAudits(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
+            if (this.audits && this.audits[0]) {
+                this.auditedUser = (await this.usersService.getUserById(this.audits[0].updated_by)) || {};
+            }
+        } catch (e) {
+            // TODO - what do we do with errors
+            console.warn(e.stack);
         }
     }
 
@@ -110,21 +140,43 @@ class BasePresaleAdmin extends React.Component {
         }
     }
 
-    async saveChanges() {
+    saveChanges = async () => {
         try {
-            // TODO - save changes to allocations.
-        }catch (e) {
-
+            const groupsToUpdate = Object.entries(this.changes).map(([id, group]) => {
+                return {
+                    id,
+                    pre_sale_tickets_quota: group.pre_sale_tickets_quota
+                }
+            });
+            if (!groupsToUpdate || !groupsToUpdate.length) {
+                return;
+            }
+            await this.groupService.updatePresaleQuota(groupsToUpdate);
+            this.changes = {};
+            await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
+            await this.getAudits();
+        } catch (e) {
+            console.warn(`Error saving presale quota! - ${e.stack}`);
         }
-    }
+    };
+
+    saveButton = {
+        icon: 'save',
+        onClick: this.saveChanges.bind(this),
+        tooltip: this.props.t('saveChanges')
+    };
 
     get TRANSLATE_PREFIX() {
         const {match} = this.props;
         return `${match.params.groupType}:management`;
     }
 
+    presaleQuotaChanged = (group) => {
+        this.changes[group.id] = group;
+    };
+
     render() {
-        const {t,lng} = this.props;
+        const {t, lng} = this.props;
         return (
             <div className="DGSAdmin">
                 <Row>
@@ -142,7 +194,14 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable presale={true} groups={this.groups}/>
+                        <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2" format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
+                        <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md="12">
+                        <GroupsTable presale={true} groups={this.groups}
+                                     presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>
             </div>

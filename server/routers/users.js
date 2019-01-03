@@ -1,7 +1,7 @@
 const Router = require('express').Router;
 const controllers = require('../controllers');
 
-module.exports = class EventsRouter {
+module.exports = class UsersRouter {
 
     constructor() {
         this.router = new Router();
@@ -17,7 +17,6 @@ module.exports = class EventsRouter {
         /**
          * E.G - /api/VERSION/spark/camps/open
          */
-        this.router.get('/spark/events/:id', controllers.sparkEvents.getEvent);
-        this.router.post('/spark/events/change', controllers.sparkEvents.changeEvent);
+        this.router.get('/spark/users/:id', controllers.users.getUserById);
     }
 };

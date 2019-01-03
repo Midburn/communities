@@ -27,6 +27,8 @@
   "actions": "Actions",
   "saveChanges": "Save changes",
   "export": "Export to Excel",
+  "lastUpdate": "Last updated at",
+  "by": "By",
   "nav": {
     "gate": {
       "manage": "Entry management",

@@ -1,29 +1,42 @@
 const Sequelize = require('sequelize');
 const path = require('path');
-
+const Models = require('../../db/models');
 // Load environment variables default values
 require('dotenv').config();
+
 class DatabaseService {
-    initDatabase() {
+
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.initsequelize();
+        try {
+            this.initModels();
+        } catch (e) {
+            console.error('Error syncing db models - have you ran all migration?');
+            console.error(e.stack);
+        }
+    }
+
+    initsequelize() {
         const db_name = process.env.MYSQL_DB_NAME || 'dev_camps_arts';
-        const sequelize = new Sequelize({
-            dialect:    "mysql",
-            host:       process.env.MYSQL_DB_HOST || 'localhost',
-            port:       process.env.MYSQL_DB_PORT || '3306',
-            username:   process.env.MYSQL_DB_USERNAME || 'root',
-            password:   process.env.MYSQL_DB_PASSWORD || 'admin',
-            database:   db_name,
-            modelPaths: [path.join(__dirname + "/models")]
+        this.sequelize = new Sequelize({
+            dialect: "mysql",
+            host: process.env.MYSQL_DB_HOST || 'localhost',
+            port: process.env.MYSQL_DB_PORT || '3306',
+            username: process.env.MYSQL_DB_USERNAME || 'root',
+            password: process.env.MYSQL_DB_PASSWORD || '',
+            database: db_name,
+            modelPaths: [path.join(__dirname + "../../db/models")]
         });
-        console.log('Attempting to connect to MYSQL DB: ', db_name)
-        sequelize.authenticate()
-        .then(() => {
-            console.log('Sequelize MYSQL connection has been established successfully.');
-        })
-        .catch(err => {
-            console.error('Sequelize error: unable to connect to the MYSQL database:', err);
-        });
-        return sequelize;
+    }
+
+    async initModels() {
+        this.Audits = await Models.Audits(this.sequelize, Sequelize);
+        // DO NOT USE FORCE TRUE - this will recreate the data base
+        await this.sequelize.sync({ force: false });
     }
 
 }
