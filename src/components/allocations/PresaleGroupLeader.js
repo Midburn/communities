@@ -7,12 +7,14 @@ import { Row, Col } from 'mdbreact';
 import { GroupsService } from '../../services/groups';
 import { EventsService } from '../../services/events';
 import { GroupMembers } from '../groups/Edit/GroupMembers';
+import { AllocationService } from '../../services/allocations';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
 
     groupService = new GroupsService();
     eventsService = new EventsService();
+    allocationsService = new AllocationService();
 
     @observable
     error;
@@ -22,6 +24,8 @@ class BaseDGSGroupLeader extends React.Component {
     members = [];
     @observable
     tickets = [];
+    @observable
+    allocations = [];
 
     constructor(props) {
         super(props);
@@ -61,12 +65,25 @@ class BaseDGSGroupLeader extends React.Component {
                 // TODO - what do we do with errors?
                 this.tickets = [];
             }
+            await this.getGroupAllocations();
         } catch (e) {
             console.warn(e.stack);
             this.error = e;
         }
     }
 
+    allocationsChanged = () => {
+        this.getGroupAllocations();
+    };
+
+    async getGroupAllocations() {
+        try {
+            console.log('GETTING GROUP ALLOC')
+            this.allocations = (await this.allocationsService.getGroupsAllocations([this.group.id])) || [];
+        } catch (e) {
+            console.warn(e);
+        }
+    }
 
     async saveChanges() {
         try {
@@ -97,7 +114,9 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers group={this.group} presale={true} ticketCount={true} match={match} tickets={this.tickets || []} members={this.members || []}/>
+                        <GroupMembers allocationsChanged={this.allocationsChanged} allocations={this.allocations}
+                                      group={this.group} presale={true} ticketCount={true} match={match}
+                                      tickets={this.tickets || []} members={this.members || []}/>
                     </Col>
                 </Row>
             </div>

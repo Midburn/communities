@@ -6,12 +6,25 @@ import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
 import { TableSummery } from '../../controls/TableSummery';
 import { WarningModal } from '../../controls/WarningModal';
+import { GroupsService } from '../../../services/groups';
+import * as constants from '../../../../models/constants';
+import { EventsService } from '../../../services/events';
+import { AllocationService } from '../../../services/allocations';
+import { ParsingService } from '../../../services/parsing';
 
 @observer
 class BaseGroupMembers extends React.Component {
 
+    groupService = new GroupsService();
+    eventsService = new EventsService();
+    allocationsService = new AllocationService();
+    parsingService = new ParsingService();
     TRANSLATE_PREFIX = `members`;
 
+    ALLOCATION_TYPE_TO_GROUP_QUOTA = {
+        [constants.ALLOCATION_TYPES.PRE_SALE]: 'pre_sale_tickets_quota',
+        [constants.ALLOCATION_TYPES.EARLY_ARRIVAL]: 'early_arrival_tickets_quota'
+    };
     @observable
     query = '';
 
@@ -24,7 +37,7 @@ class BaseGroupMembers extends React.Component {
     @observable
     allocationWarning = false;
 
-    allocationTimeout = null
+    allocationTimeout = null;
 
     @action
     handleChange = (e) => {
@@ -48,28 +61,49 @@ class BaseGroupMembers extends React.Component {
             phone.toLowerCase().includes(this.query);
     }
 
-    changePresaleAllocation = (memberId, e) => {
-        const {group, members} = this.props;
-        let totalAllocated = 0;
-        const quota = group.pre_sale_tickets_quota || 0;
-        for (const member of members) {
-            totalAllocated += member.pre_sale_allocation ? 1 : 0;
-        }
-        if (!!e.target.checked && quota <= totalAllocated) {
-            // There no more allocations
-            if (this.allocationTimeout) {
-                clearTimeout(this.allocationTimeout);
-            }
-            this.toggleAllocationWarning();
-            setTimeout(() => {
-                if (this.allocationWarning) {
-                    this.toggleAllocationWarning();
+    changeAllocation = async (memberId, allocationType, e) => {
+        const {allocations, match, group, allocationsChanged} = this.props;
+        const allocated = allocations.filter(allocation => allocation.allocation_type === allocationType).length;
+        const quota = group[this.ALLOCATION_TYPE_TO_GROUP_QUOTA[allocationType]];
+        try {
+            if (!!e.target.checked && quota <= allocated) {
+                // There no more allocations
+                if (this.allocationTimeout) {
+                    clearTimeout(this.allocationTimeout);
                 }
-            }, 5000);
-            return;
+                this.toggleAllocationWarning();
+                setTimeout(() => {
+                    if (this.allocationWarning) {
+                        this.toggleAllocationWarning();
+                    }
+                }, 5000);
+                return;
+            }
+            const allocationId = this.getMemberAllocationId(memberId, allocationType);
+            if (allocationId || allocationId === 0) {
+                // User is already allocated!
+                await this.allocationsService.removeAllocation(allocationId);
+            } else {
+                await this.allocationsService.allocate(
+                    allocationType,
+                    memberId,
+                    group.id,
+                    this.parsingService.getGroupTypeFromString(match.params.groupType)
+                );
+            }
+            allocationsChanged();
+        } catch (e) {
+            console.log(e.stack);
         }
-        const member = members.find(m => m.user_id === memberId);
-        member.pre_sale_ticket = e.target.checked;
+    };
+
+    getMemberAllocationId = (memberId, allocationType, bool) => {
+        const {allocations} = this.props;
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type)
+        if (bool) {
+            return !!allocation;
+        }
+        return allocation ? allocation.id : null
     };
 
     getMemberTicketCount(memberId) {
@@ -129,7 +163,7 @@ class BaseGroupMembers extends React.Component {
         for (const member of members) {
             allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
             allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            totalAllocated += member.pre_sale_ticket ? 1 : 0;
+            totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true) ? 1 : 0;
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
@@ -159,7 +193,9 @@ class BaseGroupMembers extends React.Component {
             const preSaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
-                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: member.pre_sale_ticket,
+                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
+                    constants.ALLOCATION_TYPES.PRE_SALE,
+                    true),
                 [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberAllocationPermission(member.user_id)
             } : {};
             return {...baseData, ...preSaleData}
@@ -227,8 +263,8 @@ class BaseGroupMembers extends React.Component {
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
                                         <td>
-                                            <input onChange={(e) => this.changePresaleAllocation(member.user_id, e)}
-                                                   checked={member.pre_sale_ticket} type="checkbox"/>
+                                            <input onChange={(e) => this.changeAllocation(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, e)}
+                                                   checked={this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)} type="checkbox"/>
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
