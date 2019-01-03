@@ -14,6 +14,20 @@ module.exports = {
         theme_camp: GROUP_TYPES.CAMP
     },
     /**
+     * We don't want to delete things from the tables.
+     */
+    DB_RECORD_STATUS_TYPES: {
+        DELETED: 'deleted',
+        ACTIVE: 'active'
+    },
+    /**
+     * Used to save record of updates done by users.
+     */
+    DATA_UPDATE_TYPES: {
+        // Save the time admin allocated presale tickets
+        PRESALE_ALLOCATIONS_ADMIN: 'presale_allocation_update'
+    },
+    /**
      * Response types for generic response
      */
     RESPONSE_TYPES: {

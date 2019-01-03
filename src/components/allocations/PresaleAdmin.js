@@ -17,19 +17,17 @@ class BasePresaleAdmin extends React.Component {
     parsingService = new ParsingService();
     groupService = new GroupsService();
     eventsService = new EventsService();
+    /**
+     * We'll keep track of groups changed in order to send them on save.
+     */
+    @observable
+    changes = {};
 
     @observable
     error;
 
     @observable
     groups = [];
-
-    saveButton = {
-        icon: 'save',
-        onClick: this.saveChanges,
-        tooltip: this.props.t('saveChanges')
-    };
-
 
     constructor(props) {
         super(props);
@@ -110,21 +108,38 @@ class BasePresaleAdmin extends React.Component {
         }
     }
 
-    async saveChanges() {
+    saveChanges = async () => {
         try {
-            // TODO - save changes to allocations.
-        }catch (e) {
-
+            const groupsToUpdate = Object.entries(this.changes).map(([id, group]) => {
+                return {
+                    id,
+                    pre_sale_tickets_quota: group.pre_sale_tickets_quota
+                }
+            });
+            await this.groupService.updatePresaleQuota(groupsToUpdate);
+            this.changes = {};
+        } catch (e) {
+            console.warn(`Error saving presale quota! - ${e.stack}`);
         }
-    }
+    };
+
+    saveButton = {
+        icon: 'save',
+        onClick: this.saveChanges.bind(this),
+        tooltip: this.props.t('saveChanges')
+    };
 
     get TRANSLATE_PREFIX() {
         const {match} = this.props;
         return `${match.params.groupType}:management`;
     }
 
+    presaleQuotaChanged = (group) => {
+        this.changes[group.id] = group;
+    };
+
     render() {
-        const {t,lng} = this.props;
+        const {t, lng} = this.props;
         return (
             <div className="DGSAdmin">
                 <Row>
@@ -142,7 +157,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable presale={true} groups={this.groups}/>
+                        <GroupsTable presale={true} groups={this.groups}
+                                     presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>
             </div>

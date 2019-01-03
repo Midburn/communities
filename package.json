@@ -48,8 +48,8 @@
     "mini-css-extract-plugin": "0.4.3",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
-    "mysql2": "^1.6.4",
     "moment": "^2.23.0",
+    "mysql2": "^1.6.4",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "pnp-webpack-plugin": "1.1.0",
@@ -71,6 +71,7 @@
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0",
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.1",
@@ -84,7 +85,8 @@
     "start": "cross-env NODE_ENV=production node server/server.js",
     "start:server": "cross-env NODE_ENV=production node server/server.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "sequelize": "sequelize"
   },
   "eslintConfig": {
     "extends": "react-app"

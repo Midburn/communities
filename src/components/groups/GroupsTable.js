@@ -51,8 +51,8 @@ class BaseGroupsTable extends React.Component {
     }
 
     updateGroupsQuota(group, quota) {
-        // TODO - should we update manually.
-        group.quota = quota;
+        group.pre_sale_tickets_quota = quota;
+        this.props.presaleQuotaChanged(group);
     }
 
     getFormerEventEntries(group) {
@@ -68,7 +68,7 @@ class BaseGroupsTable extends React.Component {
         for (const group of groups) {
             membersSum += group.members_count || 0;
             ticketsSum += (group.tickets || []).length;
-            allocatedSum += group.quota || 0;
+            allocatedSum += +group.pre_sale_tickets_quota || 0;
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,
@@ -106,6 +106,10 @@ class BaseGroupsTable extends React.Component {
 
             };
         })
+    }
+
+    getGroupAllocations(group) {
+        return group.pre_sale_tickets_quota ? group.pre_sale_tickets_quota.toString() : '';
     }
 
     render() {
@@ -173,7 +177,7 @@ class BaseGroupsTable extends React.Component {
                                                 hint={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
                                                 placeholder={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
                                                 aria-label={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
-                                                value={g.quota || ''}
+                                                value={this.getGroupAllocations(g)}
                                                 onChange={(e) => this.updateGroupsQuota(g, e.target.value)}/>
                                         </td>
                                     </PermissableComponent>

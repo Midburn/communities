@@ -15,6 +15,7 @@ module.exports = class SparkCampsController {
         this.getCampMembersCount = this.getCampMembersCount.bind(this);
         this.getCampMembersTickets = this.getCampMembersTickets.bind(this);
         this.getCamp = this.getCamp.bind(this);
+        this.updatePresaleQuota = this.updatePresaleQuota.bind(this);
     }
 
     async getCamp(req, res, next) {
@@ -87,6 +88,19 @@ module.exports = class SparkCampsController {
             }
             const groups = (await this.spark.get(path, req.headers)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
+        }
+    }
+
+    async updatePresaleQuota(req, res, next) {
+        try {
+            // We expect to receive an array of groups to update
+            const groups = req.body.groups;
+            for (const group of groups) {
+                await this.spark.post(`camps/${group.id}/updatePreSaleQuota`, { quota: group.pre_sale_tickets_quota }, req.headers);
+            }
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
         }
