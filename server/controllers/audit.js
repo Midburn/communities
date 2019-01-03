@@ -28,7 +28,7 @@ module.exports = class AuditController {
             if (!Object.values(constants.AUDIT_TYPES).includes(data_type)) {
                 throw new Error(`Unknown audit type - ${data_type} specified, currently only ${Object.keys(constants.AUDIT_TYPES).join(', ')} are allowed`);
             }
-            await services.db.Audits.create({ data_type, updated_by });
+            await services.db.Audits.create({ data_type, updated_by, ...req.body });
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
