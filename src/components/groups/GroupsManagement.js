@@ -10,12 +10,14 @@ import { ParsingService } from '../../services/parsing';
 import { GroupsService } from '../../services/groups';
 import { Tabs } from '../controls/Tabs';
 import { PresaleAdmin } from '../allocations/PresaleAdmin';
+import { EventRulesService } from '../../services/event-rules';
 
 @observer
 class BaseGroupsManagement extends React.Component {
 
     parsingService = new ParsingService();
     groupService = new GroupsService();
+    eventRules = new EventRulesService();
 
     @observable
     error;
@@ -32,6 +34,7 @@ class BaseGroupsManagement extends React.Component {
 
     constructor(props) {
         super(props);
+        this.init(props);
         if (props.location.hash) {
             this.setActiveTab(props.location.hash.replace('#', ''))
         }
@@ -117,14 +120,17 @@ class BaseGroupsManagement extends React.Component {
                 id: 1,
                 title: t(`${this.getTranslatePath(type)}.tabs.groups`),
                 component: <GroupsTable key={1} groups={this.groups}/>
-            },
-            {
-                id: 2,
-                title: t(`${this.getTranslatePath(type)}.tabs.presale`),
-                component: <PresaleAdmin key={2} />
             }
-
         ];
+        if (this.eventRules.isPresaleAvailable) {
+            tabs.push(
+                {
+                    id: 2,
+                    title: t(`${this.getTranslatePath(type)}.tabs.presale`),
+                    component: <PresaleAdmin key={2}/>
+                }
+            )
+        }
         return (
             <div>
                 <Row>

@@ -13,6 +13,7 @@ import { UsersService } from '../../services/users';
 import { AuditService } from '../../services/audit';
 import * as constants from '../../../models/constants';
 import { PermissableComponent } from '../controls/PermissableComponent';
+import { EventRulesService } from '../../services/event-rules';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -22,6 +23,8 @@ class BaseDGSGroupLeader extends React.Component {
     allocationsService = new AllocationService();
     auditService = new AuditService();
     usersService = new UsersService();
+    eventRules = new EventRulesService();
+
     @observable
     error;
     @observable
@@ -134,11 +137,16 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <PermissableComponent permitted={this.lastAudit}>
                     <Row>
-                        <Col md="12">
+                        <Col md="6">
                             <span>{t(`lastUpdate`)}: </span>
                             <Moment className="pl-2 pr-2"
                                     format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
                             <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                        </Col>
+                        <Col md="6">
+                            <span>{t(`allocationsLastDate`)}: </span>
+                            <Moment className="pl-2 pr-2"
+                                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.eventRules.lastDateToAllocatePreSale}</Moment>
                         </Col>
                     </Row>
                 </PermissableComponent>

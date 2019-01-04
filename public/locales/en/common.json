@@ -32,6 +32,7 @@
   "art_installations": "Art installation",
   "summery": "Summery",
   "by": "By",
+  "allocationsLastDate": "Last date to allocate tickets",
   "nav": {
     "gate": {
       "manage": "Entry management",
