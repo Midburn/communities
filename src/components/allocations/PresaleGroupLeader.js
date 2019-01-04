@@ -14,6 +14,7 @@ import { AuditService } from '../../services/audit';
 import * as constants from '../../../models/constants';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { EventRulesService } from '../../services/event-rules';
+import { PermissionService } from '../../services/permissions';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -24,6 +25,7 @@ class BaseDGSGroupLeader extends React.Component {
     auditService = new AuditService();
     usersService = new UsersService();
     eventRules = new EventRulesService();
+    permissionsService = new PermissionService();
 
     @observable
     error;
@@ -47,7 +49,15 @@ class BaseDGSGroupLeader extends React.Component {
 
     constructor(props) {
         super(props);
+        this.checkPermissions(props);
         this.getGroupData(props);
+    }
+
+    checkPermissions(props) {
+        const {match} = props;
+        if (!this.permissionsService.isAllowedToAllocateTickets(match.params.id)) {
+            this.permissionsService.redirectToSpark();
+        }
     }
 
     componentWillReceiveProps(props) {

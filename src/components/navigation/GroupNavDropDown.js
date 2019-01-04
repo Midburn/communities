@@ -45,7 +45,7 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
                         </DropdownItem>
                     </PermissableComponent>
                     {/*MANAGE MY GROUP LINK*/}
-                    <PermissableComponent permitted={permissionsService.isGroupManager(type) && !eventRulesService.isGroupEditingDisabled(type)}>
+                    <PermissableComponent permitted={permissionsService.isAGroupManager(type) && !eventRulesService.isGroupEditingDisabled(type)}>
                         <DropdownItem onClick={onClick}>
                             <NavLink
                                 to={`/${lng}/${parsingService.getPlural(type)}/${getMyGroupId()}/manage`}>{t(`${getTranslateModule()}.manage`)}</NavLink>
