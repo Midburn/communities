@@ -147,13 +147,13 @@ class BaseAppNavigation extends Component {
                                         <DropdownItem onClick={this.toggleCollapse}>
                                             <NavItem>
                                                 <AbsoluteNavLink
-                                                    to={this.getSparkLink('he/gate')}>{t('nav.gate.manage')}</AbsoluteNavLink>
+                                                    to={this.getSparkLink(`${lng}/gate`)}>{t('nav.gate.manage')}</AbsoluteNavLink>
                                             </NavItem>
                                         </DropdownItem>
                                         <DropdownItem onClick={this.toggleCollapse}>
                                             <NavItem>
                                                 <AbsoluteNavLink
-                                                    to={this.getSparkLink('he/gate/suppliers')}>{t('nav.gate.suppliers')}</AbsoluteNavLink>
+                                                    to={this.getSparkLink(`${lng}/gate/suppliers`)}>{t('nav.gate.suppliers')}</AbsoluteNavLink>
                                             </NavItem>
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -170,7 +170,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('en/suppliers-admin')}>{t('nav.management.suppliers')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/suppliers-admin`)}>{t('nav.management.suppliers')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
@@ -179,7 +179,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('/en/camp-files-admin')}>{t('nav.management.files')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/camp-files-admin`)}>{t('nav.management.files')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
@@ -187,7 +187,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('/en/events-admin')}>{t('nav.management.events')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/events-admin`)}>{t('nav.management.events')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>

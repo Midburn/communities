@@ -11,6 +11,7 @@ import { GroupsService } from '../../services/groups';
 import { Tabs } from '../controls/Tabs';
 import { PresaleAdmin } from '../allocations/PresaleAdmin';
 import { EventRulesService } from '../../services/event-rules';
+import { PermissionService } from '../../services/permissions';
 
 @observer
 class BaseGroupsManagement extends React.Component {
@@ -18,7 +19,7 @@ class BaseGroupsManagement extends React.Component {
     parsingService = new ParsingService();
     groupService = new GroupsService();
     eventRules = new EventRulesService();
-
+    permissionsService = new PermissionService();
     @observable
     error;
 
@@ -34,9 +35,17 @@ class BaseGroupsManagement extends React.Component {
 
     constructor(props) {
         super(props);
+        this.checkPermissions(props);
         this.init(props);
         if (props.location.hash) {
             this.setActiveTab(props.location.hash.replace('#', ''))
+        }
+    }
+
+    checkPermissions(props) {
+        const {match} = props;
+        if (!this.permissionsService.isAllowedToManageGroups(match.params.groupType)) {
+            this.permissionsService.redirectToSpark();
         }
     }
 

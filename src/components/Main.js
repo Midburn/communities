@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppNavigation } from './navigation/AppNavigation';
 import { Col, Container, Card, Row, CardBody } from 'mdbreact';
-import { Route, Switch, withRouter } from 'react-router-dom';
+import { Redirect, Route, Switch, withRouter } from 'react-router-dom';
 import { Groups } from './groups/Groups';
 import { withI18n } from 'react-i18next';
 import { Group } from './groups/Group';
@@ -10,8 +10,12 @@ import { GroupManagement } from './groups/Edit/GroupManagement';
 import { PresaleAdmin } from './allocations/PresaleAdmin';
 import { PresaleGroupLeader } from './allocations/PresaleGroupLeader';
 import { GroupsManagement } from './groups/GroupsManagement';
+import { PrivateRoute } from './navigation/PrivateRoute';
+import { PermissionService } from '../services/permissions';
 
 class BaseMain extends React.Component {
+
+    permissionService = new PermissionService();
 
     constructor(props) {
         super(props);
@@ -35,11 +39,13 @@ class BaseMain extends React.Component {
                                 <CardBody className="MainPanel">
                                     <Switch>
                                         <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
-                                        <Route path="/:lng(en|he)/:groupType/allocations" component={PresaleAdmin} exact/>
+                                        <PrivateRoute permit={this.permissionService.allowedToAllocateQuota}
+                                                      path="/:lng(en|he)/:groupType/allocations" component={PresaleAdmin} exact/>
                                         <Route path="/:lng(en|he)/:groupType/management" component={GroupsManagement} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/allocations" component={PresaleGroupLeader} exact/>
-                                        <Route path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
+                                        <Route  path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/manage" component={GroupManagement} exact/>
+                                        <Redirect path="/" to="/he/camps"  exact />
                                     </Switch>
                                 </CardBody>
                             </Card>
