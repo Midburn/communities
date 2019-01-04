@@ -10,6 +10,7 @@ import { TableSummery } from '../controls/TableSummery';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import * as constants from '../../../models/constants';
 import { FloatingDashboard } from '../controls/FloatingDashboard';
+import { EditableItem } from '../controls/EditableItem/EditableItem';
 
 @observer
 class BaseGroupsTable extends React.Component {
@@ -18,6 +19,8 @@ class BaseGroupsTable extends React.Component {
 
     @observable
     query = '';
+    @observable
+    filterCharts = false;
 
     get TRANSLATE_PREFIX() {
         const {match} = this.props;
@@ -117,7 +120,8 @@ class BaseGroupsTable extends React.Component {
             return [];
         }
         let quotaSum = 0;
-        for (const group of groups) {
+        const filteredCharts = groups.filter(this.filter);
+        for (const group of this.filterCharts ? filteredCharts : groups) {
             quotaSum += +group.pre_sale_tickets_quota || 0;
         }
         const allocatedSum = allocations.filter(allocation => allocation.allocation_type === constants.ALLOCATION_TYPES.PRE_SALE).length;
@@ -155,7 +159,7 @@ class BaseGroupsTable extends React.Component {
                 ],
                 datasets: [
                     {
-                        data: [groupsFullyAllocatedSum, groups.length - groupsFullyAllocatedSum],
+                        data: [groupsFullyAllocatedSum, (this.filterCharts ? filteredCharts.length : groups.length) - groupsFullyAllocatedSum],
                         backgroundColor: [
                             "#F7464A",
                             "#949FB1",
@@ -187,6 +191,8 @@ class BaseGroupsTable extends React.Component {
         const {t, groups, presale, match} = this.props;
         return (
             <div>
+                <EditableItem editMode={true} type="checkbox" onChange={(e) => this.filterCharts = e.target.checked}
+                              value={this.filterCharts} title={t('filterCharts')} />
                 <PermissableComponent permitted={presale}>
                     <FloatingDashboard charts={this.chartData} title={t('summery')}/>
                 </PermissableComponent>

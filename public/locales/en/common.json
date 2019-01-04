@@ -33,6 +33,7 @@
   "summery": "Summery",
   "by": "By",
   "allocationsLastDate": "Last date to allocate tickets",
+  "filterCharts": "Filter charts by filter",
   "nav": {
     "gate": {
       "manage": "Entry management",
