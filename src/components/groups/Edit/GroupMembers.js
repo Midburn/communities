@@ -9,6 +9,7 @@ import { WarningModal } from '../../controls/WarningModal';
 import * as constants from '../../../../models/constants';
 import { AllocationService } from '../../../services/allocations';
 import { ParsingService } from '../../../services/parsing';
+import { FloatingDashboard } from '../../controls/FloatingDashboard';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -128,9 +129,17 @@ class BaseGroupMembers extends React.Component {
     getMemberTicketCount(memberId) {
         const {tickets} = this.props;
         if (!tickets) {
-            return;
+            return 0;
         }
-        return tickets.filter(ticket => ticket.buyer_id === memberId).length;
+        return tickets.filter(ticket => ticket.buyer_id === memberId || ticket.holder === memberId).length;
+    }
+
+    isMemberHoldingTicket(memberId) {
+        const {tickets} = this.props;
+        if (!tickets) {
+            return false;
+        }
+        return !!tickets.filter(ticket => ticket.holder === memberId);
     }
 
     getMemberTransfferedTicketCount(memberId) {
@@ -225,6 +234,69 @@ class BaseGroupMembers extends React.Component {
         })
     }
 
+    get chartData() {
+        const {t, group, presale, members, allocations} = this.props;
+        if (!allocations) {
+            return [];
+        }
+        let totalAllocated = 0, membersWithTickets = 0;
+        if (presale) {
+            for (const member of members) {
+                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
+                    ? 1 : 0;
+                membersWithTickets += this.isMemberHoldingTicket(member.user_id) ? 1 : 0;
+            }
+        }
+        const totalAllocationsUsageChart = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsage`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsed`),
+                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`)
+                ],
+                datasets: [
+                    {
+                        data: [totalAllocated, group.pre_sale_tickets_quota - totalAllocated],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+
+        };
+        const totalMembersWithTicketsChart = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.membersTickets`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithTickets`),
+                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithoutTickets`)
+                ],
+                datasets: [
+                    {
+                        data: [membersWithTickets, members.length - membersWithTickets],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+
+        };
+        return [totalAllocationsUsageChart, totalMembersWithTicketsChart];
+    }
+
     toggleAllocationWarning = () => {
         this.allocationWarning = !this.allocationWarning;
     }
@@ -238,6 +310,9 @@ class BaseGroupMembers extends React.Component {
                     title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
                     toggle={this.toggleAllocationWarning}
                     text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
+                <PermissableComponent permitted={presale}>
+                    <FloatingDashboard charts={this.chartData} title={t('summery')}/>
+                </PermissableComponent>
                 <Input
                     className="form-control"
                     type="text"

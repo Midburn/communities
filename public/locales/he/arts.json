@@ -60,6 +60,10 @@
       "header": "ניהול הקצאות כרטיסי הוקרה למיצבים",
       "description": "הקצה כמות כרטיסי הוקרה לשימוש מיצבים אשר השתתפו באירוע הקודם"
     },
+    "charts": {
+      "allocationsUsage": "ניצול הקצאות",
+      "fullGroups": "מיצבים שניצלו את הקצאותים"
+    },
     "table": {
       "search": "חפש מיצב",
       "groupName": "שם המיצב",
@@ -70,13 +74,18 @@
       "totalPurchased": "כרטיסים שנרכשו",
       "totalEntered": "נכנסו לאירוע הקודם",
       "quota": "מכסה",
-      "noQuota": "הקצה"
+      "noQuota": "הקצה",
+      "allocated": "כרטיסים שהוקצו ע\"י המיצב",
+      "allocatedAll": "כרטיסים שהוקצאו ע\"י המיצבים"
     },
     "sums": {
       "groups": "מיצבים",
       "members": "חברים",
       "ticketsAll": "כרטיסים שנרכשו",
-      "allocated": "הוקצאו"
+      "allocated": "הוקצאו למיצבים",
+      "allocationsLeft": "הקצאות שנותרו",
+      "allocationsFull": "מיצבים שניצלו את ההקצאות",
+      "allocationsTotal": "מיצבים עם הקצאות זמינות"
     }
   },
   "groupLeader": {

@@ -8,6 +8,9 @@ import { action } from 'mobx/lib/mobx';
 import { GroupsService } from '../../services/groups';
 import { TableSummery } from '../controls/TableSummery';
 import { PermissableComponent } from '../controls/PermissableComponent';
+import * as constants from '../../../models/constants';
+import { FloatingDashboard } from '../controls/FloatingDashboard';
+import { EditableItem } from '../controls/EditableItem/EditableItem';
 
 @observer
 class BaseGroupsTable extends React.Component {
@@ -16,6 +19,8 @@ class BaseGroupsTable extends React.Component {
 
     @observable
     query = '';
+    @observable
+    filterCharts = false;
 
     get TRANSLATE_PREFIX() {
         const {match} = this.props;
@@ -98,7 +103,8 @@ class BaseGroupsTable extends React.Component {
             };
             const presaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)]: this.getFormerEventEntries(g),
-                [t(`${this.TRANSLATE_PREFIX}.table.quota`)]: g.quota || 0
+                [t(`${this.TRANSLATE_PREFIX}.table.quota`)]: g.quota || 0,
+                [t(`${this.TRANSLATE_PREFIX}.table.allocated`)]: this.getGroupAllocatedCount(g, constants.ALLOCATION_TYPES.PRE_SALE)
             } : {};
             return {
                 ...baseData,
@@ -108,14 +114,90 @@ class BaseGroupsTable extends React.Component {
         })
     }
 
+    get chartData() {
+        const {t, groups, allocations} = this.props;
+        if (!allocations) {
+            return [];
+        }
+        let quotaSum = 0;
+        const filteredCharts = groups.filter(this.filter);
+        for (const group of this.filterCharts ? filteredCharts : groups) {
+            quotaSum += +group.pre_sale_tickets_quota || 0;
+        }
+        const allocatedSum = allocations.filter(allocation => allocation.allocation_type === constants.ALLOCATION_TYPES.PRE_SALE).length;
+        const groupsFullyAllocatedSum = groups.filter(group => {
+            return group.pre_sale_tickets_quota === allocations.filter(allocation => allocation.related_group === group.id).length
+        }).length;
+        const totalAllocationsUsageChart = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsage`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.table.allocatedAll`),
+                    t(`${this.TRANSLATE_PREFIX}.sums.allocationsLeft`)
+                ],
+                datasets: [
+                    {
+                        data: [allocatedSum, quotaSum - allocatedSum],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+        };
+        const totalGroupsFullyAllocated = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.fullGroups`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.sums.allocationsFull`),
+                    t(`${this.TRANSLATE_PREFIX}.sums.allocationsTotal`)
+                ],
+                datasets: [
+                    {
+                        data: [groupsFullyAllocatedSum, (this.filterCharts ? filteredCharts.length : groups.length) - groupsFullyAllocatedSum],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+        };
+        return [totalAllocationsUsageChart, totalGroupsFullyAllocated];
+    }
+
     getGroupAllocations(group) {
         return group.pre_sale_tickets_quota ? group.pre_sale_tickets_quota.toString() : '';
+    }
+
+    getGroupAllocatedCount(group, allocationType) {
+        const {allocations} = this.props;
+        if (!allocations) {
+            return '';
+        }
+        return allocations.filter(allocation => allocation.related_group === group.id && allocation.allocation_type === allocationType).length;
     }
 
     render() {
         const {t, groups, presale, match} = this.props;
         return (
             <div>
+                <EditableItem editMode={true} type="checkbox" onChange={(e) => this.filterCharts = e.target.checked}
+                              value={this.filterCharts} title={t('filterCharts')} />
+                <PermissableComponent permitted={presale}>
+                    <FloatingDashboard charts={this.chartData} title={t('summery')}/>
+                </PermissableComponent>
+                <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
+                              sums={this.tableSums} csvData={this.CSVdata}/>
                 <Input
                     className="form-control"
                     type="text"
@@ -139,6 +221,9 @@ class BaseGroupsTable extends React.Component {
                             </PermissableComponent>
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.quota`)}</th>
+                            </PermissableComponent>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.table.allocated`)}</th>
                             </PermissableComponent>
                         </tr>
                     </TableHead>
@@ -181,13 +266,17 @@ class BaseGroupsTable extends React.Component {
                                                 onChange={(e) => this.updateGroupsQuota(g, e.target.value)}/>
                                         </td>
                                     </PermissableComponent>
+                                    <PermissableComponent permitted={presale}>
+                                        <td>
+                                            {this.getGroupAllocatedCount(g, constants.ALLOCATION_TYPES.PRE_SALE)}
+                                        </td>
+                                    </PermissableComponent>
                                 </tr>
+
                             );
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
-                              sums={this.tableSums} csvData={this.CSVdata}/>
             </div>
         );
     }

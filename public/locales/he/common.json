@@ -32,6 +32,9 @@
   "theme_camps": "מחנה נושא",
   "art_installations": "מיצב",
   "by": "ע\"י",
+  "summery": "סיכום",
+  "allocationsLastDate": "תאריך אחרון להקצאת כרטיסים",
+  "filterCharts": "הצג נתונים לאחר פילטר בסיכום",
   "nav": {
     "gate": {
       "manage": "ניהול כניסות",
@@ -68,6 +71,14 @@
     "tooltips": {
       "allocate": "הוסף\\הסר הקצאה",
       "allocatedByOtherGroup": "בעל הקצאה מ{{groupType}} אחר"
+    },
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
     },
     "allocationWarning": {
       "title": "מכסה מלאה",

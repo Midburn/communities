@@ -22,4 +22,11 @@ export class EventRulesService {
        return now.isAfter(start) && now.isBefore(end);
     }
 
+    get lastDateToAllocatePreSale() {
+        if (!this.currentEventJson.appreciation_tickets_allocation_start || !this.currentEventJson.appreciation_tickets_allocation_end) {
+            return null;
+        }
+        return this.currentEventJson.appreciation_tickets_allocation_end;
+    }
+
 }
