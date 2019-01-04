@@ -20,6 +20,12 @@ module.exports = {
      */
     GROUP_TYPES,
     ALLOCATION_GROUPS,
+    GIVEN_BY_SYSTEM_CODE: -1,
+    // Used to prevent conflicts in permission table
+    ENTITY_TYPE: {
+        USER: 'User',
+        GROUP: 'Group'
+    },
     GROUP_TYPES_TO_ALLOCATIPN_GROUP: {
         [GROUP_TYPES.CAMP]: ALLOCATION_GROUPS.THEME_CAMPS,
         [GROUP_TYPES.ARTS]: ALLOCATION_GROUPS.ART_INSTALLATIONS
@@ -31,6 +37,12 @@ module.exports = {
 
     SPARK_ACTION_TYPES: {
         ALLOCATE_PRESALE: 'pre_sale_ticket'
+    },
+
+    PERMISSION_TYPES: {
+        ADMIN: 'admin_permission',
+        ALLOCATE_PRESALE_TICKET: 'pre_sale_allocation_permission',
+        GIVE_PERMISSION: 'give_permission'
     },
     /**
      * We don't want to delete things from the tables.

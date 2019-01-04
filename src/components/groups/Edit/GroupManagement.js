@@ -69,7 +69,7 @@ class BaseGroupManagement extends React.Component {
             {
                 id: 1,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers key={3} members={this.members} />
+                component: <GroupMembers group={this.group} key={3} members={this.members} />
             },
             // {
             //     id: 2,

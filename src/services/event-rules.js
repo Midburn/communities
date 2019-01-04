@@ -5,7 +5,7 @@ import moment from 'moment';
 export class EventRulesService {
 
     get currentEventJson() {
-        return state.currentEvent.addinfo_json ? JSON.parse(state.currentEvent.addinfo_json)  : {};
+        return state.currentEvent && state.currentEvent.addinfo_json ? JSON.parse(state.currentEvent.addinfo_json)  : {};
     }
 
     isGroupEditingDisabled(groupType) {

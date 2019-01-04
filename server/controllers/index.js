@@ -9,6 +9,7 @@ const SparkEventsController = require('./sparkEvents');
 const AuditController = require('./audit');
 const SparkUsersController = require('./sparkUsers');
 const AllocationsController = require('./allocations');
+const PermissionsController = require('./permissions');
 
 module.exports = {
     auth: new AuthController(),
@@ -17,5 +18,6 @@ module.exports = {
     sparkEvents: new SparkEventsController(),
     audit: new AuditController(),
     users: new SparkUsersController(),
-    allocations: new AllocationsController()
+    allocations: new AllocationsController(),
+    permissions: new PermissionsController()
 };
