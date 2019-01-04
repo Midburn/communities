@@ -14,6 +14,7 @@ import * as constants from '../../../models/constants';
 import './PresaleAdmin.scss';
 import Moment from 'react-moment';
 import { UsersService } from '../../services/users';
+import { AllocationService } from '../../services/allocations';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -23,6 +24,7 @@ class BasePresaleAdmin extends React.Component {
     eventsService = new EventsService();
     auditService = new AuditService();
     usersService = new UsersService();
+    allocationsService = new AllocationService();
     /**
      * We'll keep track of groups changed in order to send them on save.
      */
@@ -41,6 +43,9 @@ class BasePresaleAdmin extends React.Component {
     @observable
     auditedUser = [];
 
+    @observable
+    allocations = [];
+
     get lastAudit() {
         if (!this.audits || !this.audits[0]) {
             return;
@@ -50,16 +55,21 @@ class BasePresaleAdmin extends React.Component {
 
     constructor(props) {
         super(props);
-        this.init();
+        this.init(props);
     }
 
-    async init() {
+    componentWillReceiveProps(props) {
+        this.init(props);
+    };
+
+    async init(props) {
         try {
-            const {match} = this.props;
+            const {match} = props;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
             this.getGroupsMembersCount();
             this.getGroupsTickets();
             this.getGroupsFormerEventTickets();
+            this.getGroupsAllocations();
             this.getAudits();
         } catch (e) {
             this.groups = [];
@@ -140,6 +150,14 @@ class BasePresaleAdmin extends React.Component {
         }
     }
 
+    async getGroupsAllocations() {
+        try {
+            this.allocations = (await this.allocationsService.getGroupsAllocations([this.groups.map(g => g.id)])) || [];
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+
     saveChanges = async () => {
         try {
             const groupsToUpdate = Object.entries(this.changes).map(([id, group]) => {
@@ -200,7 +218,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable presale={true} groups={this.groups}
+                        <GroupsTable allocations={this.allocations}
+                            presale={true} groups={this.groups}
                                      presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>

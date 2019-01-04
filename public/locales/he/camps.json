@@ -60,6 +60,10 @@
       "header": "ניהול הקצאות כרטיסי הוקרה למחנות נושא",
       "description": "הקצה כמות כרטיסי הוקרה לשימוש מחנות אשר השתתפו באירוע הקודם"
     },
+    "charts": {
+      "allocationsUsage": "ניצול הקצאות",
+      "fullGroups": "מחנות נושא שניצלו את הקצאותים"
+    },
     "table": {
       "search": "חפש מחנות",
       "groupName": "שם המחנה",
@@ -70,13 +74,18 @@
       "totalPurchased": "כרטיסים שנרכשו",
       "totalEntered": "נכנסו לאירוע הקודם",
       "quota": "מכסה",
-      "noQuota": "הקצה"
+      "noQuota": "הקצה",
+      "allocated": "כרטיסים שהוקצו ע\"י המחנה",
+      "allocatedAll": "כרטיסים שהוקצאו ע\"י המחנות"
     },
     "sums": {
       "groups": "מחנות נושא",
       "members": "חברים",
       "ticketsAll": "כרטיסים שנרכשו",
-      "allocated": "הוקצאו"
+      "allocated": "הוקצאו למחנות",
+      "allocationsLeft": "הקצאות שנותרו",
+      "allocationsFull": "מחנות נושא שניצלו את ההקצאות",
+      "allocationsTotal": "מחנות נושא עם הקצאות זמינות"
     }
   },
   "groupLeader": {
