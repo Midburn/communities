@@ -47,7 +47,7 @@ class BasePresaleAdmin extends React.Component {
     allocations = [];
 
     get lastAudit() {
-        if (!this.audits || !this.audits[0]) {
+        if (!this.audits || !this.audits.length || !this.audits[0]) {
             return;
         }
         return this.audits[0].createdAt;

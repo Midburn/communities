@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, CardBody } from 'mdbreact';
 import { Doughnut } from 'react-chartjs-2';
 import './FloatingDashboard.scss';
 
@@ -21,20 +20,20 @@ export const FloatingDashboard = ({charts, title}) => {
         }
     };
     return (
-        <dive className="FloatingDashboard">
+        <div className="FloatingDashboard">
             <h3>{title}</h3>
             <div className="FloatingDashboardBody d-flex justify-content-center  align-items-center">
                 {(charts || []).map((chart, index) => {
                     return (
-                        <div className="d-flex align-items-center flex-column">
+                        <div key={index} className="d-flex align-items-center flex-column">
                             <label>{chart.title}</label>
                             <div>
-                                <Doughnut key={index} data={chart.data} options={{...BASE_OPTIONS, ...chart.options}} />
+                                <Doughnut data={chart.data} options={{...BASE_OPTIONS, ...chart.options}} />
                             </div>
                         </div>
                     );
                 })}
             </div>
-        </dive>
+        </div>
     );
 };

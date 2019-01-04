@@ -70,6 +70,14 @@
       "allocate": "הוסף\\הסר הקצאה",
       "allocatedByOtherGroup": "בעל הקצאה מ{{groupType}} אחר"
     },
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
+    },
     "allocationWarning": {
       "title": "מכסה מלאה",
       "text": "הגעת למכסה שהוקצבה לך, אתה יכול להעביר הקצאות אך לא להוסיף."
