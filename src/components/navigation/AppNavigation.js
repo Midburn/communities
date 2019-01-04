@@ -211,7 +211,9 @@ class BaseAppNavigation extends Component {
                         {state.allocationGroups.map(group => {
                             return (
                                 <PermissableComponent key={group.id}
-                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] && this.eventRules.isPresaleAvailable}>
+                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] &&
+                                                      this.eventRules.isPresaleAvailable &&
+                                                      this.permissionsService.isAllowedToAllocateTickets(group.id)}>
                                     <NavItem onClick={this.toggleCollapse}>
                                         <NavLink
                                             to={`/${lng}/${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>

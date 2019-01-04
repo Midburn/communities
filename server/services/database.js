@@ -36,6 +36,8 @@ class DatabaseService {
     async initModels() {
         this.Audits = await Models.Audits(this.sequelize, Sequelize);
         this.Allocations = await Models.Allocations(this.sequelize, Sequelize);
+        this.Permissions = await Models.Permissions(this.sequelize, Sequelize);
+        this.LoggedUsers = await Models.LoggedUsers(this.sequelize, Sequelize);
         // DO NOT USE FORCE TRUE - this will recreate the data base
         await this.sequelize.sync({ force: false });
     }

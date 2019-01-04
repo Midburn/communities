@@ -11,7 +11,8 @@ const constants = require('../models/constants');
 const services = require('./services');
 const routers = require('./routers');
 const GenericResponse = require('../models/generic-response');
-const dbService = require('./services/database')
+const morganLogger = require('morgan');
+const session = require('express-session');
 
 class Server {
 
@@ -19,6 +20,7 @@ class Server {
         this.app = express();
         this.config = services.config;
         this.listener = null;
+        this.initLogger();
         this.initMiddlewares();
         this.initRouters();
         this.initStaticServer();
@@ -59,6 +61,10 @@ class Server {
                 }
             }
         });
+    }
+
+    initLogger() {
+        this.app.use(morganLogger('dev', {}));
     }
 
     initRouters() {

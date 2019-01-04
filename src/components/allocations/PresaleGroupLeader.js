@@ -39,6 +39,8 @@ class BaseDGSGroupLeader extends React.Component {
     allocations = [];
     @observable
     auditedUser = [];
+    @observable
+    groupPermissions = [];
 
     get lastAudit() {
         if (!this.audits || !this.audits[0]) {
@@ -95,9 +97,18 @@ class BaseDGSGroupLeader extends React.Component {
             }
             await this.getGroupAllocations();
             await this.getAudits();
+            await this.getGroupPermissions();
         } catch (e) {
             console.warn(e.stack);
             this.error = e;
+        }
+    }
+
+    getGroupPermissions = async () => {
+        try {
+            this.groupPermissions = await this.permissionsService.getPermissionsRelatedToEntity(this.group.id);
+        } catch (e) {
+            console.warn(e);
         }
     }
 
@@ -123,7 +134,7 @@ class BaseDGSGroupLeader extends React.Component {
         }
     }
 
-    async getGroupAllocations() {
+    getGroupAllocations = async () => {
         try {
             this.allocations = (await this.allocationsService.getMembersAllocations([this.members.map(member => member.user_id)])) || [];
         } catch (e) {
@@ -167,7 +178,9 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers allocationsChanged={this.allocationsChanged}
+                        <GroupMembers permissions={this.groupPermissions}
+                                      permissionsChanged={this.getGroupPermissions}
+                                      allocationsChanged={this.allocationsChanged}
                                       allocations={this.allocations}
                                       group={this.group} presale={true} ticketCount={true} match={match}
                                       tickets={this.tickets || []} members={this.members || []}/>

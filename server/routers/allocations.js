@@ -1,5 +1,7 @@
 const Router = require('express').Router;
 const controllers = require('../controllers');
+const constants = require('../../models/constants');
+const services = require('../services');
 
 module.exports = class AllocationsRouter {
 
@@ -20,13 +22,19 @@ module.exports = class AllocationsRouter {
          * E.G - POST /api/VERSION/allocations
          */
         this.router.route('/allocations')
-            .post(this.controller.allocate);
+            .post(services.permissions.checkUserPermission(
+                constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET,
+                constants.ENTITY_TYPE.GROUP,
+                (req) => req.body.related_group), this.controller.allocate);
         /**
          * remove allocation
          * E.G - DELETE /api/VERSION/allocations
          */
         this.router.route('/allocations/:id')
-            .delete(this.controller.removeAllocation);
+            .delete(services.permissions.checkUserPermission(
+                constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET,
+                constants.ENTITY_TYPE.GROUP,
+                (req) => req.body.related_group), this.controller.removeAllocation);
         /**
          * get allocations for certain groups
          * E.G - POST /api/VERSION/allocations/groups/:id

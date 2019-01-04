@@ -10,12 +10,15 @@ import * as constants from '../../../../models/constants';
 import { AllocationService } from '../../../services/allocations';
 import { ParsingService } from '../../../services/parsing';
 import { FloatingDashboard } from '../../controls/FloatingDashboard';
+import { state } from '../../../models/state';
+import { PermissionService } from '../../../services/permissions';
 
 @observer
 class BaseGroupMembers extends React.Component {
 
     allocationsService = new AllocationService();
     parsingService = new ParsingService();
+    permissionsService = new PermissionService();
     TRANSLATE_PREFIX = `members`;
 
     ALLOCATION_TYPE_TO_GROUP_QUOTA = {
@@ -77,6 +80,7 @@ class BaseGroupMembers extends React.Component {
                 return;
             }
             const allocationId = this.getMemberAllocationId(memberId, allocationType);
+            console.log(allocationId);
             if (allocationId || allocationId === 0) {
                 // User is already allocated!
                 await this.allocationsService.removeAllocation(allocationId);
@@ -150,38 +154,53 @@ class BaseGroupMembers extends React.Component {
         return tickets.filter(ticket => ticket.buyer_id === memberId && ticket.holder_id !== memberId).length;
     }
 
-    getMemberAllocationPermission(memberId) {
-        if (!this.memberPermissions[memberId]) {
-            return this.memberPermissions[memberId];
-        }
-        // TODO - replace
-        return this.memberPermissions[memberId].includes('allocatePresale');
-    }
-
-    changeMembersAllocatingPermission(memberId, e) {
-        // TODO - implement saving changes + permissions from DB.
-        if (e.target.checked) {
-            this.addPermission(memberId, 'allocatePresale');
-        } else {
-            this.removePermission(memberId, 'allocatePresale');
-        }
-    }
-
-    addPermission(memberId, permission) {
-        if (!this.memberPermissions[memberId]) {
-            this.memberPermissions[memberId] = [permission]
-        } else {
-            this.memberPermissions[memberId].push(permission);
-        }
-    }
-
-    removePermission(memberId, permission) {
-        if (!this.memberPermissions[memberId]) {
+    getMemberPermission(memberId, permissionType) {
+        const {permissions} = this.props;
+        if (!permissions) {
             return;
         }
-        const index = this.memberPermissions[memberId].indexOf(permission);
-        if (index > -1) {
-            this.memberPermissions[memberId].splice(index, 1);
+        return permissions.some(permission => permission.permission_type === permissionType && permission.user_id === memberId);
+    }
+
+    async changeMemberPermission(memberId, permissionType) {
+        const { permissions, permissionsChanged } = this.props;
+        if (!permissions) {
+            return;
+        }
+        const permission = permissions.find(p => {
+            return p.permission_type === permissionType &&
+                p.user_id === memberId;
+        });
+        if (!permission) {
+            await this.addPermission(memberId, permissionType);
+        } else {
+            await this.removePermission(permission);
+        }
+        permissionsChanged();
+    }
+
+    async addPermission(memberId, permissionType) {
+        const {group} = this.props;
+        try {
+            await this.permissionsService.addPermission({
+                user_id: memberId,
+                permission_type: permissionType,
+                entity_type: constants.ENTITY_TYPE.GROUP,
+                related_entity: group.id,
+                permitted_by: state.loggedUser.user_id
+            })
+        } catch (e) {
+            console.warn(e);
+        }
+
+    }
+
+    async removePermission(permission) {
+        const {group} = this.props;
+        try {
+            await this.permissionsService.revokePermission(permission.id, constants.ENTITY_TYPE.GROUP, group.id);
+        } catch (e) {
+            console.warn(e);
         }
     }
 
@@ -228,7 +247,7 @@ class BaseGroupMembers extends React.Component {
                 [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
                     constants.ALLOCATION_TYPES.PRE_SALE,
                     true),
-                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberAllocationPermission(member.user_id)
+                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberPermission(member.user_id)
             } : {};
             return {...baseData, ...preSaleData}
         })
@@ -295,6 +314,18 @@ class BaseGroupMembers extends React.Component {
 
         };
         return [totalAllocationsUsageChart, totalMembersWithTicketsChart];
+    }
+
+    isChangePermissionsDisabled(memberId) {
+        const {permissions, group} = this.props;
+        if (memberId === group.main_contact) {
+            // This is the camp manager - can't change his permissions.
+            return true;
+        }
+        return permissions && !permissions.some(permission => {
+            return permission.permission_type === constants.PERMISSION_TYPES.GIVE_PERMISSION &&
+                permission.user_id === state.loggedUser.user_id;
+        })
     }
 
     toggleAllocationWarning = () => {
@@ -376,8 +407,9 @@ class BaseGroupMembers extends React.Component {
                                     <PermissableComponent permitted={presale}>
                                         <td className="d-flex justify-content-center">
                                             <input
-                                                onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
-                                                checked={this.getMemberAllocationPermission(member.user_id)}
+                                                disabled={this.isChangePermissionsDisabled(member.user_id)}
+                                                onChange={(e) => this.changeMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
+                                                checked={this.getMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
                                                 type="checkbox"/>
                                         </td>
                                     </PermissableComponent>

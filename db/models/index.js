@@ -1,7 +1,11 @@
-const Audits = require('./audit');
-const Allocations = require('./allocations');
+const Audits = require('./audit'),
+    Allocations = require('./allocations'),
+    Permissions = require('./permissions'),
+    LoggedUsers = require('./loggedusers');
 
 module.exports = {
     Audits,
-    Allocations
+    Allocations,
+    Permissions,
+    LoggedUsers,
 };

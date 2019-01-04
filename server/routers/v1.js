@@ -6,6 +6,7 @@ const EventsRouter = require('./events');
 const AuditRouter = require('./audit');
 const UserRouter = require('./users');
 const AllocationsRouter = require('./allocations');
+const PermissionsRouter = require('./permissions');
 
 module.exports = class V1Router {
 
@@ -19,6 +20,7 @@ module.exports = class V1Router {
         this.audit = new AuditRouter();
         this.users = new UserRouter();
         this.allocations = new AllocationsRouter();
+        this.permissions = new PermissionsRouter();
         this.VERSION = '/v1';
         this.initMiddleware();
         this.initRoutes();
@@ -36,5 +38,6 @@ module.exports = class V1Router {
         this.router.use(this.VERSION, this.audit.router);
         this.router.use(this.VERSION, this.users.router);
         this.router.use(this.VERSION, this.allocations.router);
+        this.router.use(this.VERSION, this.permissions.router);
     }
 };

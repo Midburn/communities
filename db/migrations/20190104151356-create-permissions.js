@@ -2,7 +2,7 @@
 const constants = require('../../models/constants');
 module.exports = {
     up: (queryInterface, Sequelize) => {
-        return queryInterface.createTable('Allocations', {
+        return queryInterface.createTable('Permissions', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
@@ -14,30 +14,17 @@ module.exports = {
                 values: [constants.DB_RECORD_STATUS_TYPES.ACTIVE, constants.DB_RECORD_STATUS_TYPES.DELETED],
                 defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE
             },
-            allocation_type: {
-                type: Sequelize.ENUM,
-                values: [constants.ALLOCATION_TYPES.EARLY_ARRIVAL, constants.ALLOCATION_TYPES.PRE_SALE]
-            },
-            allocated_by: {
+            user_id: {
                 type: Sequelize.INTEGER
             },
-            allocated_to: {
-                type: Sequelize.INTEGER
-            },
-            related_group: {
-                type: Sequelize.INTEGER
-            },
-            active_for_event: {
+            permission_type: {
                 type: Sequelize.STRING
             },
-            allocation_group: {
-                type: Sequelize.ENUM,
-                values: [
-                    constants.ALLOCATION_GROUPS.THEME_CAMPS,
-                    constants.ALLOCATION_GROUPS.ART_INSTALLATIONS,
-                    constants.ALLOCATION_GROUPS.VOLUNTEER_DEPARTMENT,
-                    constants.ALLOCATION_GROUPS.PRODUCTION,
-                ]
+            related_entity: {
+                type: Sequelize.INTEGER
+            },
+            permitted_by: {
+                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,
@@ -46,10 +33,11 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE
-            }
+            },
+            entity_type: Sequelize.STRING
         });
     },
     down: (queryInterface, Sequelize) => {
-        return queryInterface.dropTable('Allocations');
+        return queryInterface.dropTable('Permissions');
     }
 };
