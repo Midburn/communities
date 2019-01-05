@@ -108,8 +108,13 @@ export class PermissionService {
     }
 
     redirectToSpark() {
-        window.location.href = state.configurations.SPARK_HOST ||
-        process.env.NODE_ENV === 'production' ? 'https://spark.midburn.org' : 'http://localhost:3000';
+        let redirect;
+        if (state.configurations.SPARK_HOST) {
+            redirect = state.configurations.SPARK_HOST;
+        } else {
+            redirect = process.env.NODE_ENV === 'production' ? 'https://spark.midburn.org' : 'http://localhost:3000';
+        }
+        window.location.href = redirect;
     }
 
 }

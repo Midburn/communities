@@ -89,7 +89,8 @@
     "start:server": "cross-env NODE_ENV=production node server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "sequelize": "sequelize"
+    "sequelize": "sequelize",
+    "createdb": "mysql -u root -p < db/migrations/create_db.sql"
   },
   "eslintConfig": {
     "extends": "react-app"

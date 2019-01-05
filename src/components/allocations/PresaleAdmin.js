@@ -66,13 +66,12 @@ class BasePresaleAdmin extends React.Component {
         try {
             const {match} = props;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
-            this.getGroupsMembersCount();
-            this.getGroupsTickets();
-            this.getGroupsFormerEventTickets();
-            this.getGroupsAllocations();
-            this.getAudits();
+            await this.getGroupsMembersCount();
+            await this.getGroupsTickets();
+            await this.getGroupsFormerEventTickets();
+            await this.getGroupsAllocations();
+            await this.getAudits();
         } catch (e) {
-            this.groups = [];
             // TODO - what do we do with errors?
             this.error = e;
         }

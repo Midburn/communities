@@ -80,10 +80,9 @@ class BaseGroupMembers extends React.Component {
                 return;
             }
             const allocationId = this.getMemberAllocationId(memberId, allocationType);
-            console.log(allocationId);
             if (allocationId || allocationId === 0) {
                 // User is already allocated!
-                await this.allocationsService.removeAllocation(allocationId);
+                await this.allocationsService.removeAllocation(group.id, allocationId);
             } else {
                 await this.allocationsService.allocate(
                     allocationType,
@@ -344,6 +343,8 @@ class BaseGroupMembers extends React.Component {
                 <PermissableComponent permitted={presale}>
                     <FloatingDashboard charts={this.chartData} title={t('summery')}/>
                 </PermissableComponent>
+                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
+                              csvData={this.CSVdata}/>
                 <Input
                     className="form-control"
                     type="text"
@@ -418,8 +419,7 @@ class BaseGroupMembers extends React.Component {
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
-                              csvData={this.CSVdata}/>
+        
             </div>
 
 
