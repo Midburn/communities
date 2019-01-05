@@ -7,7 +7,29 @@ module.exports = {
     /**
      * Group types for DB + navs.
      */
-    GROUP_TYPES,
+
+
+    /** 
+     * Group-related enums
+     */
+    NOISE_LEVEL: {
+        QUIET: 'quiet',
+        MEDIUM: 'medium',
+        NOISY: 'noisy',
+        VERY_NOISY: 'very_noisy'
+    },
+
+    GROUP_STATUS: {
+        ACTIVE: 'active',
+        OPEN: 'open',
+        CLOSED: 'closed',
+        DELETED: 'deleted'
+    },
+
+    GROUP_TYPES: {
+        CAMP: 'camp',
+        ART: 'art'
+    },
 
     SPARK_TYPES_TO_GROUP_TYPES: {
         art_installation: GROUP_TYPES.ART,
