@@ -1,0 +1,22 @@
+language: node_js
+sudo: required
+node_js:
+  - "10"
+env:
+  matrix:
+  - DEPLOY_ENVIRONMENT=staging DEPLOY_BRANCH=master
+  - DEPLOY_ENVIRONMENT=production DEPLOY_TAGS=true
+  - DEPLOY_ENVIRONMENT=sparktesting DEPLOY_BRANCH=master
+  - ""
+cache:
+  directories:
+install:
+  -
+before_script:
+  -
+script:
+  - .travis/continuous_deployment.sh
+after_success:
+  -
+services:
+  - docker
