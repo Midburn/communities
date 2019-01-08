@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const path = require('path');
 const Models = require('../../db/models');
+const DBConfig = require('../../db/config');
 // Load environment variables default values
 require('dotenv').config();
 
@@ -21,16 +22,9 @@ class DatabaseService {
     }
 
     initsequelize() {
-        const db_name = process.env.MYSQL_DB_NAME || 'dev_camps_arts';
-        this.sequelize = new Sequelize({
-            dialect: "mysql",
-            host: process.env.MYSQL_DB_HOST || 'localhost',
-            port: process.env.MYSQL_DB_PORT || '3306',
-            username: process.env.MYSQL_DB_USERNAME || 'root',
-            password: process.env.MYSQL_DB_PASSWORD || '',
-            database: db_name,
-            modelPaths: [path.join(__dirname + "../../db/models")]
-        });
+        const db_name = process.env.MYSQL_DB_NAME || 'theme_and_arts';
+        const envConfig = process.env.NODE_ENV === 'production' ? DBConfig.production : DBConfig.development;
+        this.sequelize = new Sequelize(envConfig);
     }
 
     async initModels() {

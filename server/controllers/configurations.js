@@ -19,9 +19,9 @@ module.exports = class ConfigurationsController {
     async getConfigurations(req, res, next) {
         try {
             const SPARK_HOST = this.config.SPARK_HOST;
-            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { SPARK_HOST }));
+            return next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { SPARK_HOST }));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
+            return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
         }
     }
 };
