@@ -43,21 +43,21 @@ class Server {
         this.app.use(compression()); // compress all responses
         this.app.use(async (req, res, next) => {
             if (req.url.includes(this.config.SPARK_HOST) || req.url.includes('api/v1/configurations')) {
-                next();
+                return next();
             }
             try {
                 const token = req.cookies && req.cookies[this.config.JWT_KEY] && req.cookies[this.config.JWT_KEY].token;
                 const userDetails = jwt.verify(token, this.config.SECRET);
                 req.token = token;
                 req.userDetails = userDetails;
-                next();
+                return next();
             }
             catch (err) {
                 if (req.path.startsWith('/api/v1/') && !req.path.startsWith('/api/v1/public/')) {
                     res.clearCookie(this.config.JWT_KEY);
                     return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Unauthorized'), 401));
                 } else {
-                    next();
+                    return next();
                 }
             }
         });

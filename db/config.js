@@ -9,8 +9,8 @@ const pool = {
 module.exports = {
     development: {
         username: 'root',
-        password: 'root',
-        database: 'theme_and_arts',
+        password: '',
+        database: 'communities',
         host: 'localhost',
         dialect: 'mysql',
         logging: process.env.MYSQL_DB_LOGGING,

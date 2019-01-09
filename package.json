@@ -91,7 +91,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "sequelize": "sequelize",
-    "createdb": "mysql -u root -p < db/migrations/create_db.sql"
+    "createdb": "mysql -u root < db/migrations/create_db.sql"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -107,17 +107,19 @@
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "babel-preset-mobx": "^2.0.0",
-    "cross-env": "^5.2.0"
+    "cross-env": "^5.2.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "enzyme-to-json": "^3.3.5"
   },
   "jest": {
+    "snapshotSerializers": ["enzyme-to-json/serializer"],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
+    "setupFiles": ["react-app-polyfill/jsdom", "<rootDir>/src/setupTests.js"],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
