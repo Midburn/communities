@@ -11,6 +11,7 @@ import { PermissableComponent } from '../controls/PermissableComponent';
 import * as constants from '../../../models/constants';
 import { FloatingDashboard } from '../controls/FloatingDashboard';
 import { EditableItem } from '../controls/EditableItem/EditableItem';
+import {isMobileOnly } from 'react-device-detect';
 
 @observer
 class BaseGroupsTable extends React.Component {
@@ -193,11 +194,13 @@ class BaseGroupsTable extends React.Component {
             <div>
                 <EditableItem editMode={true} type="checkbox" onChange={(e) => this.filterCharts = e.target.checked}
                               value={this.filterCharts} title={t('filterCharts')} />
-                <PermissableComponent permitted={presale}>
+                <PermissableComponent permitted={presale && !isMobileOnly}>
                     <FloatingDashboard charts={this.chartData} title={t('summery')}/>
                 </PermissableComponent>
-                <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
-                              sums={this.tableSums} csvData={this.CSVdata}/>
+                <PermissableComponent permitted={!isMobileOnly}>
+                    <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
+                                  sums={this.tableSums} csvData={this.CSVdata}/>
+                </PermissableComponent>
                 <Input
                     className="form-control"
                     type="text"

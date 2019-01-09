@@ -35,7 +35,11 @@
   "summery": "סיכום",
   "allocationsLastDate": "תאריך אחרון להקצאת כרטיסים",
   "filterCharts": "הצג נתונים לאחר פילטר בסיכום",
+  "new": "חדש",
   "nav": {
+    "allocations": {
+      "title": "הקצאות הוקרה {{year}}"
+    },
     "gate": {
       "manage": "ניהול כניסות",
       "suppliers": "ניהול כניסות ספקים",

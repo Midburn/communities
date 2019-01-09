@@ -12,6 +12,7 @@ import { ParsingService } from '../../../services/parsing';
 import { FloatingDashboard } from '../../controls/FloatingDashboard';
 import { state } from '../../../models/state';
 import { PermissionService } from '../../../services/permissions';
+import { isMobileOnly } from 'react-device-detect';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -124,8 +125,8 @@ class BaseGroupMembers extends React.Component {
     getMemberAllocationTooltip(memberId, allocationType) {
         const {t} = this.props;
         const isAllocatedByOtherGroup = this.isAllocatedByDifferentGroup(memberId, allocationType, true);
-        return  isAllocatedByOtherGroup ?
-            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, { groupType: t(isAllocatedByOtherGroup) }) :
+        return isAllocatedByOtherGroup ?
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, {groupType: t(isAllocatedByOtherGroup)}) :
             t(`${this.TRANSLATE_PREFIX}.tooltips.allocate`);
     };
 
@@ -162,7 +163,7 @@ class BaseGroupMembers extends React.Component {
     }
 
     async changeMemberPermission(memberId, permissionType) {
-        const { permissions, permissionsChanged } = this.props;
+        const {permissions, permissionsChanged} = this.props;
         if (!permissions) {
             return;
         }
@@ -340,11 +341,14 @@ class BaseGroupMembers extends React.Component {
                     title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
                     toggle={this.toggleAllocationWarning}
                     text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
-                <PermissableComponent permitted={presale}>
+                <PermissableComponent permitted={presale && !isMobileOnly}>
                     <FloatingDashboard charts={this.chartData} title={t('summery')}/>
                 </PermissableComponent>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
-                              csvData={this.CSVdata}/>
+                <PermissableComponent permitted={!isMobileOnly}>
+                    <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`}
+                                  sums={this.tableSums}
+                                  csvData={this.CSVdata}/>
+                </PermissableComponent>
                 <Input
                     className="form-control"
                     type="text"
