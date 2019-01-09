@@ -9,8 +9,4 @@ describe('App Component', () => {
         ReactDOM.render(<App />, div);
         ReactDOM.unmountComponentAtNode(div);
     });
-    it('should render correctly in "debug" mode', () => {
-        const component = shallow(<App />);
-        expect(component).toMatchSnapshot();
-    });
 });

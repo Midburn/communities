@@ -8,7 +8,8 @@ import { ParsingService } from '../../services/parsing';
 import { EventRulesService } from '../../services/event-rules';
 import { state } from '../../models/state';
 import * as constants from '../../../models/constants';
-
+import colors from '../../styles/_colors.scss';
+import { IoIosBonfire } from 'react-icons/io';
 /**
  * Renders drop down based on group type
  * @param type: from constanst group types
@@ -24,15 +25,15 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
 
     const hasAllocationGroups = !!state.allocationGroups && eventRulesService.isPresaleAvailable;
     const isAllocationAdmin = !!permissionsService.isAdmin() && eventRulesService.isPresaleAvailable;
-
+    console.log(colors)
     return (
         <PermissableComponent permitted={hasAllocationGroups || isAllocationAdmin}>
             <NavItem>
                 <Dropdown id={`${type}-nav-fropdown`}>
                     <DropdownToggle nav caret>
                         {t(`nav.allocations.title`, {year: state.currentEventId.match(/\d+/)[0]})}
-                        <MDBBadge className="ml-2 mr-2" color="warning">
-                            <MDBIcon icon="fire" />{t('new')}!
+                        <MDBBadge className={`ml-2 mr-2 ${colors.yellow}`}>
+                            <IoIosBonfire />{t('new')}!
                         </MDBBadge>
                     </DropdownToggle>
                     <DropdownMenu basic>

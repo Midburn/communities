@@ -10,7 +10,8 @@ import {
     NavItem,
     DropdownMenu,
     NavbarToggler,
-    NavLink
+    NavLink,
+    MDBBtn
 } from 'mdbreact';
 import i18n from '../../services/i18n';
 import './AppNavigation.scss';
@@ -161,14 +162,14 @@ class BaseAppNavigation extends Component {
                         <AllocationsDropDown onClick={this.toggleCollapse} t={t} lng={lng}/>
                     </NavbarNav>
                     <NavbarNav className="right-nav" right>
-                        <NavItem onClick={this.toggleCollapse}>
+                        <NavItem onClick={this.toggleCollapse} className="d-flex align-items-center">
                             <NavLink onClick={this.changLng}
                                      to={this.getToggledLngUrl()}>
-                                {t(`${lng === 'he' ? 'en' : 'he'}`)}
+                                <span className={`${lng === 'he' ? 'font-weight-bold' : 'font-weight-light'}`}>{t('he')}</span> / <span className={`${lng === 'en' ? 'font-weight-bold' : 'font-weight-light'}`}>{t('en')}</span>
                             </NavLink>
                         </NavItem>
-                        <NavItem onClick={this.logout}>
-                            <NavLink to={'#'}>{t('logout')}</NavLink>
+                        <NavItem >
+                            <MDBBtn outline color="primary" onClick={this.logout}>{t('logout')}</MDBBtn>
                         </NavItem>
                     </NavbarNav>
                 </Collapse>

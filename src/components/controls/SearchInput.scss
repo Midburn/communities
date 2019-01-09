@@ -1,0 +1,17 @@
+@import "../../styles/colors";
+
+.SearchInput {
+  border-radius: 5px;
+  border: 1px solid $light-gray;
+  padding: 0.1rem 0.8rem;
+  SearchIcon {
+    color: white;
+  }
+  input {
+    border: none;
+    font-family: FontAwesome, sans-serif;
+    &:focus {
+      outline: none;
+    }
+  }
+}

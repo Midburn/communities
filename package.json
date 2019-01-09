@@ -69,6 +69,7 @@
     "react-flags": "^0.1.17",
     "react-flip-move": "^3.0.3",
     "react-i18next": "^8.3.9",
+    "react-icons": "^3.2.2",
     "react-moment": "^0.8.4",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
@@ -90,6 +91,7 @@
     "start:server": "cross-env NODE_ENV=production node server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:once": "jest",
     "sequelize": "sequelize",
     "createdb": "mysql -u root < db/migrations/create_db.sql"
   },
@@ -113,13 +115,18 @@
     "enzyme-to-json": "^3.3.5"
   },
   "jest": {
-    "snapshotSerializers": ["enzyme-to-json/serializer"],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
-    "setupFiles": ["react-app-polyfill/jsdom", "<rootDir>/src/setupTests.js"],
+    "setupFiles": [
+      "react-app-polyfill/jsdom",
+      "<rootDir>/src/setupTests.js"
+    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
       "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,ts,tsx}"
