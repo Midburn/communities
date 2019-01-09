@@ -10,7 +10,7 @@ describe('App Component', () => {
         ReactDOM.unmountComponentAtNode(div);
     });
     it('should render correctly in "debug" mode', () => {
-        const component = shallow(<App debug />);
+        const component = shallow(<App />);
         expect(component).toMatchSnapshot();
     });
 });

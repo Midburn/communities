@@ -20,7 +20,6 @@ const CSV = (props) => {
                     <MDBIcon size="lg" icon="file-excel-o"></MDBIcon>
                 </MDBTooltip>
             </CSVLink>
-
         </div>
 
     );
