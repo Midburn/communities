@@ -212,7 +212,7 @@ class BaseGroupsTable extends React.Component {
                     value={this.query}
                     onChange={this.handleChange}
                 />
-                <Table hover responsive btn>
+                <Table hover responsive btn className="GroupsTable">
                     <TableHead>
                         <tr>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.groupName`)}</th>
