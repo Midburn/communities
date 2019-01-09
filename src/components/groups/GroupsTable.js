@@ -13,6 +13,7 @@ import { FloatingDashboard } from '../controls/FloatingDashboard';
 import { EditableItem } from '../controls/EditableItem/EditableItem';
 import {isMobileOnly } from 'react-device-detect';
 import {NumberEditor} from "../controls/NumberEditor";
+import colors from '../../styles/_colors.scss';
 
 @observer
 class BaseGroupsTable extends React.Component {
@@ -141,12 +142,12 @@ class BaseGroupsTable extends React.Component {
                     {
                         data: [allocatedSum, quotaSum - allocatedSum],
                         backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
+                            colors.yellow,
+                            colors["light-gray"],
                         ],
                         hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
+                            colors.orange,
+                            colors.gray
                         ]
                     }
                 ],
@@ -163,12 +164,12 @@ class BaseGroupsTable extends React.Component {
                     {
                         data: [groupsFullyAllocatedSum, (this.filterCharts ? filteredCharts.length : groups.length) - groupsFullyAllocatedSum],
                         backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
+                            colors.yellow,
+                            colors["light-gray"],
                         ],
                         hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
+                            colors.orange,
+                            colors.gray
                         ]
                     }
                 ],

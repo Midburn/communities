@@ -5,10 +5,9 @@ $secondary-color: #ffa500;
 $card-bg: #fafafa;
 $card-text: black;
 
-
 $dark-gray: #7F8C8D;
-$gray: #95A5A6;
-$light-gray: #BDC3C7;
+$gray: #b9bfb8;
+$light-gray: #e4eae5;
 $dark-blue: #34495E;
 $blue: #3491f1;
 $light-blue: #61a6ef;
@@ -22,7 +21,26 @@ $light-red: #ff6b5b;
 $purple:  #8E44AD;
 $pink: #d6569d;
 
-:local(.yellow) {
+// Export vars to be used in JS
+:export {
+    dark-gray: $dark-gray;
+    gray: $gray;
+    light-gray: $light-gray;
+    dark-blue: $dark-blue;
+    blue: $blue;
+    light-blue: $light-blue;
+    teal: $teal;
+    green: $green;
+    light-green: $light-green;
+    yellow: $yellow;;
+    orange: $orange;
+    red:  $red;
+    light-red: $light-red;
+    purple:  $purple;
+    pink: $pink;
+}
+
+:local(.yellowBackgroud) {
     background-color: $yellow !important;
 }
 

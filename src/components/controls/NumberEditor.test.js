@@ -35,7 +35,7 @@ describe('NumberCounter component', () => {
         const testValue = 0;
         const min = 0;
         const onChange = jest.fn()
-        const wrapper = shallow(<NumberEditor value={testValue} onChange={onChange} min={min}/>);
+        const wrapper = mount(<NumberEditor value={testValue} onChange={onChange} min={min}/>);
         const isDecBtnDisable = wrapper.find('#decrement').props().disabled;
         expect(isDecBtnDisable).toBeTruthy();
     });

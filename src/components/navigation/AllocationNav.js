@@ -25,14 +25,13 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
 
     const hasAllocationGroups = !!state.allocationGroups && eventRulesService.isPresaleAvailable;
     const isAllocationAdmin = !!permissionsService.isAdmin() && eventRulesService.isPresaleAvailable;
-    console.log(colors)
     return (
         <PermissableComponent permitted={hasAllocationGroups || isAllocationAdmin}>
             <NavItem>
                 <Dropdown id={`${type}-nav-fropdown`}>
                     <DropdownToggle nav caret>
                         {t(`nav.allocations.title`, {year: state.currentEventId.match(/\d+/)[0]})}
-                        <MDBBadge className={`ml-2 mr-2 ${colors.yellow}`}>
+                        <MDBBadge className={`ml-2 mr-2 ${colors.yellowBackgroud}`}>
                             <IoIosBonfire />{t('new')}!
                         </MDBBadge>
                     </DropdownToggle>

@@ -14,13 +14,14 @@
     outline: none;
     text-align: center;
     color: $blue;
+    font-weight: 600;
     &:focus {
       outline: none;
     }
     background: transparent;
   }
   .handle {
-    color: $light-gray;
+    color: $gray;
     padding: 0.5rem;
     border-radius: 8px;
     display: flex;
@@ -32,8 +33,7 @@
       color: white;
     }
     &[disabled] {
-      cursor: default;
-      opacity: 0.3;
+      opacity: 0.4;
       pointer-events: none;
     }
   }
