@@ -8,7 +8,7 @@ export const NumberEditor = ({value, onChange, min, max}) => {
             <span disabled={max !== 'undefined' && value >= max} onClick={() => onChange(Number(value) + 1)} id="increment" className="handle">
                 <TiPlus />
             </span>
-            <input type="number" value={value || 0} onChange={(e) => onChange(Number(e.target.value))}/>
+            <input type="number" data-hook="number-input" value={value || 0} onChange={(e) => onChange(Number(e.target.value))}/>
             <span disabled={max !== 'undefined' && value <= min} onClick={() => onChange(Number(value) - 1)} id="decrement" className="handle">
                 <TiMinus />
             </span>
