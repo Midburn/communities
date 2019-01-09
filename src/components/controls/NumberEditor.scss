@@ -1,0 +1,40 @@
+@import '../../styles/colors';
+
+:local(.NumberCounter) {
+  width: 100%;
+  display: flex;
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input {
+    width: 75%;
+    border: none;
+    outline: none;
+    text-align: center;
+    color: $blue;
+    &:focus {
+      outline: none;
+    }
+    background: transparent;
+  }
+  .handle {
+    color: $light-gray;
+    padding: 0.5rem;
+    border-radius: 8px;
+    display: flex;
+    cursor: pointer;
+    border: 1px solid $light-gray;
+    transition: 0.5s;
+    &:hover {
+      background-color: $light-blue;
+      color: white;
+    }
+    &[disabled] {
+      cursor: default;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+  }
+}

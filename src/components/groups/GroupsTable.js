@@ -12,6 +12,7 @@ import * as constants from '../../../models/constants';
 import { FloatingDashboard } from '../controls/FloatingDashboard';
 import { EditableItem } from '../controls/EditableItem/EditableItem';
 import {isMobileOnly } from 'react-device-detect';
+import {NumberEditor} from "../controls/NumberEditor";
 
 @observer
 class BaseGroupsTable extends React.Component {
@@ -260,13 +261,7 @@ class BaseGroupsTable extends React.Component {
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
                                         <td>
-                                            <Input
-                                                type="number"
-                                                hint={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
-                                                placeholder={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
-                                                aria-label={t(`${this.TRANSLATE_PREFIX}.table.noQuota`)}
-                                                value={this.getGroupAllocations(g)}
-                                                onChange={(e) => this.updateGroupsQuota(g, e.target.value)}/>
+                                            <NumberEditor value={this.getGroupAllocations(g)} min={0} onChange={(e) => this.updateGroupsQuota(g, e)}/>
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
