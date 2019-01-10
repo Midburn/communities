@@ -1,6 +1,5 @@
 import React from 'react';
-import { NavItem, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, MDBBadge, MDBIcon } from 'mdbreact';
-import { NavLink } from "react-router-dom";
+import { NavItem, Dropdown, DropdownToggle, DropdownMenu, NavLink, DropdownItem, MDBBadge, MDBIcon } from 'mdbreact';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { GroupsService } from '../../services/groups';
@@ -43,10 +42,12 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
                                                       eventRulesService.isPresaleAvailable &&
                                                       permissionsService.isAllowedToAllocateTickets(group.id)}>
                                     <DropdownItem onClick={onClick}>
-                                        <NavLink
-                                            to={`/${lng}/${parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
-                                            {groupsService.getPropertyByLang(group, 'name')}
-                                        </NavLink>
+                                        <NavItem>
+                                            <NavLink
+                                                to={`/${lng}/${parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
+                                                {groupsService.getPropertyByLang(group, 'name')}
+                                            </NavLink>
+                                        </NavItem>
                                     </DropdownItem>
                                 </PermissableComponent>
                             );
@@ -57,10 +58,12 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
                                 <PermissableComponent key={groupType}
                                                       permitted={!!permissionsService.isAdmin() && eventRulesService.isPresaleAvailable}>
                                     <DropdownItem onClick={onClick}>
-                                        <NavLink
-                                            to={`/${lng}/${parsingService.getPlural(groupType)}/allocations`}>
-                                            {t(`nav.${parsingService.getPlural(groupType)}.allocateAdmin`)}
-                                        </NavLink>
+                                        <NavItem>
+                                            <NavLink
+                                                to={`/${lng}/${parsingService.getPlural(groupType)}/allocations`}>
+                                                {t(`nav.${parsingService.getPlural(groupType)}.allocateAdmin`)}
+                                            </NavLink>
+                                        </NavItem>
                                     </DropdownItem>
                                 </PermissableComponent>
                             );
