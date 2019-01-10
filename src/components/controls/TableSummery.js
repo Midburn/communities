@@ -13,7 +13,7 @@ export const TableSummery = ({sums, csvData, csvName}) => {
     return (
         <Container fluid className="TableSummeryContainer TableSummery d-flex justify-content-center z-depth-1">
             <Container fluid={window.innerWidth < 1200} className="TableSummery d-flex ">
-                <CardBody className="SummeryContent d-flex justify-content-even font-small align-items-center">
+                <div className="SummeryContent pt-4 pb-4 d-flex justify-content-even font-small align-items-center">
                     {Object.keys(sums || {}).map(key => {
                         return (
                             <span key={key}>
@@ -30,7 +30,7 @@ export const TableSummery = ({sums, csvData, csvName}) => {
                             />
                         </PermissableComponent>
                     </div>
-                </CardBody>
+                </div>
             </Container>
         </Container>
     );
