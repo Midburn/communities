@@ -33,7 +33,7 @@
       color: white;
     }
     &[disabled] {
-      opacity: 0.4;
+      color:$pale;
       pointer-events: none;
     }
   }
