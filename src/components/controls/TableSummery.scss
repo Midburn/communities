@@ -1,8 +1,7 @@
 .TableSummeryContainer {
-    position: fixed;
-    width: 90vw;
-    left: 5vw;
-    bottom: 1vh;
+    position: relative;
+    width: 100%;
+    transition: 0.5s;
     .TableSummery {
         .SummeryContent {
             max-height: 12vh;

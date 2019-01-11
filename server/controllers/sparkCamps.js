@@ -16,6 +16,7 @@ module.exports = class SparkCampsController {
         this.getCampMembersTickets = this.getCampMembersTickets.bind(this);
         this.getCamp = this.getCamp.bind(this);
         this.updatePresaleQuota = this.updatePresaleQuota.bind(this);
+        this.sparkGroupMemberAction = this.sparkGroupMemberAction.bind(this);
     }
 
     async getCamp(req, res, next) {
@@ -124,6 +125,27 @@ module.exports = class SparkCampsController {
             }
             const groups = (await this.spark.get(path, req.headers)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups.camps));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
+        }
+    }
+
+    async sparkGroupMemberAction(req, res, next) {
+        try {
+            const groupId = req.params.groupId, memberId = req.params.memberId, action = req.params.actionType;
+            if (!groupId || !memberId || !action) {
+                throw new Error('Must specify groupId, memberId and actionType when spark executing member action');
+            }
+            if (!Object.values(constants.SPARK_ACTION_TYPES).includes(action)) {
+                throw new Error(`Unknown action sent - currently only ${Object.values(constants.SPARK_ACTION_TYPES).join(', ')} action type are allowed`);
+            }
+            let path = `camps/${groupId}/members/${memberId}/${action}`;
+            if (req.query.eventId) {
+                path += `?eventId=${req.query.eventId}`;
+            }
+            // We expect to receive an array of groups to update
+            await this.spark.get(path, req.headers);
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
         }

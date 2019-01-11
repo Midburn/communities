@@ -5,7 +5,7 @@ import { InitilizationService } from '../services/initialization';
 import { Loader } from './Loader';
 import { PrivateRoute } from './navigation/PrivateRoute';
 import { NotFound } from './NotFound';
-
+import { state } from '../models/state';
 export class BaseLayout extends Component {
     initService = new InitilizationService();
 
@@ -22,9 +22,9 @@ export class BaseLayout extends Component {
 
     async init() {
         try {
+            state.authenticated = await this.initService.init();
             this.setState({
                 loading: false,
-                authenticated: await this.initService.init()
             });
         } catch (err) {
             this.setState({
@@ -40,7 +40,7 @@ export class BaseLayout extends Component {
                 { this.state.loading ? <Loader /> :
                     <div>
                         <Switch>
-                            <PrivateRoute path="/:lng(en|he)" authenticated={this.state.authenticated} component={Main} />
+                            <PrivateRoute path="/:lng(en|he)" component={Main}/>
                             <Redirect path="/" to="/he/camps"  exact />
                             <Route component={NotFound}/>
                         </Switch>

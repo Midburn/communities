@@ -29,7 +29,12 @@
   "saveChanges": "שמור שינויים",
   "export": "ייצא לאקסל",
   "lastUpdate": "עודכן לאחרונה ב",
+  "theme_camps": "מחנה נושא",
+  "art_installations": "מיצב",
   "by": "ע\"י",
+  "summery": "סיכום",
+  "allocationsLastDate": "תאריך אחרון להקצאת כרטיסים",
+  "filterCharts": "הצג נתונים לאחר פילטר בסיכום",
   "nav": {
     "gate": {
       "manage": "ניהול כניסות",
@@ -63,6 +68,18 @@
   },
   "members": {
     "search": "חפש חברים",
+    "tooltips": {
+      "allocate": "הוסף\\הסר הקצאה",
+      "allocatedByOtherGroup": "בעל הקצאה מ{{groupType}} אחר"
+    },
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
+    },
     "allocationWarning": {
       "title": "מכסה מלאה",
       "text": "הגעת למכסה שהוקצבה לך, אתה יכול להעביר הקצאות אך לא להוסיף."

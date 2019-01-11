@@ -14,6 +14,7 @@ import * as constants from '../../../models/constants';
 import './PresaleAdmin.scss';
 import Moment from 'react-moment';
 import { UsersService } from '../../services/users';
+import { AllocationService } from '../../services/allocations';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -23,6 +24,7 @@ class BasePresaleAdmin extends React.Component {
     eventsService = new EventsService();
     auditService = new AuditService();
     usersService = new UsersService();
+    allocationsService = new AllocationService();
     /**
      * We'll keep track of groups changed in order to send them on save.
      */
@@ -41,8 +43,11 @@ class BasePresaleAdmin extends React.Component {
     @observable
     auditedUser = [];
 
+    @observable
+    allocations = [];
+
     get lastAudit() {
-        if (!this.audits || !this.audits[0]) {
+        if (!this.audits || !this.audits.length || !this.audits[0]) {
             return;
         }
         return this.audits[0].createdAt;
@@ -50,19 +55,23 @@ class BasePresaleAdmin extends React.Component {
 
     constructor(props) {
         super(props);
-        this.init();
+        this.init(props);
     }
 
-    async init() {
+    componentWillReceiveProps(props) {
+        this.init(props);
+    };
+
+    async init(props) {
         try {
-            const {match} = this.props;
+            const {match} = props;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
-            this.getGroupsMembersCount();
-            this.getGroupsTickets();
-            this.getGroupsFormerEventTickets();
-            this.getAudits();
+            await this.getGroupsMembersCount();
+            await this.getGroupsTickets();
+            await this.getGroupsFormerEventTickets();
+            await this.getGroupsAllocations();
+            await this.getAudits();
         } catch (e) {
-            this.groups = [];
             // TODO - what do we do with errors?
             this.error = e;
         }
@@ -72,7 +81,7 @@ class BasePresaleAdmin extends React.Component {
         try {
             this.audits = await this.auditService.getAudits(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
             if (this.audits && this.audits[0]) {
-                this.auditedUser = (await this.usersService.getUserById(this.audits[0].updated_by)) || {};
+                this.auditedUser = (await this.usersService.getUserNameById(this.audits[0].updated_by)) || {};
             }
         } catch (e) {
             // TODO - what do we do with errors
@@ -140,6 +149,14 @@ class BasePresaleAdmin extends React.Component {
         }
     }
 
+    async getGroupsAllocations() {
+        try {
+            this.allocations = (await this.allocationsService.getGroupsAllocations([this.groups.map(g => g.id)])) || [];
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+
     saveChanges = async () => {
         try {
             const groupsToUpdate = Object.entries(this.changes).map(([id, group]) => {
@@ -200,7 +217,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable presale={true} groups={this.groups}
+                        <GroupsTable allocations={this.allocations}
+                            presale={true} groups={this.groups}
                                      presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>

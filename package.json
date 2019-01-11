@@ -31,6 +31,7 @@
     "eslint-plugin-jsx-a11y": "6.1.2",
     "eslint-plugin-react": "7.11.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
     "file-loader": "2.0.0",
     "fork-ts-checker-webpack-plugin-alt": "0.4.14",
     "fs-extra": "7.0.0",
@@ -49,6 +50,7 @@
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
     "moment": "^2.23.0",
+    "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
@@ -59,6 +61,7 @@
     "postcss-safe-parser": "4.0.1",
     "react": "^16.6.3",
     "react-app-polyfill": "^0.1.3",
+    "react-chartjs-2": "^2.7.4",
     "react-csv": "^1.0.19",
     "react-dev-utils": "^6.1.1",
     "react-dom": "^16.6.3",
@@ -86,7 +89,8 @@
     "start:server": "cross-env NODE_ENV=production node server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "sequelize": "sequelize"
+    "sequelize": "sequelize",
+    "createdb": "mysql -u root -p < db/migrations/create_db.sql"
   },
   "eslintConfig": {
     "extends": "react-app"

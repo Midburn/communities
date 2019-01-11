@@ -17,6 +17,6 @@ module.exports = class UsersRouter {
         /**
          * E.G - /api/VERSION/spark/camps/open
          */
-        this.router.get('/spark/users/:id', controllers.users.getUserById);
+        this.router.get('/spark/users/:id/name', controllers.users.getUserNameById);
     }
 };

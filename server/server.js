@@ -11,7 +11,8 @@ const constants = require('../models/constants');
 const services = require('./services');
 const routers = require('./routers');
 const GenericResponse = require('../models/generic-response');
-const dbService = require('./services/database')
+const morganLogger = require('morgan');
+const session = require('express-session');
 
 class Server {
 
@@ -19,6 +20,7 @@ class Server {
         this.app = express();
         this.config = services.config;
         this.listener = null;
+        this.initLogger();
         this.initMiddlewares();
         this.initRouters();
         this.initStaticServer();
@@ -40,7 +42,7 @@ class Server {
         this.app.use(bodyParser.json()); // for parsing application/json
         this.app.use(compression()); // compress all responses
         this.app.use(async (req, res, next) => {
-            if (req.url.includes(this.config.SPARK_HOST)) {
+            if (req.url.includes(this.config.SPARK_HOST) || req.url.includes('api/v1/configurations')) {
                 next();
             }
             try {
@@ -59,6 +61,10 @@ class Server {
                 }
             }
         });
+    }
+
+    initLogger() {
+        this.app.use(morganLogger('dev', {}));
     }
 
     initRouters() {
@@ -106,7 +112,7 @@ class Server {
 
     handleGenericReposnse() {
         this.app.use((genericResponse, req, res, next) => {
-            if (res.ended || !genericResponse) {
+            if (res.finished || !genericResponse) {
                 return;
             }
             switch (genericResponse.type) {

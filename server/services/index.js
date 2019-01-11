@@ -4,10 +4,14 @@
  */
 const configService = require('./config'),
     sparkService = require('./spark'),
-    dbService = require('./database');
+    dbService = require('./database'),
+    permissionsService = require('./permissions'),
+    initialLogin = require('./initial-login');
 
 module.exports = {
     config: configService,
     spark: sparkService,
-    db: dbService
+    db: dbService,
+    permissions: permissionsService,
+    initialLogin: initialLogin
 };

@@ -13,7 +13,6 @@ import {
     NavLink
 } from 'mdbreact';
 import i18n from '../../services/i18n';
-import Flag from "react-flags";
 import './AppNavigation.scss';
 import { withRouter } from 'react-router-dom';
 import { AuthService } from '../../services/auth';
@@ -39,25 +38,25 @@ class BaseAppNavigation extends Component {
         links: Object.values(constants.GROUP_TYPES)
     };
 
-    changLng = (lng) => {
-        i18n.changeLanguage(lng);
+    changLng = () => {
+        i18n.changeLanguage(i18n.language === 'he' ? 'en' : 'he');
     };
-
-    getFlag = (lng) => {
-        const lngToFlagNameDict = {
-            he: 'IL',
-            en: 'US'
-        };
-        return <Flag
-            country={lngToFlagNameDict[lng]}
-            name={lngToFlagNameDict[lng]}
-            format="png"
-            pngSize={32}
-            basePath="/img/flags"
-            shiny={true}
-            alt={lngToFlagNameDict[lng] + 'Flag'}
-        />
-    };
+    //
+    // getFlag = (lng) => {
+    //     const lngToFlagNameDict = {
+    //         he: 'IL',
+    //         en: 'US'
+    //     };
+    //     return <Flag
+    //         country={lngToFlagNameDict[lng]}
+    //         name={lngToFlagNameDict[lng]}
+    //         format="png"
+    //         pngSize={32}
+    //         basePath="/img/flags"
+    //         shiny={true}
+    //         alt={lngToFlagNameDict[lng] + 'Flag'}
+    //     />
+    // };
 
     toggleCollapse = () => {
         this.setState({
@@ -83,9 +82,46 @@ class BaseAppNavigation extends Component {
         return `${state.configurations.SPARK_HOST}/${relative}`;
     }
 
+    getToggledLngUrl() {
+        const {lng, location} = this.props;
+        return location.pathname.replace(lng, lng === 'he' ? 'en' : 'he');
+    }
+
     render() {
         const {t, lng} = this.props;
-
+        // const LngFlagDropDown = (<Dropdown id="basic-nav-dropdown">
+        //     <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
+        //     <DropdownMenu basic>
+        //         <DropdownItem onClick={() => {
+        //             this.toggleCollapse();
+        //             this.changLng('en')
+        //         }}>
+        //             {t('en')}
+        //             <Flag
+        //                 name="US"
+        //                 country="US"
+        //                 format="png"
+        //                 pngSize={32}
+        //                 basePath="/img/flags"
+        //                 shiny={true}
+        //             />
+        //         </DropdownItem>
+        //         <DropdownItem onClick={() => {
+        //             this.toggleCollapse();
+        //             this.changLng('he')
+        //         }}>
+        //             {t('he')}
+        //             <Flag
+        //                 name="IL"
+        //                 country="IL"
+        //                 format="png"
+        //                 pngSize={32}
+        //                 basePath="/img/flags"
+        //                 shiny={true}
+        //             />
+        //         </DropdownItem>
+        //     </DropdownMenu>
+        // </Dropdown>);
         return (
             <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling fixed="top">
                 <NavbarBrand className="NavbarBrand" onClick={this.backToSpark}>
@@ -111,13 +147,13 @@ class BaseAppNavigation extends Component {
                                         <DropdownItem onClick={this.toggleCollapse}>
                                             <NavItem>
                                                 <AbsoluteNavLink
-                                                    to={this.getSparkLink('he/gate')}>{t('nav.gate.manage')}</AbsoluteNavLink>
+                                                    to={this.getSparkLink(`${lng}/gate`)}>{t('nav.gate.manage')}</AbsoluteNavLink>
                                             </NavItem>
                                         </DropdownItem>
                                         <DropdownItem onClick={this.toggleCollapse}>
                                             <NavItem>
                                                 <AbsoluteNavLink
-                                                    to={this.getSparkLink('he/gate/suppliers')}>{t('nav.gate.suppliers')}</AbsoluteNavLink>
+                                                    to={this.getSparkLink(`${lng}/gate/suppliers`)}>{t('nav.gate.suppliers')}</AbsoluteNavLink>
                                             </NavItem>
                                         </DropdownItem>
                                     </DropdownMenu>
@@ -134,7 +170,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('en/suppliers-admin')}>{t('nav.management.suppliers')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/suppliers-admin`)}>{t('nav.management.suppliers')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
@@ -143,7 +179,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('/en/camp-files-admin')}>{t('nav.management.files')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/camp-files-admin`)}>{t('nav.management.files')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
@@ -151,7 +187,7 @@ class BaseAppNavigation extends Component {
                                             <DropdownItem onClick={this.toggleCollapse}>
                                                 <NavItem>
                                                     <AbsoluteNavLink
-                                                        to={this.getSparkLink('/en/events-admin')}>{t('nav.management.events')}</AbsoluteNavLink>
+                                                        to={this.getSparkLink(`${lng}/events-admin`)}>{t('nav.management.events')}</AbsoluteNavLink>
                                                 </NavItem>
                                             </DropdownItem>
                                         </PermissableComponent>
@@ -175,7 +211,9 @@ class BaseAppNavigation extends Component {
                         {state.allocationGroups.map(group => {
                             return (
                                 <PermissableComponent key={group.id}
-                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] && this.eventRules.isPresaleAvailable}>
+                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] &&
+                                                      this.eventRules.isPresaleAvailable &&
+                                                      this.permissionsService.isAllowedToAllocateTickets(group.id)}>
                                     <NavItem onClick={this.toggleCollapse}>
                                         <NavLink
                                             to={`/${lng}/${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
@@ -199,40 +237,11 @@ class BaseAppNavigation extends Component {
                                 </PermissableComponent>
                             );
                         })}
-                        <NavItem>
-                            <Dropdown id="basic-nav-dropdown">
-                                <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
-                                <DropdownMenu basic>
-                                    <DropdownItem onClick={() => {
-                                        this.toggleCollapse();
-                                        this.changLng('en')
-                                    }}>
-                                        {t('en')}
-                                        <Flag
-                                            name="US"
-                                            country="US"
-                                            format="png"
-                                            pngSize={32}
-                                            basePath="/img/flags"
-                                            shiny={true}
-                                        />
-                                    </DropdownItem>
-                                    <DropdownItem onClick={() => {
-                                        this.toggleCollapse();
-                                        this.changLng('he')
-                                    }}>
-                                        {t('he')}
-                                        <Flag
-                                            name="IL"
-                                            country="IL"
-                                            format="png"
-                                            pngSize={32}
-                                            basePath="/img/flags"
-                                            shiny={true}
-                                        />
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                        <NavItem onClick={this.toggleCollapse}>
+                            <NavLink onClick={this.changLng}
+                                     to={this.getToggledLngUrl()}>
+                                {t(`${lng === 'he' ? 'en' : 'he'}`)}
+                            </NavLink>
                         </NavItem>
                         <NavItem onClick={this.logout}>
                             <NavLink to={'#'}>{t('logout')}</NavLink>
@@ -243,5 +252,6 @@ class BaseAppNavigation extends Component {
         );
     }
 }
+
 
 export const AppNavigation = withRouter(withNamespaces()(BaseAppNavigation));

@@ -5,7 +5,7 @@ import moment from 'moment';
 export class EventRulesService {
 
     get currentEventJson() {
-        return state.currentEvent.addinfo_json ? JSON.parse(state.currentEvent.addinfo_json)  : {};
+        return state.currentEvent && state.currentEvent.addinfo_json ? JSON.parse(state.currentEvent.addinfo_json)  : {};
     }
 
     isGroupEditingDisabled(groupType) {
@@ -20,6 +20,13 @@ export class EventRulesService {
        const start = moment(this.currentEventJson.appreciation_tickets_allocation_start);
        const end = moment(this.currentEventJson.appreciation_tickets_allocation_end);
        return now.isAfter(start) && now.isBefore(end);
+    }
+
+    get lastDateToAllocatePreSale() {
+        if (!this.currentEventJson.appreciation_tickets_allocation_start || !this.currentEventJson.appreciation_tickets_allocation_end) {
+            return null;
+        }
+        return this.currentEventJson.appreciation_tickets_allocation_end;
     }
 
 }

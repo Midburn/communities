@@ -96,9 +96,9 @@ class BaseGroup extends React.Component {
                 return;
             }
             this.group = group;
-            if (this.permissionService.isGroupMember(group.id)) {
+            if (this.permissionService.isGroupMember(group.id) || this.permissionService.isAdmin()) {
                 try {
-                    this.members = await this.groupService.getCampsMembers(this.group.id);
+                    this.members = await this.groupService.getCampsMembers(this.group.id, this.group.event_id);
                 } catch (e) {
                     // TODO - what do we do with errors ?
                     this.members = [];
@@ -157,7 +157,7 @@ class BaseGroup extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        {this.permissionService.isGroupMember(this.group.id) && !!this.members ? MemberView : BasicView}
+                        {(this.permissionService.isGroupMember(this.group.id) || this.permissionService.isAdmin()) && !!this.members ? MemberView : BasicView}
                     </Col>
                 </Row>
             </div>

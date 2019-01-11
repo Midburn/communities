@@ -60,6 +60,10 @@
       "header": "Manage art installations appreciation tickets quota",
       "description": "Allocate appreciation  tickets quota to art installations participating in the last event"
     },
+    "charts": {
+      "allocationsUsage": "Allocations usage",
+      "fullGroups": "Art installations who used all quota"
+    },
     "table": {
       "search": "Search art installations",
       "groupName": "Installation name",
@@ -70,13 +74,18 @@
       "totalPurchased": "Total purchased",
       "totalEntered": "Total entered former event",
       "quota": "Quota",
-      "noQuota": "Allocate"
+      "noQuota": "Allocate",
+      "allocated": "Allocated by the camp",
+      "allocatedAll": "Allocated by the camps"
     },
     "sums": {
       "groups": "Art Installations",
       "members": "Members",
       "ticketsAll": "Purchased tickets",
-      "allocated": "Allocated"
+      "allocated": "Allocated",
+      "allocationsLeft": "Allocations left",
+      "allocationsFull": "Art installations fully allocated",
+      "allocationsTotal": "Art installations with available allocations"
     }
   },
   "groupLeader": {

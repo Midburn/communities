@@ -1,17 +1,30 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Table, TableHead, TableBody, Input } from 'mdbreact';
+import { Table, TableHead, TableBody, Input, MDBTooltip } from 'mdbreact';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
 import { TableSummery } from '../../controls/TableSummery';
 import { WarningModal } from '../../controls/WarningModal';
+import * as constants from '../../../../models/constants';
+import { AllocationService } from '../../../services/allocations';
+import { ParsingService } from '../../../services/parsing';
+import { FloatingDashboard } from '../../controls/FloatingDashboard';
+import { state } from '../../../models/state';
+import { PermissionService } from '../../../services/permissions';
 
 @observer
 class BaseGroupMembers extends React.Component {
 
+    allocationsService = new AllocationService();
+    parsingService = new ParsingService();
+    permissionsService = new PermissionService();
     TRANSLATE_PREFIX = `members`;
 
+    ALLOCATION_TYPE_TO_GROUP_QUOTA = {
+        [constants.ALLOCATION_TYPES.PRE_SALE]: 'pre_sale_tickets_quota',
+        [constants.ALLOCATION_TYPES.EARLY_ARRIVAL]: 'early_arrival_tickets_quota'
+    };
     @observable
     query = '';
 
@@ -24,7 +37,7 @@ class BaseGroupMembers extends React.Component {
     @observable
     allocationWarning = false;
 
-    allocationTimeout = null
+    allocationTimeout = null;
 
     @action
     handleChange = (e) => {
@@ -48,36 +61,88 @@ class BaseGroupMembers extends React.Component {
             phone.toLowerCase().includes(this.query);
     }
 
-    changePresaleAllocation = (memberId, e) => {
-        const {group, members} = this.props;
-        let totalAllocated = 0;
-        const quota = group.pre_sale_tickets_quota || 0;
-        for (const member of members) {
-            totalAllocated += member.pre_sale_allocation ? 1 : 0;
-        }
-        if (!!e.target.checked && quota <= totalAllocated) {
-            // There no more allocations
-            if (this.allocationTimeout) {
-                clearTimeout(this.allocationTimeout);
-            }
-            this.toggleAllocationWarning();
-            setTimeout(() => {
-                if (this.allocationWarning) {
-                    this.toggleAllocationWarning();
+    changeAllocation = async (memberId, allocationType, e) => {
+        const {allocations, match, group, allocationsChanged} = this.props;
+        const allocated = allocations.filter(allocation => allocation.allocation_type === allocationType).length;
+        const quota = group[this.ALLOCATION_TYPE_TO_GROUP_QUOTA[allocationType]];
+        try {
+            if (!!e.target.checked && quota <= allocated) {
+                // There no more allocations
+                if (this.allocationTimeout) {
+                    clearTimeout(this.allocationTimeout);
                 }
-            }, 5000);
-            return;
+                this.toggleAllocationWarning();
+                setTimeout(() => {
+                    if (this.allocationWarning) {
+                        this.toggleAllocationWarning();
+                    }
+                }, 5000);
+                return;
+            }
+            const allocationId = this.getMemberAllocationId(memberId, allocationType);
+            if (allocationId || allocationId === 0) {
+                // User is already allocated!
+                await this.allocationsService.removeAllocation(group.id, allocationId);
+            } else {
+                await this.allocationsService.allocate(
+                    allocationType,
+                    memberId,
+                    group.id,
+                    this.parsingService.getGroupTypeFromString(match.params.groupType)
+                );
+            }
+            allocationsChanged();
+        } catch (e) {
+            console.log(e.stack);
         }
-        const member = members.find(m => m.user_id === memberId);
-        member.pre_sale_ticket = e.target.checked;
+    };
+
+    getMemberAllocationId = (memberId, allocationType, bool) => {
+        const {allocations} = this.props;
+        if (!allocations) {
+            return false;
+        }
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
+        if (bool) {
+            return !!allocation;
+        }
+        return allocation ? allocation.id : null
+    };
+
+    isAllocatedByDifferentGroup(memberId, allocationType, returnType) {
+        const {group, allocations} = this.props;
+        if (!allocations) {
+            return false;
+        }
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
+        if (!allocation || allocation.related_group === group.id) {
+            return false;
+        }
+        return returnType ? allocation.allocation_group : allocation.related_group !== group.id;
+    }
+
+    getMemberAllocationTooltip(memberId, allocationType) {
+        const {t} = this.props;
+        const isAllocatedByOtherGroup = this.isAllocatedByDifferentGroup(memberId, allocationType, true);
+        return  isAllocatedByOtherGroup ?
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, { groupType: t(isAllocatedByOtherGroup) }) :
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocate`);
     };
 
     getMemberTicketCount(memberId) {
         const {tickets} = this.props;
         if (!tickets) {
-            return;
+            return 0;
         }
-        return tickets.filter(ticket => ticket.buyer_id === memberId).length;
+        return tickets.filter(ticket => ticket.buyer_id === memberId || ticket.holder === memberId).length;
+    }
+
+    isMemberHoldingTicket(memberId) {
+        const {tickets} = this.props;
+        if (!tickets) {
+            return false;
+        }
+        return !!tickets.filter(ticket => ticket.holder === memberId);
     }
 
     getMemberTransfferedTicketCount(memberId) {
@@ -88,48 +153,67 @@ class BaseGroupMembers extends React.Component {
         return tickets.filter(ticket => ticket.buyer_id === memberId && ticket.holder_id !== memberId).length;
     }
 
-    getMemberAllocationPermission(memberId) {
-        if (!this.memberPermissions[memberId]) {
-            return this.memberPermissions[memberId];
-        }
-        // TODO - replace
-        return this.memberPermissions[memberId].includes('allocatePresale');
-    }
-
-    changeMembersAllocatingPermission(memberId, e) {
-        // TODO - implement saving changes + permissions from DB.
-        if (e.target.checked) {
-            this.addPermission(memberId, 'allocatePresale');
-        } else {
-            this.removePermission(memberId, 'allocatePresale');
-        }
-    }
-
-    addPermission(memberId, permission) {
-        if (!this.memberPermissions[memberId]) {
-            this.memberPermissions[memberId] = [permission]
-        } else {
-            this.memberPermissions[memberId].push(permission);
-        }
-    }
-
-    removePermission(memberId, permission) {
-        if (!this.memberPermissions[memberId]) {
+    getMemberPermission(memberId, permissionType) {
+        const {permissions} = this.props;
+        if (!permissions) {
             return;
         }
-        const index = this.memberPermissions[memberId].indexOf(permission);
-        if (index > -1) {
-            this.memberPermissions[memberId].splice(index, 1);
+        return permissions.some(permission => permission.permission_type === permissionType && permission.user_id === memberId);
+    }
+
+    async changeMemberPermission(memberId, permissionType) {
+        const { permissions, permissionsChanged } = this.props;
+        if (!permissions) {
+            return;
+        }
+        const permission = permissions.find(p => {
+            return p.permission_type === permissionType &&
+                p.user_id === memberId;
+        });
+        if (!permission) {
+            await this.addPermission(memberId, permissionType);
+        } else {
+            await this.removePermission(permission);
+        }
+        permissionsChanged();
+    }
+
+    async addPermission(memberId, permissionType) {
+        const {group} = this.props;
+        try {
+            await this.permissionsService.addPermission({
+                user_id: memberId,
+                permission_type: permissionType,
+                entity_type: constants.ENTITY_TYPE.GROUP,
+                related_entity: group.id,
+                permitted_by: state.loggedUser.user_id
+            })
+        } catch (e) {
+            console.warn(e);
+        }
+
+    }
+
+    async removePermission(permission) {
+        const {group} = this.props;
+        try {
+            await this.permissionsService.revokePermission(permission.id, constants.ENTITY_TYPE.GROUP, group.id);
+        } catch (e) {
+            console.warn(e);
         }
     }
 
     get tableSums() {
         const {t, members, presale, group} = this.props;
         let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
-        for (const member of members) {
-            allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
-            allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
-            totalAllocated += member.pre_sale_ticket ? 1 : 0;
+        if (presale) {
+            for (const member of members) {
+                allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
+                allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
+                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
+                    ? 1 : 0;
+            }
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
@@ -159,10 +243,87 @@ class BaseGroupMembers extends React.Component {
             const preSaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
-                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: member.pre_sale_ticket,
-                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberAllocationPermission(member.user_id)
+                [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
+                    constants.ALLOCATION_TYPES.PRE_SALE,
+                    true),
+                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberPermission(member.user_id)
             } : {};
             return {...baseData, ...preSaleData}
+        })
+    }
+
+    get chartData() {
+        const {t, group, presale, members, allocations} = this.props;
+        if (!allocations) {
+            return [];
+        }
+        let totalAllocated = 0, membersWithTickets = 0;
+        if (presale) {
+            for (const member of members) {
+                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
+                    ? 1 : 0;
+                membersWithTickets += this.isMemberHoldingTicket(member.user_id) ? 1 : 0;
+            }
+        }
+        const totalAllocationsUsageChart = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsage`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsed`),
+                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`)
+                ],
+                datasets: [
+                    {
+                        data: [totalAllocated, group.pre_sale_tickets_quota - totalAllocated],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+
+        };
+        const totalMembersWithTicketsChart = {
+            title: t(`${this.TRANSLATE_PREFIX}.charts.membersTickets`),
+            data: {
+                labels: [
+                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithTickets`),
+                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithoutTickets`)
+                ],
+                datasets: [
+                    {
+                        data: [membersWithTickets, members.length - membersWithTickets],
+                        backgroundColor: [
+                            "#F7464A",
+                            "#949FB1",
+                        ],
+                        hoverBackgroundColor: [
+                            "#FF5A5E",
+                            "#A8B3C5",
+                        ]
+                    }
+                ],
+            }
+
+        };
+        return [totalAllocationsUsageChart, totalMembersWithTicketsChart];
+    }
+
+    isChangePermissionsDisabled(memberId) {
+        const {permissions, group} = this.props;
+        if (memberId === group.main_contact) {
+            // This is the camp manager - can't change his permissions.
+            return true;
+        }
+        return permissions && !permissions.some(permission => {
+            return permission.permission_type === constants.PERMISSION_TYPES.GIVE_PERMISSION &&
+                permission.user_id === state.loggedUser.user_id;
         })
     }
 
@@ -179,6 +340,11 @@ class BaseGroupMembers extends React.Component {
                     title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
                     toggle={this.toggleAllocationWarning}
                     text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
+                <PermissableComponent permitted={presale}>
+                    <FloatingDashboard charts={this.chartData} title={t('summery')}/>
+                </PermissableComponent>
+                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
+                              csvData={this.CSVdata}/>
                 <Input
                     className="form-control"
                     type="text"
@@ -225,17 +391,26 @@ class BaseGroupMembers extends React.Component {
                                             {this.getMemberTransfferedTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
-                                    <PermissableComponent permitted={presale}>
+                                    <PermissableComponent permitted={!!presale}>
                                         <td>
-                                            <input onChange={(e) => this.changePresaleAllocation(member.user_id, e)}
-                                                   checked={member.pre_sale_ticket} type="checkbox"/>
+                                            <MDBTooltip
+                                                placement="top"
+                                                className="d-flex justify-content-center"
+                                                tooltipContent={this.getMemberAllocationTooltip(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)}>
+                                                <input
+                                                    onChange={(e) => this.changeAllocation(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, e)}
+                                                    disabled={this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)}
+                                                    checked={this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)}
+                                                    type="checkbox"/>
+                                            </MDBTooltip>
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
-                                        <td>
+                                        <td className="d-flex justify-content-center">
                                             <input
-                                                onChange={(e) => this.changeMembersAllocatingPermission(member.user_id, e)}
-                                                checked={this.getMemberAllocationPermission(member.user_id)}
+                                                disabled={this.isChangePermissionsDisabled(member.user_id)}
+                                                onChange={(e) => this.changeMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
+                                                checked={this.getMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
                                                 type="checkbox"/>
                                         </td>
                                     </PermissableComponent>
@@ -244,8 +419,7 @@ class BaseGroupMembers extends React.Component {
                         })}
                     </TableBody>
                 </Table>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
-                              csvData={this.CSVdata}/>
+        
             </div>
 
 

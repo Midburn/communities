@@ -28,7 +28,12 @@
   "saveChanges": "Save changes",
   "export": "Export to Excel",
   "lastUpdate": "Last updated at",
+  "theme_camps": "Camp",
+  "art_installations": "Art installation",
+  "summery": "Summery",
   "by": "By",
+  "allocationsLastDate": "Last date to allocate tickets",
+  "filterCharts": "Filter charts by filter",
   "nav": {
     "gate": {
       "manage": "Entry management",
@@ -62,6 +67,18 @@
   },
   "members": {
     "search": "Search members",
+    "tooltips": {
+      "allocate": "Add/Remove allocation",
+      "allocatedByOtherGroup": "Has ticket allocated by another {{groupType}}"
+    },
+    "charts": {
+      "allocationsUsage": "Allocation Usage",
+      "allocationsUsed": "Allocations used",
+      "allocationsLeft": "Allocations left",
+      "membersTickets": "Tickets",
+      "membersWithTickets": "Members with tickets",
+      "membersWithoutTickets": "Members without tickets"
+    },
     "allocationWarning": {
       "title": "Quota full",
       "text": "You have reached the allocated quota."

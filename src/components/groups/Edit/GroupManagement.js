@@ -5,8 +5,6 @@ import { Row, Col } from 'mdbreact';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tabs } from '../../controls/Tabs';
-import { CampFiles } from './CampFiles';
-import { CampSuppliers } from './CampSuppliers';
 import { GroupMembers } from './GroupMembers';
 import { GroupHeader } from '../GroupHeader';
 import { GroupsService } from '../../../services/groups';
@@ -36,14 +34,6 @@ class BaseGroupManagement extends React.Component {
             this.activeTab = tab;
             this.props.history.push({hash: `#${tab}`, search: this.props.location.search})
         }
-    }
-
-    saveChanges(editedGroup) {
-        const groupToSave = {
-            ...this.props.editedGroup,
-            ...editedGroup
-        }
-        // TODO - send to BE.
     }
 
     componentWillReceiveProps(props) {
@@ -79,7 +69,7 @@ class BaseGroupManagement extends React.Component {
             {
                 id: 1,
                 title: t(`${match.params.groupType}:single.edit.tabs.members`),
-                component: <GroupMembers key={3} members={this.members} onSave={this.saveChanges} />
+                component: <GroupMembers group={this.group} key={3} members={this.members} />
             },
             // {
             //     id: 2,
