@@ -1,4 +1,4 @@
-import React from 'react';
+ import React from 'react';
 import { Card, CardBody } from 'mdbreact';
 import { Doughnut } from 'react-chartjs-2';
 import colors from '../../styles/_colors.scss';
@@ -59,7 +59,7 @@ export const DoughnutCard = ({data, note, className}) => {
                     <div className="FocusArea">
                         {data.map(stat => {
                             return (
-                                stat.focus ? <div>
+                                stat.focus ? <div key={stat.label}>
                                         <h5>{stat.label}</h5>
                                         <div className="FocusLine"></div>
                                     </div>
@@ -68,15 +68,15 @@ export const DoughnutCard = ({data, note, className}) => {
                         })}
                     </div>
                     <div className="NoteArea">
-                        {note}
+                        {note || ''}
                     </div>
                 </div>
                 <div className="ChartArea  w-50">
                     <Doughnut data={_data} options={BASE_OPTIONS}/>
                     {data.map(stat => {
                         return (
-                            stat.focus ? <div className="FocusData">
-                                    {stat.value}
+                            stat.focus ? <div key={stat.label} className="FocusData">
+                                    {stat.value || ' '}
                                 </div>
                                 : null
                         )
