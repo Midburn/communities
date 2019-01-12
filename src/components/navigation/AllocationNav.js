@@ -23,9 +23,8 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
     const eventRulesService = new EventRulesService();
 
     const hasAllocationGroups = !!state.allocationGroups && eventRulesService.isPresaleAvailable;
-    const isAllocationAdmin = !!permissionsService.isAdmin() && eventRulesService.isPresaleAvailable;
     return (
-        <PermissableComponent permitted={hasAllocationGroups || isAllocationAdmin}>
+        <PermissableComponent permitted={hasAllocationGroups || permissionsService.isAdmin()}>
             <NavItem>
                 <Dropdown id={`${type}-nav-fropdown`}>
                     <DropdownToggle nav caret className="d-flex align-items-center">
@@ -56,7 +55,7 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
                             // TODO - not only admin - more roles needed.
                             return (
                                 <PermissableComponent key={groupType}
-                                                      permitted={!!permissionsService.isAdmin() && eventRulesService.isPresaleAvailable}>
+                                                      permitted={!!permissionsService.isAdmin()}>
                                     <DropdownItem onClick={onClick}>
                                         <NavItem>
                                             <NavLink

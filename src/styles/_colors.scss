@@ -7,7 +7,7 @@ $card-text: black;
 
 $dark-gray: #7F8C8D;
 $gray: #b9bfb8;
-$light-gray: #e4eae5;
+$light-gray: #ece9f1;
 $pale: #f3f9f3;
 $dark-blue: #34495E;
 $blue: #3491f1;
@@ -16,7 +16,7 @@ $teal: #3ea4a6;
 $green: #16A085;
 $light-green: #1dd6b2;
 $light-yellow: #fff9ca;;
-$yellow: #F1C40F;;
+$yellow: #ffcf5c;;
 $orange: #F39C12;
 $red:  #E74C3C;
 $light-red: #ff6b5b;
@@ -56,7 +56,7 @@ $pink: #d6569d;
     background-color: $blue;
 }
 .yellow {
-    background-color: $yellow;
+    background-color: $yellow !important;
 }
 .orange {
     background-color: $orange;

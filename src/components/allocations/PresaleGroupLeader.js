@@ -15,6 +15,8 @@ import * as constants from '../../../models/constants';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { EventRulesService } from '../../services/event-rules';
 import { PermissionService } from '../../services/permissions';
+import { DoughnutCard } from '../controls/DoughnutCard';
+import { isMobileOnly } from "react-device-detect";
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -147,27 +149,77 @@ class BaseDGSGroupLeader extends React.Component {
         return `${match.params.groupType}:groupLeader`;
     }
 
+    getMemberAllocationId = (memberId, allocationType, bool) => {
+        const allocations = this.allocations;
+        if (!allocations) {
+            return false;
+        }
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
+        if (bool) {
+            return !!allocation;
+        }
+        return allocation ? allocation.id : null
+    };
+
+    isAllocatedByDifferentGroup(memberId, allocationType, returnType) {
+        const group = this.group, allocations = this.allocations;
+        if (!allocations) {
+            return false;
+        }
+        const allocation = allocations.find(allocation => allocation.allocated_to === memberId && allocationType === allocation.allocation_type);
+        if (!allocation || allocation.related_group === group.id) {
+            return false;
+        }
+        return returnType ? allocation.allocation_group : allocation.related_group !== group.id;
+    }
+
+    get chartData() {
+        const {t} = this.props;
+        let totalAllocated = 0;
+        for (const member of this.members) {
+            totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
+            && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
+                ? 1 : 0;
+        }
+        return [
+            {
+                label: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsed`),
+                value: totalAllocated,
+            },
+            {
+                label: t(`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`),
+                value: this.group.pre_sale_tickets_quota - totalAllocated,
+                focus: true
+            }
+        ]
+    }
+
     render() {
         const {t, match} = this.props;
+        const AllocationLastDate = <div>
+            <span>{t(`allocationsLastDate`)}: </span>
+            <Moment className="pl-2 pr-2"
+                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.eventRules.lastDateToAllocatePreSale}</Moment>
+        </div>;
         return (
             <div>
                 <Row>
-                    <Col md="12">
+                    <Col md="6">
                         <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} - {this.groupService.getPropertyByLang(this.group, 'name')}</h1>
+                    </Col>
+                    <Col md="6">
+                        <PermissableComponent permitted={!isMobileOnly}>
+                            <DoughnutCard data={this.chartData} note={AllocationLastDate} />
+                        </PermissableComponent>
                     </Col>
                 </Row>
                 <PermissableComponent permitted={this.lastAudit}>
                     <Row>
-                        <Col md="6">
+                        <Col md="12">
                             <span>{t(`lastUpdate`)}: </span>
                             <Moment className="pl-2 pr-2"
                                     format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
                             <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
-                        </Col>
-                        <Col md="6">
-                            <span>{t(`allocationsLastDate`)}: </span>
-                            <Moment className="pl-2 pr-2"
-                                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.eventRules.lastDateToAllocatePreSale}</Moment>
                         </Col>
                     </Row>
                 </PermissableComponent>

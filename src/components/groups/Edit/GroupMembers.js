@@ -9,7 +9,6 @@ import { WarningModal } from '../../controls/WarningModal';
 import * as constants from '../../../../models/constants';
 import { AllocationService } from '../../../services/allocations';
 import { ParsingService } from '../../../services/parsing';
-import { FloatingDashboard } from '../../controls/FloatingDashboard';
 import { state } from '../../../models/state';
 import { PermissionService } from '../../../services/permissions';
 import { isMobileOnly } from 'react-device-detect';
@@ -253,69 +252,6 @@ class BaseGroupMembers extends React.Component {
         })
     }
 
-    get chartData() {
-        const {t, group, presale, members, allocations} = this.props;
-        if (!allocations) {
-            return [];
-        }
-        let totalAllocated = 0, membersWithTickets = 0;
-        if (presale) {
-            for (const member of members) {
-                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
-                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
-                    ? 1 : 0;
-                membersWithTickets += this.isMemberHoldingTicket(member.user_id) ? 1 : 0;
-            }
-        }
-        const totalAllocationsUsageChart = {
-            title: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsage`),
-            data: {
-                labels: [
-                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsed`),
-                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`)
-                ],
-                datasets: [
-                    {
-                        data: [totalAllocated, group.pre_sale_tickets_quota - totalAllocated],
-                        backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
-                        ],
-                        hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
-                        ]
-                    }
-                ],
-            }
-
-        };
-        const totalMembersWithTicketsChart = {
-            title: t(`${this.TRANSLATE_PREFIX}.charts.membersTickets`),
-            data: {
-                labels: [
-                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithTickets`),
-                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithoutTickets`)
-                ],
-                datasets: [
-                    {
-                        data: [membersWithTickets, members.length - membersWithTickets],
-                        backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
-                        ],
-                        hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
-                        ]
-                    }
-                ],
-            }
-
-        };
-        return [totalAllocationsUsageChart, totalMembersWithTicketsChart];
-    }
-
     isChangePermissionsDisabled(memberId) {
         const {permissions, group} = this.props;
         if (memberId === group.main_contact) {
@@ -341,9 +277,6 @@ class BaseGroupMembers extends React.Component {
                     title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
                     toggle={this.toggleAllocationWarning}
                     text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
-                <PermissableComponent permitted={presale && !isMobileOnly}>
-                    <FloatingDashboard charts={this.chartData} title={t('summery')}/>
-                </PermissableComponent>
                 <PermissableComponent permitted={!isMobileOnly}>
                     <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`}
                                   sums={this.tableSums}

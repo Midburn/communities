@@ -90,6 +90,14 @@
   },
   "groupLeader": {
     "header": "הקצאת כרטיסי הוקרה",
-    "description": "הקצה כרטיסי הוקרה לחברי המחנה שלך מהאירוע הקודם"
+    "description": "הקצה כרטיסי הוקרה לחברי המחנה שלך מהאירוע הקודם",
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
+    }
   }
 }
