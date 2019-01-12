@@ -171,7 +171,6 @@ class BasePresaleAdmin extends React.Component {
     async getAdminAllocations() {
         try {
             this.groupQuotas = (await this.allocationsService.getAdminsAllocations(constants.ALLOCATION_TYPES.PRE_SALE)) || [];
-            console.log(this.groupQuotas);
         } catch (e) {
             console.warn(e);
         }
@@ -179,16 +178,23 @@ class BasePresaleAdmin extends React.Component {
 
     saveChanges = async () => {
         try {
-            const groupsToUpdate = Object.entries(this.changes).map(([id, group]) => {
+            const update = this.groups.map(group => {
+                let updatedQouta;
+                const groupUpdate = this.groupQuotas.find(allocation => allocation.group_id === group.id);
+                if (!groupUpdate) {
+                    updatedQouta = (group.pre_sale_tickets_quota || 0);
+                } else {
+                    updatedQouta = (group.pre_sale_tickets_quota || 0) + (groupUpdate.count || 0);
+                }
                 return {
-                    id,
-                    pre_sale_tickets_quota: group.pre_sale_tickets_quota
+                    id: group.id,
+                    pre_sale_tickets_quota: updatedQouta
                 }
             });
-            if (!groupsToUpdate || !groupsToUpdate.length) {
+            if (!update || !update.length) {
                 return;
             }
-            await this.groupService.updatePresaleQuota(groupsToUpdate);
+            await this.groupService.updatePresaleQuota(update);
             this.changes = {};
             await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
             await this.getAudits();
@@ -249,15 +255,12 @@ class BasePresaleAdmin extends React.Component {
     }
 
     render() {
-        const {t, lng, match} = this.props;
+        const {t, match} = this.props;
         return (
             <div className="DGSAdmin">
                 <Row>
                     <Col md="12">
                         <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.allocations.header`)}</h1>
-                        <div className={`ButtonGroup ${lng === 'he' ? 'left' : 'right'}`}>
-                            <ButtonGroup buttons={[this.saveButton]} vertical={true}/>
-                        </div>
                     </Col>
                 </Row>
                 <Row>
@@ -278,7 +281,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable allocations={this.allocations}
+                        <GroupsTable publishQuota={this.saveChanges}
+                            allocations={this.allocations}
                                      groupQuotas={this.groupQuotas}
                             presale={true} groups={(this.groups || []).filter(this.filter)}
                                      presaleQuotaChanged={this.presaleQuotaChanged}/>

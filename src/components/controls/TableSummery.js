@@ -9,7 +9,7 @@ import {PermissableComponent} from './PermissableComponent';
  * @param dataForExport - table data to be exported to CSV
  * @constructor
  */
-export const TableSummery = ({sums, csvData, csvName}) => {
+export const TableSummery = ({sums, csvData, csvName, moreButtons}) => {
 
     return (
         <Container fluid className="TableSummeryContainer TableSummery d-flex justify-content-center z-depth-1">
@@ -31,13 +31,14 @@ export const TableSummery = ({sums, csvData, csvName}) => {
                         </TableBody>
                     </Table>
 
-                    <div className="SummeryActions">
+                    <div className="SummeryActions d-flex">
                         <PermissableComponent permitted={!!csvData}>
                             <ExportCSV
                                 data={csvData}
                                 filename={csvName}
                             />
                         </PermissableComponent>
+                        {moreButtons || ' '}
                     </div>
                 </div>
             </Container>

@@ -1,13 +1,14 @@
 import React from 'react';
-import { withI18n } from 'react-i18next';
 import { NavLink, withRouter } from 'react-router-dom';
-import { Table, TableHead, TableBody } from 'mdbreact';
+import { Table, TableHead, TableBody, MDBBtn } from 'mdbreact';
 import { GroupsService } from '../../services/groups';
 import { TableSummery } from '../controls/TableSummery';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import * as constants from '../../../models/constants';
 import {isMobileOnly } from 'react-device-detect';
 import {NumberEditor} from "../controls/NumberEditor";
+import { FiCheckCircle } from 'react-icons/fi';
+import { withI18n } from 'react-i18next';
 
 class BaseGroupsTable extends React.Component {
 
@@ -97,11 +98,16 @@ class BaseGroupsTable extends React.Component {
     }
 
     render() {
-        const {t, groups, presale, groupQuotas} = this.props;
+        const {t, groups, presale, groupQuotas, publishQuota} = this.props;
+        const PublishButton = <MDBBtn className="blue" onClick={publishQuota}>
+            <FiCheckCircle />
+            {t(`${this.TRANSLATE_PREFIX}.table.publish`)}
+        </MDBBtn>;
         return (
             <div>
                 <PermissableComponent permitted={!isMobileOnly}>
                     <TableSummery csvName={`GroupsAllocationSummery - ${(new Date()).toDateString()}.csv`}
+                                    moreButtons={presale ? PublishButton : ' '}
                                   sums={this.tableSums} csvData={this.CSVdata}/>
                 </PermissableComponent>
                 <Table hover responsive btn className="GroupsTable">
@@ -163,7 +169,6 @@ class BaseGroupsTable extends React.Component {
                                         </td>
                                     </PermissableComponent>
                                 </tr>
-
                             );
                         })}
                     </TableBody>

@@ -98,6 +98,7 @@ module.exports = class SparkCampsController {
         try {
             // We expect to receive an array of groups to update
             const groups = req.body.groups;
+            const publishDate = new Date();
             for (const group of groups) {
                 await this.spark.post(`camps/${group.id}/updatePreSaleQuota`, { quota: group.pre_sale_tickets_quota }, req.headers);
             }

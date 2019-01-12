@@ -65,6 +65,7 @@
       "fullGroups": "Art installations who used all quota"
     },
     "table": {
+      "publish": "Publish allocations",
       "search": "Search art installations",
       "groupName": "Installation name",
       "leaderName": "Installation leader",
