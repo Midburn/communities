@@ -17,6 +17,8 @@ import { EventRulesService } from '../../services/event-rules';
 import { PermissionService } from '../../services/permissions';
 import { DoughnutCard } from '../controls/DoughnutCard';
 import { isMobileOnly } from "react-device-detect";
+import { SearchInput } from '../controls/SearchInput';
+import { action } from 'mobx/lib/mobx';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -28,7 +30,8 @@ class BaseDGSGroupLeader extends React.Component {
     usersService = new UsersService();
     eventRules = new EventRulesService();
     permissionsService = new PermissionService();
-
+    @observable
+    query = '';
     @observable
     error;
     @observable
@@ -194,6 +197,31 @@ class BaseDGSGroupLeader extends React.Component {
         ]
     }
 
+    /**
+     *  Filter related methods (change, filter, match)
+     */
+    @action
+    handleChange = (e) => {
+        this.query = e.target.value;
+    };
+
+    match(member) {
+        const name = member.name || '';
+        const email = member.email || '';
+        const phone = member.cell_phone || '';
+        return name.toLowerCase().includes(this.query) ||
+            email.toLowerCase().includes(this.query) ||
+            phone.toLowerCase().includes(this.query);
+    }
+
+    filter = (member) => {
+        if (!this.query || !this.query.length) {
+            // No query given - should return all camps
+            return true;
+        }
+        return this.match(member);
+    };
+
     render() {
         const {t, match} = this.props;
         const AllocationLastDate = <div>
@@ -209,23 +237,28 @@ class BaseDGSGroupLeader extends React.Component {
                     </Col>
                     <Col md="6">
                         <PermissableComponent permitted={!isMobileOnly}>
-                            <DoughnutCard data={this.chartData} note={AllocationLastDate} />
+                            <DoughnutCard data={this.chartData} note={AllocationLastDate}/>
                         </PermissableComponent>
                     </Col>
                 </Row>
-                <PermissableComponent permitted={this.lastAudit}>
-                    <Row>
-                        <Col md="12">
+                <Row>
+                    <Col md="12">
+                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
+                    </Col>
+                </Row>
+
+                <Row className="mt-4 mb-4">
+                    <Col md="6">
+                        <SearchInput value={this.query} onChange={this.handleChange}
+                                     placeholder={t(`members.search`)}/>
+                    </Col>
+                    <Col md="6">
+                        <PermissableComponent permitted={this.lastAudit}>
                             <span>{t(`lastUpdate`)}: </span>
                             <Moment className="pl-2 pr-2"
                                     format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
                             <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
-                        </Col>
-                    </Row>
-                </PermissableComponent>
-                <Row>
-                    <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
+                        </PermissableComponent>
                     </Col>
                 </Row>
                 <Row>
@@ -235,7 +268,7 @@ class BaseDGSGroupLeader extends React.Component {
                                       allocationsChanged={this.allocationsChanged}
                                       allocations={this.allocations}
                                       group={this.group} presale={true} ticketCount={true} match={match}
-                                      tickets={this.tickets || []} members={this.members || []}/>
+                                      tickets={this.tickets || []} members={(this.members || []).filter(this.filter)}/>
                     </Col>
                 </Row>
             </div>

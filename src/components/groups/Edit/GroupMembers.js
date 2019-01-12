@@ -25,8 +25,6 @@ class BaseGroupMembers extends React.Component {
         [constants.ALLOCATION_TYPES.PRE_SALE]: 'pre_sale_tickets_quota',
         [constants.ALLOCATION_TYPES.EARLY_ARRIVAL]: 'early_arrival_tickets_quota'
     };
-    @observable
-    query = '';
 
     @observable
     memberPermissions = {};
@@ -38,28 +36,6 @@ class BaseGroupMembers extends React.Component {
     allocationWarning = false;
 
     allocationTimeout = null;
-
-    @action
-    handleChange = (e) => {
-        this.query = e.target.value;
-    };
-
-    filter = (member) => {
-        if (!this.query || !this.query.length) {
-            // No query given - should return all camps
-            return true;
-        }
-        return this.match(member);
-    };
-
-    match(member) {
-        const name = member.name || '';
-        const email = member.email || '';
-        const phone = member.cell_phone || '';
-        return name.toLowerCase().includes(this.query) ||
-            email.toLowerCase().includes(this.query) ||
-            phone.toLowerCase().includes(this.query);
-    }
 
     changeAllocation = async (memberId, allocationType, e) => {
         const {allocations, match, group, allocationsChanged} = this.props;
@@ -135,14 +111,6 @@ class BaseGroupMembers extends React.Component {
             return 0;
         }
         return tickets.filter(ticket => ticket.buyer_id === memberId || ticket.holder === memberId).length;
-    }
-
-    isMemberHoldingTicket(memberId) {
-        const {tickets} = this.props;
-        if (!tickets) {
-            return false;
-        }
-        return !!tickets.filter(ticket => ticket.holder === memberId);
     }
 
     getMemberTransfferedTicketCount(memberId) {
@@ -282,15 +250,6 @@ class BaseGroupMembers extends React.Component {
                                   sums={this.tableSums}
                                   csvData={this.CSVdata}/>
                 </PermissableComponent>
-                <Input
-                    className="form-control"
-                    type="text"
-                    hint={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    placeholder={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    aria-label={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    value={this.query}
-                    onChange={this.handleChange}
-                />
                 <Table responsive btn>
                     <TableHead>
                         <tr>
@@ -312,7 +271,7 @@ class BaseGroupMembers extends React.Component {
                         </tr>
                     </TableHead>
                     <TableBody>
-                        {members.filter(this.filter).map(member => {
+                        {members.map(member => {
                             return (
                                 <tr key={member.user_id}>
                                     <td>{member.name}</td>

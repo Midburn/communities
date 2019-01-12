@@ -90,6 +90,14 @@
   },
   "groupLeader": {
     "header": "Allocate pre-sale tickets",
-    "description": "Allocate pre-sale tickets for your camp members from former event"
+    "description": "Allocate pre-sale tickets for your camp members from former event",
+    "charts": {
+      "allocationsUsage": "Allocation Usage",
+      "allocationsUsed": "Allocations used",
+      "allocationsLeft": "Allocations left",
+      "membersTickets": "Tickets",
+      "membersWithTickets": "Members with tickets",
+      "membersWithoutTickets": "Members without tickets"
+    }
   }
 }

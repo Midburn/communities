@@ -75,14 +75,6 @@
       "allocate": "Add/Remove allocation",
       "allocatedByOtherGroup": "Has ticket allocated by another {{groupType}}"
     },
-    "charts": {
-      "allocationsUsage": "Allocation Usage",
-      "allocationsUsed": "Allocations used",
-      "allocationsLeft": "Allocations left",
-      "membersTickets": "Tickets",
-      "membersWithTickets": "Members with tickets",
-      "membersWithoutTickets": "Members without tickets"
-    },
     "allocationWarning": {
       "title": "Quota full",
       "text": "You have reached the allocated quota."
