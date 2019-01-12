@@ -10,12 +10,52 @@ module.exports = class AllocationsController {
         this.getGroupsAllocation = this.getGroupsAllocation.bind(this);
         this.getMembersAllocations = this.getMembersAllocations.bind(this);
         this.removeAllocation = this.removeAllocation.bind(this);
+        this.adminAllocationToGroup = this.adminAllocationToGroup.bind(this);
+        this.getAdminsAllocations = this.getAdminsAllocations.bind(this);
     }
 
     async allocate(req, res, next) {
         try {
             await services.db.Allocations.create(req.body);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed adding allocations- ${e.stack}`)));
+        }
+    }
+
+    async adminAllocationToGroup(req, res, next) {
+        try {
+            const where = { group_id: req.body.group_id, publication_date: { $eq: null }, allocation_type: req.body.allocation_type, event_id: req.body.event_id };
+            const record = await services.db.AdminAllocationRounds.findOne({where});
+            if (!record) {
+                await services.db.AdminAllocationRounds.create(req.body);
+            } else {
+                Object.keys(req.body).forEach(key => {
+                    record[key] = req.body[key]
+                });
+                await record.save();
+            }
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed adding allocations- ${e.stack}`)));
+        }
+    }
+
+    async getAdminsAllocations(req, res, next) {
+        try {
+            const groupAllocations = await services.db.AdminAllocationRounds.findAll({
+                where: {
+                    event_id: req.params.event_id,
+                    allocation_type: req.params.allocation_type
+                }
+            });
+            const dictionary = {};
+            for (let group of groupAllocations) {
+                group = group.toJSON();
+                const key = group.publication_date || constants.UNPUBLISHED_ALLOCATION_KEY;
+                dictionary[key] = dictionary[key] ? [...dictionary[key], group] : [group];
+            }
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { allocations: dictionary }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed adding allocations- ${e.stack}`)));
         }

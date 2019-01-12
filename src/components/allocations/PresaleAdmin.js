@@ -15,6 +15,9 @@ import './PresaleAdmin.scss';
 import Moment from 'react-moment';
 import { UsersService } from '../../services/users';
 import { AllocationService } from '../../services/allocations';
+import { action } from 'mobx/lib/mobx';
+import { SearchInput } from '../controls/SearchInput';
+import { PermissableComponent } from '../controls/PermissableComponent';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -46,6 +49,12 @@ class BasePresaleAdmin extends React.Component {
     @observable
     allocations = [];
 
+    @observable
+    groupQuotas = [];
+
+    @observable
+    query = '';
+
     get lastAudit() {
         if (!this.audits || !this.audits.length || !this.audits[0]) {
             return;
@@ -69,6 +78,7 @@ class BasePresaleAdmin extends React.Component {
             await this.getGroupsMembersCount();
             await this.getGroupsTickets();
             await this.getGroupsFormerEventTickets();
+            await this.getAdminAllocations();
             await this.getGroupsAllocations();
             await this.getAudits();
         } catch (e) {
@@ -152,6 +162,16 @@ class BasePresaleAdmin extends React.Component {
     async getGroupsAllocations() {
         try {
             this.allocations = (await this.allocationsService.getGroupsAllocations([this.groups.map(g => g.id)])) || [];
+            console.log(this.groupQuotas);
+        } catch (e) {
+            console.warn(e);
+        }
+    }
+
+    async getAdminAllocations() {
+        try {
+            this.groupQuotas = (await this.allocationsService.getAdminsAllocations(constants.ALLOCATION_TYPES.PRE_SALE)) || [];
+            console.log(this.groupQuotas);
         } catch (e) {
             console.warn(e);
         }
@@ -188,12 +208,48 @@ class BasePresaleAdmin extends React.Component {
         return `${match.params.groupType}:management`;
     }
 
-    presaleQuotaChanged = (group) => {
-        this.changes[group.id] = group;
+    presaleQuotaChanged = async (group, quota) => {
+        try {
+            await this.allocationsService.addAllocationsToGroup(constants.ALLOCATION_TYPES.PRE_SALE, group.id, quota);
+            await this.getAdminAllocations();
+        } catch (e) {
+            console.warn(e.stack);
+        }
     };
 
+    /**
+     * Filter related methods (change, filter, match)
+     */
+    @action
+    handleChange = (e) => {
+        this.query = e.target.value;
+    };
+
+    filter = (member) => {
+        if (!this.query || !this.query.length) {
+            // No query given - should return all camps
+            return true;
+        }
+        return this.match(member);
+    };
+
+    match(group) {
+        for (const searchProp of [
+            group.camp_name_he || '',
+            group.camp_name_en || '',
+            group.contact_person_name || '',
+            group.contact_person_email || '',
+            group.contact_person_phone || ''
+        ]) {
+            if (searchProp.toLowerCase().includes(this.query)) {
+                return true
+            }
+        }
+        return false;
+    }
+
     render() {
-        const {t, lng} = this.props;
+        const {t, lng, match} = this.props;
         return (
             <div className="DGSAdmin">
                 <Row>
@@ -209,16 +265,22 @@ class BasePresaleAdmin extends React.Component {
                         <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.allocations.description`)} ({this.eventsService.getFormerEventId()})</p>
                     </Col>
                 </Row>
-                <Row>
-                    <Col md="12">
-                        <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2" format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
-                        <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                <Row className="mt-4 mb-4">
+                    <Col md="6">
+                        <SearchInput value={this.query} onChange={this.handleChange} placeholder={t(`${match.params.groupType}:search.title`)}/>
                     </Col>
+                    <PermissableComponent permitted={!!this.lastAudit}>
+                        <Col md="6">
+                            <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2" format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
+                            <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                        </Col>
+                    </PermissableComponent>
                 </Row>
                 <Row>
                     <Col md="12">
                         <GroupsTable allocations={this.allocations}
-                            presale={true} groups={this.groups}
+                                     groupQuotas={this.groupQuotas}
+                            presale={true} groups={(this.groups || []).filter(this.filter)}
                                      presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>
