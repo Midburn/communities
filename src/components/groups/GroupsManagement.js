@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row } from 'mdbreact';
 import { withI18n } from 'react-i18next';
-import { observable, computed } from 'mobx';
+import {observable, computed, action} from 'mobx';
 import { observer } from 'mobx-react';
 import { state } from '../../models/state';
 import * as constants from '../../../models/constants';
@@ -25,6 +25,9 @@ class BaseGroupsManagement extends React.Component {
 
     @observable
     groups = [];
+
+    @observable
+    query = '';
 
     getTranslatePath(type) {
         return `${type}:management`;
@@ -121,6 +124,37 @@ class BaseGroupsManagement extends React.Component {
         }
     }
 
+    /**
+     * Filter related methods (change, filter, match)
+     */
+    @action
+    handleChange = (e) => {
+        this.query = e.target.value;
+    };
+
+    filter = (member) => {
+        if (!this.query || !this.query.length) {
+            // No query given - should return all camps
+            return true;
+        }
+        return this.match(member);
+    };
+
+    match(group) {
+        for (const searchProp of [
+            group.camp_name_he || '',
+            group.camp_name_en || '',
+            group.contact_person_name || '',
+            group.contact_person_email || '',
+            group.contact_person_phone || ''
+        ]) {
+            if (searchProp.toLowerCase().includes(this.query)) {
+                return true
+            }
+        }
+        return false;
+    }
+
     render() {
         const {t, match} = this.props;
         const type = match.params.groupType;
@@ -129,17 +163,13 @@ class BaseGroupsManagement extends React.Component {
                 id: 1,
                 title: t(`${this.getTranslatePath(type)}.tabs.groups`),
                 component: <GroupsTable key={1} groups={this.groups}/>
+            },
+            {
+                id: 2,
+                title: t(`${this.getTranslatePath(type)}.tabs.presale`),
+                component: <PresaleAdmin key={2}/>
             }
         ];
-        if (this.eventRules.isPresaleAvailable) {
-            tabs.push(
-                {
-                    id: 2,
-                    title: t(`${this.getTranslatePath(type)}.tabs.presale`),
-                    component: <PresaleAdmin key={2}/>
-                }
-            )
-        }
         return (
             <div>
                 <Row>
