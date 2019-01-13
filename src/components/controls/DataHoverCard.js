@@ -1,6 +1,5 @@
 import React from 'react';
 import {Card, CardBody} from 'mdbreact';
-import {PermissableComponent} from './PermissableComponent';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import './DataHoverCard.scss';
 

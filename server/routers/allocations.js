@@ -51,7 +51,7 @@ module.exports = class AllocationsRouter {
          * get allocations for certain groups
          * E.G - GET /api/VERSION/allocations/groups/:id
          */
-        this.router.route('/allocations/admin/:event_id/:allocation_type')
+        this.router.route('/allocations/admin/:event_id/:allocation_type/:group_type')
             .get(this.controller.getAdminsAllocations);
         /**
          * get allocations for certain members

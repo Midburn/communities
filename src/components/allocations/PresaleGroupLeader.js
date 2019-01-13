@@ -49,7 +49,7 @@ class BaseDGSGroupLeader extends React.Component {
 
     get lastAudit() {
         if (!this.audits || !this.audits[0]) {
-            return;
+            return null;
         }
         return this.audits[0].createdAt;
     }

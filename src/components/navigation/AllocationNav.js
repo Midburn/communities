@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavItem, Dropdown, DropdownToggle, DropdownMenu, NavLink, DropdownItem, MDBBadge, MDBIcon } from 'mdbreact';
+import { NavItem, Dropdown, DropdownToggle, DropdownMenu, NavLink, DropdownItem, MDBBadge } from 'mdbreact';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { GroupsService } from '../../services/groups';

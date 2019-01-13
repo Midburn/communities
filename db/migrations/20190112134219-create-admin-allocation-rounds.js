@@ -17,6 +17,10 @@ module.exports = {
             group_id: {
                 type: Sequelize.INTEGER
             },
+            group_type: {
+                type: Sequelize.ENUM,
+                values: [constants.GROUP_TYPES.ART, constants.GROUP_TYPES.CAMP]
+            },
             count: {
                 type: Sequelize.STRING
             },

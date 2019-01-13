@@ -46,6 +46,7 @@ module.exports = class AllocationsController {
             const groupAllocations = await services.db.AdminAllocationRounds.findAll({
                 where: {
                     event_id: req.params.event_id,
+                    group_type: req.params.group_type,
                     allocation_type: req.params.allocation_type
                 }
             });

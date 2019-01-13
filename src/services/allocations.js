@@ -14,19 +14,19 @@ export class AllocationService {
         }
     }
 
-    async addAllocationsToGroup(type, groupId, count, eventId) {
+    async addAllocationsToGroup(type, groupId, count, groupType, eventId) {
         try {
             return (await axios.post(`/api/v1/allocations/admin`,
-                this.buildAdminAllocation(type, groupId, count, eventId),
+                this.buildAdminAllocation(type, groupId, count, groupType, eventId),
                 {withCredentials: true})).data.body;
         } catch (e) {
             console.warn(`Error fetching camps ${e.stack}`);
         }
     }
 
-    async getAdminsAllocations(type, eventId) {
+    async getAdminsAllocations(type, groupType, eventId) {
         try {
-            return (await axios.get(`/api/v1/allocations/admin/${eventId || state.currentEventId}/${type}`, {withCredentials: true})).data.body.allocations;
+            return (await axios.get(`/api/v1/allocations/admin/${eventId || state.currentEventId}/${type}/${groupType}`, {withCredentials: true})).data.body.allocations;
         } catch (e) {
             console.warn(`Error fetching camps ${e.stack}`);
         }
@@ -67,10 +67,11 @@ export class AllocationService {
         }
     }
 
-    buildAdminAllocation(type, groupId, count, eventId) {
+    buildAdminAllocation(type, groupId, count, group_type, eventId) {
         return {
             group_id: groupId,
             count: count,
+            group_type,
             event_id: eventId || state.currentEventId,
             allocation_type: type
         }

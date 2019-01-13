@@ -97,6 +97,9 @@ module.exports = class SparkCampsController {
 
     async updatePresaleQuota(req, res, next) {
         try {
+            if (!req.params.group_type) {
+                throw new Error('Must specify group type');
+            }
             // We expect to receive an array of groups to update
             const groups = req.body.groups;
             for (const group of groups) {
@@ -105,6 +108,7 @@ module.exports = class SparkCampsController {
             await db.AdminAllocationRounds.update({publication_date: new Date()}, { where: {
                     allocation_type: constants.ALLOCATION_TYPES.PRE_SALE,
                     publication_date: { $eq: null },
+                    group_type: req.params.group_type,
                     event_id: req.body.event_id
                 }});
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));

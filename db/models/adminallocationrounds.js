@@ -3,6 +3,10 @@ const constants = require('../../models/constants');
 module.exports = (sequelize, DataTypes) => {
     const AdminAllocationRounds = sequelize.define('AdminAllocationRounds', {
         group_id: DataTypes.INTEGER,
+        group_type: {
+            type: DataTypes.ENUM,
+            values: [constants.GROUP_TYPES.ART, constants.GROUP_TYPES.CAMP]
+        },
         count: DataTypes.STRING,
         publication_date: DataTypes.DATE,
         event_id: DataTypes.STRING,

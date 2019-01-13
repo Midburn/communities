@@ -1,22 +1,22 @@
 import React from 'react';
-import { withI18n } from 'react-i18next';
-import { withRouter } from 'react-router-dom';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react';
-import { Row, Col } from 'mdbreact';
-import { GroupsTable } from '../groups/GroupsTable';
-import { GroupsService } from '../../services/groups';
-import { ParsingService } from '../../services/parsing';
-import { EventsService } from '../../services/events';
-import { AuditService } from '../../services/audit';
+import {withI18n} from 'react-i18next';
+import {withRouter} from 'react-router-dom';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
+import {Row, Col} from 'mdbreact';
+import {GroupsTable} from '../groups/GroupsTable';
+import {GroupsService} from '../../services/groups';
+import {ParsingService} from '../../services/parsing';
+import {EventsService} from '../../services/events';
+import {AuditService} from '../../services/audit';
 import * as constants from '../../../models/constants';
 import './PresaleAdmin.scss';
 import Moment from 'react-moment';
-import { UsersService } from '../../services/users';
-import { AllocationService } from '../../services/allocations';
-import { action } from 'mobx/lib/mobx';
-import { SearchInput } from '../controls/SearchInput';
-import { PermissableComponent } from '../controls/PermissableComponent';
+import {UsersService} from '../../services/users';
+import {AllocationService} from '../../services/allocations';
+import {action} from 'mobx/lib/mobx';
+import {SearchInput} from '../controls/SearchInput';
+import {PermissableComponent} from '../controls/PermissableComponent';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -53,7 +53,7 @@ class BasePresaleAdmin extends React.Component {
 
     get lastAudit() {
         if (!this.audits || !this.audits.length || !this.audits[0]) {
-            return;
+            return null;
         }
         return this.audits[0].createdAt;
     }
@@ -164,14 +164,16 @@ class BasePresaleAdmin extends React.Component {
     }
 
     async getAdminAllocations() {
+        const {match} = this.props;
         try {
-            this.groupQuotas = (await this.allocationsService.getAdminsAllocations(constants.ALLOCATION_TYPES.PRE_SALE)) || [];
+            this.groupQuotas = (await this.allocationsService.getAdminsAllocations(constants.ALLOCATION_TYPES.PRE_SALE, this.parsingService.getGroupTypeFromString(match.params.groupType))) || [];
         } catch (e) {
             console.warn(e);
         }
     }
 
     saveChanges = async () => {
+        const {match} = this.props;
         try {
             if (!this.groupQuotas || !this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY]) {
                 return;
@@ -182,8 +184,9 @@ class BasePresaleAdmin extends React.Component {
                 if (!groupUpdate) {
                     updatedQouta = (group.pre_sale_tickets_quota || 0);
                 } else {
-                    updatedQouta = (group.pre_sale_tickets_quota || 0) + (groupUpdate.count || 0);
+                    updatedQouta = (Number(group.pre_sale_tickets_quota) || 0) + (Number(groupUpdate.count) || 0);
                 }
+                group.pre_sale_tickets_quota = updatedQouta;
                 return {
                     id: group.id,
                     pre_sale_tickets_quota: updatedQouta
@@ -192,7 +195,7 @@ class BasePresaleAdmin extends React.Component {
             if (!update || !update.length) {
                 return;
             }
-            await this.groupService.updatePresaleQuota(update);
+            await this.groupService.updatePresaleQuota(update, this.parsingService.getGroupTypeFromString(match.params.groupType));
             await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
             await this.getAudits();
             await this.getAdminAllocations();
@@ -213,8 +216,9 @@ class BasePresaleAdmin extends React.Component {
     }
 
     presaleQuotaChanged = async (group, quota) => {
+        const {match} = this.props;
         try {
-            await this.allocationsService.addAllocationsToGroup(constants.ALLOCATION_TYPES.PRE_SALE, group.id, quota);
+            await this.allocationsService.addAllocationsToGroup(constants.ALLOCATION_TYPES.PRE_SALE, group.id, quota, this.parsingService.getGroupTypeFromString(match.params.groupType));
             await this.getAdminAllocations();
         } catch (e) {
             console.warn(e.stack);
@@ -268,11 +272,13 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row className="mt-4 mb-4">
                     <Col md="6">
-                        <SearchInput value={this.query} onChange={this.handleChange} placeholder={t(`${match.params.groupType}:search.title`)}/>
+                        <SearchInput value={this.query} onChange={this.handleChange}
+                                     placeholder={t(`${match.params.groupType}:search.title`)}/>
                     </Col>
                     <PermissableComponent permitted={!!this.lastAudit}>
-                        <Col md="6">
-                            <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2" format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
+                        <Col md="6" className="text-gray d-flex align-items-center">
+                            <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2"
+                                                                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
                             <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
                         </Col>
                     </PermissableComponent>
@@ -280,9 +286,9 @@ class BasePresaleAdmin extends React.Component {
                 <Row>
                     <Col md="12">
                         <GroupsTable publishQuota={this.saveChanges}
-                            allocations={this.allocations}
+                                     allocations={this.allocations}
                                      groupQuotas={this.groupQuotas}
-                            presale={true} groups={(this.groups || []).filter(this.filter)}
+                                     presale={true} groups={(this.groups || []).filter(this.filter)}
                                      presaleQuotaChanged={this.presaleQuotaChanged}/>
                     </Col>
                 </Row>

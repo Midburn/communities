@@ -9,7 +9,6 @@ import {isMobileOnly} from 'react-device-detect';
 import {NumberEditor} from "../controls/NumberEditor";
 import {FiCheckCircle, FiPhone} from 'react-icons/fi';
 import {withI18n} from 'react-i18next';
-import Moment from "react-moment";
 import * as moment from "moment";
 import {DataHoverCard} from "../controls/DataHoverCard";
 import {MdMailOutline} from "react-icons/md";
@@ -62,9 +61,9 @@ class BaseGroupsTable extends React.Component {
         return groups.map(g => {
             const baseData = {
                 [t(`${this.TRANSLATE_PREFIX}.table.groupName`)]: this.groupsService.getPropertyByLang(g, 'name'),
-                [t(`${this.TRANSLATE_PREFIX}.table.leaderName`)]: g.contact_person_name,
-                [t(`${this.TRANSLATE_PREFIX}.table.leaderEmail`)]: g.contact_person_email,
-                [t(`${this.TRANSLATE_PREFIX}.table.leaderPhone`)]: g.contact_person_phone,
+                [t(`${this.TRANSLATE_PREFIX}.table.leaderName`)]: this.getManagerName(g),
+                [t(`${this.TRANSLATE_PREFIX}.table.leaderEmail`)]: this.getManagerEmail(g),
+                [t(`${this.TRANSLATE_PREFIX}.table.leaderPhone`)]: this.getManagerPhone(g),
                 [t(`${this.TRANSLATE_PREFIX}.table.totalMembers`)]: g.members_count,
                 [t(`${this.TRANSLATE_PREFIX}.table.totalPurchased`)]: (g.tickets || []).length
             };
@@ -121,6 +120,14 @@ class BaseGroupsTable extends React.Component {
         }
     }
 
+    getManagerPhone(group) {
+        return group && group.manager ? group.manager.phone : ' ';
+    }
+
+    getManagerEmail(group) {
+        return group && group.manager ? group.manager.email : ' ';
+    }
+
     getManagerExtraDetails(group) {
         if (!group  || !group.manager) {
             return ' ';
@@ -128,10 +135,10 @@ class BaseGroupsTable extends React.Component {
         return (
             <div>
                 <div className="d-flex align-items-center">
-                    <FiPhone /><span className="ml-2 mr-2">{group.manager.phone}</span>
+                    <FiPhone /><span className="ml-2 mr-2">{this.getManagerPhone(group)}</span>
                 </div>
                 <div className="d-flex align-items-center">
-                    <MdMailOutline /><span className="ml-2 mr-2">{group.manager.email}</span>
+                    <MdMailOutline /><span className="ml-2 mr-2">{this.getManagerEmail(group)}</span>
                 </div>
             </div>
         );

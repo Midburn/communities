@@ -9,13 +9,13 @@
     margin: 0;
   }
   input {
-    width: 75%;
+    width: 66%;
     border: none;
     outline: none;
     text-align: center;
     color: $blue;
     font-weight: 600;
-    min-width: 3rem;
+    min-width: 1.5rem;
     &:focus {
       outline: none;
     }

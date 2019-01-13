@@ -1,5 +1,10 @@
 @import "./styles/mdbootstrap_override";
 
+th *, th, td, td * {
+  width: max-content;
+  white-space: nowrap;
+}
+
 body {
   margin: 0;
   padding: 0;
