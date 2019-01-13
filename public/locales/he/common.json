@@ -36,6 +36,8 @@
   "allocationsLastDate": "תאריך אחרון להקצאת כרטיסים",
   "filterCharts": "הצג נתונים לאחר פילטר בסיכום",
   "new": "חדש",
+  "round": "סבב",
+  "published": "פורסם",
   "nav": {
     "allocations": {
       "title": "הקצאות הוקרה {{year}}"

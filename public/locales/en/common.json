@@ -35,6 +35,8 @@
   "allocationsLastDate": "Last date to allocate tickets",
   "filterCharts": "Filter charts by filter",
   "new": "New",
+  "round": "Round",
+  "published": "Published",
   "nav": {
     "allocations": {
       "title": "Appreciation tickets {{year}}"

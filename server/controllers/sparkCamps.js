@@ -1,6 +1,7 @@
 const services = require('../services');
 const GenericResponse = require('../../models/generic-response');
 const constants = require('../../models/constants');
+const db = require('../services/database');
 
 module.exports = class SparkCampsController {
 
@@ -98,10 +99,14 @@ module.exports = class SparkCampsController {
         try {
             // We expect to receive an array of groups to update
             const groups = req.body.groups;
-            const publishDate = new Date();
             for (const group of groups) {
                 await this.spark.post(`camps/${group.id}/updatePreSaleQuota`, { quota: group.pre_sale_tickets_quota }, req.headers);
             }
+            await db.AdminAllocationRounds.update({publication_date: new Date()}, { where: {
+                    allocation_type: constants.ALLOCATION_TYPES.PRE_SALE,
+                    publication_date: { $eq: null },
+                    event_id: req.body.event_id
+                }});
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));

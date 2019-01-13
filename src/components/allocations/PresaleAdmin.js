@@ -9,7 +9,6 @@ import { GroupsService } from '../../services/groups';
 import { ParsingService } from '../../services/parsing';
 import { EventsService } from '../../services/events';
 import { AuditService } from '../../services/audit';
-import { ButtonGroup } from '../controls/ButtonGroup';
 import * as constants from '../../../models/constants';
 import './PresaleAdmin.scss';
 import Moment from 'react-moment';
@@ -31,9 +30,6 @@ class BasePresaleAdmin extends React.Component {
     /**
      * We'll keep track of groups changed in order to send them on save.
      */
-    @observable
-    changes = {};
-
     @observable
     error;
 
@@ -162,7 +158,6 @@ class BasePresaleAdmin extends React.Component {
     async getGroupsAllocations() {
         try {
             this.allocations = (await this.allocationsService.getGroupsAllocations([this.groups.map(g => g.id)])) || [];
-            console.log(this.groupQuotas);
         } catch (e) {
             console.warn(e);
         }
@@ -178,9 +173,12 @@ class BasePresaleAdmin extends React.Component {
 
     saveChanges = async () => {
         try {
+            if (!this.groupQuotas || !this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY]) {
+                return;
+            }
             const update = this.groups.map(group => {
                 let updatedQouta;
-                const groupUpdate = this.groupQuotas.find(allocation => allocation.group_id === group.id);
+                const groupUpdate = this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY].find(allocation => allocation.group_id === group.id);
                 if (!groupUpdate) {
                     updatedQouta = (group.pre_sale_tickets_quota || 0);
                 } else {
@@ -195,9 +193,9 @@ class BasePresaleAdmin extends React.Component {
                 return;
             }
             await this.groupService.updatePresaleQuota(update);
-            this.changes = {};
             await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
             await this.getAudits();
+            await this.getAdminAllocations();
         } catch (e) {
             console.warn(`Error saving presale quota! - ${e.stack}`);
         }
