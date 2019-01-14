@@ -30,11 +30,11 @@ module.exports = class AllocationsRouter {
          * remove allocation
          * E.G - DELETE /api/VERSION/allocations
          */
-        this.router.route('/allocations/:id')
+        this.router.route('/allocations/:group_id/:id/')
             .delete(services.permissions.checkUserPermission(
                 constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET,
                 constants.ENTITY_TYPE.GROUP,
-                (req) => req.body.related_group), this.controller.removeAllocation);
+                (req) => req.params.group_id), this.controller.removeAllocation);
         /**
          * get allocations for certain groups
          * E.G - POST /api/VERSION/allocations/groups/:id
