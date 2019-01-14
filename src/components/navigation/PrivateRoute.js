@@ -11,4 +11,5 @@ export const PrivateRoute = ({component: Component, permit, authenticated, ...re
         )}/>
     }
     permissionService.redirectToSpark();
+    return (<div></div>);
 };

@@ -14,9 +14,9 @@ export class AllocationService {
         }
     }
 
-    async removeAllocation(allocationId) {
+    async removeAllocation(groupId, allocationId) {
         try {
-            return (await axios.delete(`/api/v1/allocations/${allocationId}`, {withCredentials: true})).data.body;
+            return (await axios.delete(`/api/v1/allocations/${groupId}/${allocationId}`, {withCredentials: true})).data.body;
         } catch (e) {
             console.warn(`Error fetching camps ${e.stack}`);
         }

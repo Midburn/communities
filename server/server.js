@@ -42,7 +42,7 @@ class Server {
         this.app.use(bodyParser.json()); // for parsing application/json
         this.app.use(compression()); // compress all responses
         this.app.use(async (req, res, next) => {
-            if (req.url.includes(this.config.SPARK_HOST)) {
+            if (req.url.includes(this.config.SPARK_HOST) || req.url.includes('api/v1/configurations')) {
                 next();
             }
             try {
@@ -112,7 +112,7 @@ class Server {
 
     handleGenericReposnse() {
         this.app.use((genericResponse, req, res, next) => {
-            if (res.ended || !genericResponse) {
+            if (res.finished || !genericResponse) {
                 return;
             }
             switch (genericResponse.type) {
