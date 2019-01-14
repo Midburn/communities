@@ -16,94 +16,89 @@ class BaseCreateGroup extends React.Component {
     }
 
     render() {
+        const { t } = this.props;
+
         return (
             <div>
                 <Row>
                     <Col md="12">
-                        <h2>הרשמה למחנה נושא 2018</h2>
-                        <div>
-                            ברוכות הבאים הביתה!
-הדרך מתחילה כאן, ואנחנו מה-זה מתרגשים שאתן איתנו!
-
-בבקשה תחשבו טוב-טוב על הפרטים הבאים - ורק אז תמלאו.
-
-ההרשמה פתוחה עד ה1.2 בלבד!
-                        </div>
+                        <h2>{t('nav.camps.create.title')}</h2>
+                        <div>{t('nav.camps.create.description')}</div>
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campHebName" title="שם מחנה בעברית" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campHebName" title={`${t('nav.camps.create.campName')} (${t('hebrew')})`} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campEngName" title="שם מחנה באגלית" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campEngName" title={`${t('nav.camps.create.campName')} (${t('english')})`} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campLeaderName" title="שם מוביל המחנה" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campLeaderName" title={t('nav.camps.create.campLeaderName')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campLeaderPhone" title="טלפון מוביל המחנה" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campLeaderPhone" title={t('nav.camps.create.campLeaderPhone')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campLeaderEmail" title="מייל מוביל המחנה" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campLeaderEmail" title={t('nav.camps.create.campLeadereEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campLeaderMidburnProfileEmail" title="מייל פרופיל המידברן של מוביל המחנה" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campLeaderMidburnProfileEmail" title={t('nav.camps.create.campLeaderMidburnProfileEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campAdditionalName" title="מייל נוסף שאתם רוצים לתת לנו לגיבוי?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campAdditionalName" title={t('nav.camps.create.campAdditionalName')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campContent" title="מה התוכן שלכם" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campContent" title={t('nav.camps.create.campContent')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campCharacter" title="איזה סוג מחנה אתם הולכים להיות?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campCharacter" title={t('nav.camps.create.campCharacter')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campNoiseCount" title="מה מידת הרעש של הקאמפ?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campNoiseCount" title={t('nav.camps.create.campNoiseCount')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="campIsNewMembersOpen" title="האם הקאמפ פתוח למצטרפים חדשים?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campIsNewMembersOpen" title={t('nav.camps.create.campIsNewMembersOpen')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem name="camoMembersCount" title="כמה אנשים (בערך) אתם מתכננים להיות?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem name="campMembersCount" title={t('nav.camps.create.campMembersCount')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="האם אתם מחנה משפחות/ילדים?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.kidsFamilyCamp')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="האם אתם מחנה חדש או ותיק?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.newOrOldCamp')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="האם המחנה לקח חלק באירוע מידברן/ברנינג מן/קהילה לפני?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.campParticipation')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
 
-                    <div>עכשיו קצת פרטים על הצוות המוביל שאיתכן....</div>
+                    <div>{t('nav.camps.create.leaderTeamCampDescription')}</div>
 
                     <Col md="12">
-                        <EditableItem title='שם מלא מוביל חשל"ש' value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.campMoopLeaderFullname')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title='אימייל מוביל חשל"ש' value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.campMoopLeaderEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="שם מלא מוביל בטיחות" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.securityLeaderName')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="אימייל מוביל בטיחות" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.securityLeaderEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="שם מלא מוביל סאונד" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.soundLeaderName')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="אימייל מוביל סאונד" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.soundLeaderEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="שם מלא מוביל תוכן" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.ContentLeaderName')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="אימייל מוביל תוכן" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.ContentLeaderEmail')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
                     <Col md="12">
-                        <EditableItem title="עוד משהו שתרצו להגיד לנו?" value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
+                        <EditableItem title={t('nav.camps.create.anythingElse')} value={this.state.value} onChange={this.handleTextChange} type="text" editMode="false" />
                     </Col>
 
                 </Row>
