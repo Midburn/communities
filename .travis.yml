@@ -15,7 +15,7 @@ install:
 before_script:
   -
 script:
-  - .travis/continuous_deployment.sh
+  - ./.travis/continuous_deployment.sh
 after_success:
   -
 services:
