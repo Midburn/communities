@@ -1,5 +1,4 @@
 .idea
-.travis
 .npmrc
 .env
 node_modules

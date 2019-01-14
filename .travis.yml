@@ -11,12 +11,9 @@ env:
 cache:
   directories:
 install:
-  -
-before_script:
-  -
+  - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm install --dev --pure-lockfile; fi
 script:
-  - ./.travis/continuous_deployment.sh
-after_success:
-  -
+  - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm run build; fi
+  - .travis/continuous_deployment.sh
 services:
   - docker
