@@ -1,4 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## Features
 
 - Routing using [react-router-dom](https://github.com/ReactTraining/react-router#readme)
