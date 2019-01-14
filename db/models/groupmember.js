@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   GroupMember.associate = function(models) {
     models.GroupMember.belongsTo(models.Group, {
       onDelete: 'CASCADE',
-      foreignKey: { allowNull: false }
+      foreignKey: { 
+        allowNull: false,
+        fieldName: 'GroupId',
+       }
     });
   };
   return GroupMember;
