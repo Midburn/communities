@@ -9,6 +9,7 @@ const pool = {
 module.exports = {
     development: {
         username: 'root',
+        port: 3306,
         password: 'root',
         database: 'theme_and_arts',
         host: 'localhost',
@@ -21,7 +22,7 @@ module.exports = {
         port: process.env.MYSQL_DB_PORT,
         password: process.env.MYSQL_DB_PASSWORD,
         database: process.env.MYSQL_DB_NAME,
-        host: process.env.MYSQL_DB_NAME,
+        host: process.env.MYSQL_DB_HOST,
         dialect: 'mysql',
         logging: process.env.MYSQL_DB_LOGGING,
         pool

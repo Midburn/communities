@@ -18,7 +18,30 @@ module.exports = {
     /**
      * Group types for DB + navs.
      */
-    GROUP_TYPES,
+
+    /** 
+     * Group-related enums
+     */
+    NOISE_LEVEL: {
+        QUIET: 'quiet',
+        MEDIUM: 'medium',
+        NOISY: 'noisy',
+        VERY_NOISY: 'very_noisy'
+    },
+
+    GROUP_STATUS: {
+        ACTIVE: 'active',
+        OPEN: 'open',
+        CLOSED: 'closed',
+        DELETED: 'deleted'
+    },
+
+    GROUP_TYPES: {
+        CAMP: 'camp',
+        ART: 'art'
+    },
+
+
     ALLOCATION_GROUPS,
     GIVEN_BY_SYSTEM_CODE: -1,
     // Used to prevent conflicts in permission table
@@ -30,6 +53,7 @@ module.exports = {
         [GROUP_TYPES.CAMP]: ALLOCATION_GROUPS.THEME_CAMPS,
         [GROUP_TYPES.ARTS]: ALLOCATION_GROUPS.ART_INSTALLATIONS
     },
+
     SPARK_TYPES_TO_GROUP_TYPES: {
         art_installation: GROUP_TYPES.ART,
         theme_camp: GROUP_TYPES.CAMP

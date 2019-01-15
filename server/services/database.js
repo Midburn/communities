@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const path = require('path');
 const Models = require('../../db/models');
+
 const DBConfig = require('../../db/config');
+
 // Load environment variables default values
 require('dotenv').config();
 
@@ -29,9 +31,12 @@ class DatabaseService {
 
     async initModels() {
         this.Audits = await Models.Audits(this.sequelize, Sequelize);
+        this.Groups = await Models.Groups(this.sequelize, Sequelize);
+        this.GroupMembers = await Models.GroupMembers(this.sequelize, Sequelize);
         this.Allocations = await Models.Allocations(this.sequelize, Sequelize);
         this.Permissions = await Models.Permissions(this.sequelize, Sequelize);
         this.LoggedUsers = await Models.LoggedUsers(this.sequelize, Sequelize);
+
         // DO NOT USE FORCE TRUE - this will recreate the data base
         await this.sequelize.sync({ force: false });
     }
