@@ -76,7 +76,7 @@
       "totalEntered": "Total entered former event",
       "quota": "Quota",
       "noQuota": "Allocate",
-      "allocated": "Allocated by the art installation",
+      "allocated": "Allocation Percentage",,
       "allocatedAll": "Allocated by the art installations"
     },
     "sums": {

@@ -12,6 +12,7 @@ import {withI18n} from 'react-i18next';
 import * as moment from "moment";
 import {DataHoverCard} from "../controls/DataHoverCard";
 import {MdMailOutline} from "react-icons/md";
+import NumberFormat from 'react-number-format';
 
 class BaseGroupsTable extends React.Component {
 
@@ -70,7 +71,7 @@ class BaseGroupsTable extends React.Component {
             const presaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)]: this.getFormerEventEntries(g),
                 [t(`${this.TRANSLATE_PREFIX}.table.quota`)]: g.quota || 0,
-                [t(`${this.TRANSLATE_PREFIX}.table.allocated`)]: this.getGroupAllocatedCount(g, constants.ALLOCATION_TYPES.PRE_SALE)
+                [t(`${this.TRANSLATE_PREFIX}.table.allocated`)]: this.getGroupAllocatedPercentage(g, constants.ALLOCATION_TYPES.PRE_SALE)
             } : {};
             return {
                 ...baseData,
@@ -92,12 +93,19 @@ class BaseGroupsTable extends React.Component {
         return groupQuota.count;
     }
 
-    getGroupAllocatedCount(group, allocationType) {
+    getGroupAllocatedPercentage(group, allocationType) {
         const {allocations} = this.props;
         if (!allocations) {
             return '';
         }
-        return allocations.filter(allocation => allocation.related_group === group.id && allocation.allocation_type === allocationType).length;
+        const allocated = allocations.filter(allocation => allocation.related_group === group.id && allocation.allocation_type === allocationType).length;
+        // TODO - handle other types of allocations.
+        const quota = allocationType === constants.ALLOCATION_TYPES.PRE_SALE ? group.pre_sale_tickets_quota: 0;
+        console.log({allocated, quota});
+        if (quota === 0) {
+            return 0;
+        }
+        return (allocated || 0) / quota;
     }
 
     /**
@@ -223,7 +231,7 @@ class BaseGroupsTable extends React.Component {
                                             })
                                         }
                                         <td>
-                                            {this.getGroupAllocatedCount(g, constants.ALLOCATION_TYPES.PRE_SALE)}
+                                            <NumberFormat decimalScale={1} displayType={"text"} value={this.getGroupAllocatedPercentage(g, constants.ALLOCATION_TYPES.PRE_SALE) * 100} suffix={"%"}/>
                                         </td>
                                     </PermissableComponent>
                                 </tr>
