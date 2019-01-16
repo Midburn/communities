@@ -101,7 +101,6 @@ class BaseGroupsTable extends React.Component {
         const allocated = allocations.filter(allocation => allocation.related_group === group.id && allocation.allocation_type === allocationType).length;
         // TODO - handle other types of allocations.
         const quota = allocationType === constants.ALLOCATION_TYPES.PRE_SALE ? group.pre_sale_tickets_quota: 0;
-        console.log({allocated, quota});
         if (quota === 0) {
             return 0;
         }
