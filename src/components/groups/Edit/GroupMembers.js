@@ -188,7 +188,7 @@ class BaseGroupMembers extends React.Component {
         };
         const preSaleSums = presale ? {
             [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: allPurchasedTicketsCount,
-            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
+            // [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
             [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: totalAllocated,
             [t(`${this.TRANSLATE_PREFIX}.sums.quota`)]: group.pre_sale_tickets_quota || 0,
         } : {};
@@ -210,7 +210,7 @@ class BaseGroupMembers extends React.Component {
             };
             const preSaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
-                [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
+                // [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
                     constants.ALLOCATION_TYPES.PRE_SALE,
                     true),
@@ -259,9 +259,9 @@ class BaseGroupMembers extends React.Component {
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.tickets`)}</th>
                             </PermissableComponent>
-                            <PermissableComponent permitted={presale}>
-                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>
-                            </PermissableComponent>
+                            {/*<PermissableComponent permitted={presale}>*/}
+                                {/*<th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>*/}
+                            {/*</PermissableComponent>*/}
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.presale`)}</th>
                             </PermissableComponent>
@@ -282,11 +282,11 @@ class BaseGroupMembers extends React.Component {
                                             {this.getMemberTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
-                                    <PermissableComponent permitted={ticketCount}>
-                                        <td>
-                                            {this.getMemberTransfferedTicketCount(member.user_id)}
-                                        </td>
-                                    </PermissableComponent>
+                                    {/*<PermissableComponent permitted={ticketCount}>*/}
+                                        {/*<td>*/}
+                                            {/*{this.getMemberTransfferedTicketCount(member.user_id)}*/}
+                                        {/*</td>*/}
+                                    {/*</PermissableComponent>*/}
                                     <PermissableComponent permitted={!!presale}>
                                         <td>
                                             <MDBTooltip

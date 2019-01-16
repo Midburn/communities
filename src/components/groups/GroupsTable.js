@@ -178,7 +178,7 @@ class BaseGroupsTable extends React.Component {
                                     Object.keys((groupQuotas || [])).map((key, i) => {
                                         return key === constants.UNPUBLISHED_ALLOCATION_KEY ? null :
                                             (
-                                                <MDBTooltip placement="top"
+                                                <MDBTooltip placement="bottom"
                                                             key={key}
                                                             tag="th"
                                                             tooltipContent={`${t('published')}: ${moment(new Date(key)).format('DD/MM/YYYY, HH:mm:ss')}`}>
