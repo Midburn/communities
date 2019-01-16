@@ -1,0 +1,18 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+  - pull
+  - gcr.io/midbarrn/midburn-communities-latest
+- name: gcr.io/cloud-builders/docker
+  args:
+  - build
+  - "--cache-from"
+  - gcr.io/midbarrn/midburn-communities-latest
+  - "-t"
+  - gcr.io/midbarrn/midburn-communities-latest
+  - "-t"
+  - "${_IMAGE_TAG}"
+  - "."
+images:
+- gcr.io/midbarrn/midburn-communities-latest
+- "${_IMAGE_TAG}"
