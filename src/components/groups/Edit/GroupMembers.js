@@ -177,7 +177,7 @@ class BaseGroupMembers extends React.Component {
         if (presale) {
             for (const member of members) {
                 allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
-                allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
+                // allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
                 totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
                 && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
                     ? 1 : 0;
