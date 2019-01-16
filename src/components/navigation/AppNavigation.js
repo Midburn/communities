@@ -169,7 +169,7 @@ class BaseAppNavigation extends Component {
                             </NavLink>
                         </NavItem>
                         <NavItem >
-                            <MDBBtn outline color="primary" onClick={this.logout}>{t('logout')}</MDBBtn>
+                            <MDBBtn className={"border-blue text-blue"} outline color="primary" onClick={this.logout}>{t('logout')}</MDBBtn>
                         </NavItem>
                     </NavbarNav>
                 </Collapse>

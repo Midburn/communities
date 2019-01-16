@@ -4,7 +4,6 @@ const Audits = require('./audit'),
     LoggedUsers = require('./loggedusers'),
     Groups = require('./group'),
     GroupMembers = require('./groupmember'),
-    LoggedUsers = require('./loggedusers'),
     AdminAllocationRounds = require('./adminallocationrounds');
 
 module.exports = {

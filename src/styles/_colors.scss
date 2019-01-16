@@ -55,6 +55,9 @@ $pink: #d6569d;
 .blue {
     background-color: $blue !important;
 }
+.border-blue {
+    border-color: $blue !important;
+}
 .yellow {
     background-color: $yellow !important;
 }
@@ -91,7 +94,7 @@ $pink: #d6569d;
     color: $green;
 }
 .text-blue {
-    color: $blue;
+    color: $blue !important;
 }
 .text-orange {
     color: $orange;

@@ -13,6 +13,9 @@
     background-color: $light-yellow;
   }
 }
+.btn {
+  box-shadow: unset;
+}
 .dropdown-menu {
   width: max-content;
 }
