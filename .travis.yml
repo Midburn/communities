@@ -4,10 +4,9 @@ node_js:
   - "10"
 env:
   matrix:
-  - DEPLOY_ENVIRONMENT=staging DEPLOY_BRANCH=master
-  - DEPLOY_ENVIRONMENT=production DEPLOY_TAGS=true
-  - DEPLOY_ENVIRONMENT=sparktesting DEPLOY_BRANCH=master
-  - ""
+    - DEPLOY_ENVIRONMENT=staging DEPLOY_BRANCH=master
+    - DEPLOY_ENVIRONMENT=production DEPLOY_TAGS=true
+    - ""
 cache:
   directories:
 install:
