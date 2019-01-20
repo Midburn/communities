@@ -219,12 +219,6 @@ class BasePresaleAdmin extends React.Component {
         }
     };
 
-  saveButton = {
-    icon: "save",
-    onClick: this.saveChanges.bind(this),
-    tooltip: this.props.t("saveChanges")
-  };
-
   get TRANSLATE_PREFIX() {
     const { match } = this.props;
     return `${match.params.groupType}:management`;
