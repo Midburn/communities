@@ -33,17 +33,17 @@ class BasePresaleAdmin extends React.Component {
     @observable
     error;
 
-    @observable
-    groups = [];
+  @observable
+  groups = [];
 
-    @observable
-    audits = [];
+  @observable
+  audits = [];
 
-    @observable
-    auditedUser = [];
+  @observable
+  auditedUser = [];
 
-    @observable
-    allocations = [];
+  @observable
+  allocations = [];
 
     @observable
     groupQuotas = [];
@@ -83,85 +83,100 @@ class BasePresaleAdmin extends React.Component {
         }
     }
 
-    async getAudits() {
-        try {
-            this.audits = await this.auditService.getAudits(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN);
-            if (this.audits && this.audits[0]) {
-                this.auditedUser = (await this.usersService.getUserNameById(this.audits[0].updated_by)) || {};
-            }
-        } catch (e) {
-            // TODO - what do we do with errors
-            console.warn(e.stack);
-        }
+  async getAudits() {
+    try {
+      this.audits = await this.auditService.getAudits(
+        constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_ADMIN
+      );
+      if (this.audits && this.audits[0]) {
+        this.auditedUser =
+          (await this.usersService.getUserNameById(
+            this.audits[0].updated_by
+          )) || {};
+      }
+    } catch (e) {
+      // TODO - what do we do with errors
+      console.warn(e.stack);
     }
+  }
 
-    /**
-     * For displaying member count (for former event)
-     * @returns {Promise<void>}
-     */
-    async getGroupsMembersCount() {
-        for (const group of this.groups) {
-            try {
-                const members = await this.groupService.getCampsMembersCount(group.id);
-                for (const member of members) {
-                    if (member.status === 'approved_mgr') {
-                        group.members_count = !isNaN(group.members_count) ? group.members_count++ : 1;
-                    }
-                }
-            } catch (e) {
-                // TODO - what do we do with errors?
-                group.members_count = 0;
-            }
+  /**
+   * For displaying member count (for former event)
+   * @returns {Promise<void>}
+   */
+  async getGroupsMembersCount() {
+    for (const group of this.groups) {
+      try {
+        const members = await this.groupService.getCampsMembersCount(group.id);
+        for (const member of members) {
+          if (member.status === "approved_mgr") {
+            group.members_count = !isNaN(group.members_count)
+              ? group.members_count++
+              : 1;
+          }
         }
+      } catch (e) {
+        // TODO - what do we do with errors?
+        group.members_count = 0;
+      }
     }
+  }
 
-    /**
-     * For displaying ticket count (for this event)
-     * @returns {Promise<void>}
-     */
-    async getGroupsTickets() {
-        for (const group of this.groups) {
-            try {
-                const tickets = await this.groupService.getCampsMembersTickets(group.id);
-                if (!tickets || !tickets.length) {
-                    group.tickets = [];
-                } else {
-                    group.tickets = tickets;
-                }
-            } catch (e) {
-                // TODO - what do we do with errors?
-                group.members_count = 0;
-            }
+  /**
+   * For displaying ticket count (for this event)
+   * @returns {Promise<void>}
+   */
+  async getGroupsTickets() {
+    for (const group of this.groups) {
+      try {
+        const tickets = await this.groupService.getCampsMembersTickets(
+          group.id
+        );
+        if (!tickets || !tickets.length) {
+          group.tickets = [];
+        } else {
+          group.tickets = tickets;
         }
+      } catch (e) {
+        // TODO - what do we do with errors?
+        group.members_count = 0;
+      }
     }
+  }
 
-    /**
-     * For displaying entered count (for former event)
-     * @returns {Promise<void>}
-     */
-    async getGroupsFormerEventTickets() {
-        for (const group of this.groups) {
-            try {
-                const tickets = await this.groupService.getCampsMembersTickets(group.id, this.eventsService.getFormerEventId());
-                if (!tickets || !tickets.length) {
-                    group.former_tickets = [];
-                } else {
-                    group.former_tickets = tickets;
-                }
-            } catch (e) {
-                // TODO - what do we do with errors?
-                group.members_count = 0;
-            }
+  /**
+   * For displaying entered count (for former event)
+   * @returns {Promise<void>}
+   */
+  async getGroupsFormerEventTickets() {
+    for (const group of this.groups) {
+      try {
+        const tickets = await this.groupService.getCampsMembersTickets(
+          group.id,
+          this.eventsService.getFormerEventId()
+        );
+        if (!tickets || !tickets.length) {
+          group.former_tickets = [];
+        } else {
+          group.former_tickets = tickets;
         }
+      } catch (e) {
+        // TODO - what do we do with errors?
+        group.members_count = 0;
+      }
     }
+  }
 
-    async getGroupsAllocations() {
-        try {
-            this.allocations = (await this.allocationsService.getGroupsAllocations([this.groups.map(g => g.id)])) || [];
-        } catch (e) {
-            console.warn(e);
-        }
+  async getGroupsAllocations() {
+    try {
+      this.allocations =
+        (await this.allocationsService.getGroupsAllocations([
+          this.groups.map(g => g.id)
+        ])) || [];
+    } catch (e) {
+      console.warn(e);
     }
+  }
 
     async getAdminAllocations() {
         const {match} = this.props;
@@ -204,16 +219,16 @@ class BasePresaleAdmin extends React.Component {
         }
     };
 
-    saveButton = {
-        icon: 'save',
-        onClick: this.saveChanges.bind(this),
-        tooltip: this.props.t('saveChanges')
-    };
+  saveButton = {
+    icon: "save",
+    onClick: this.saveChanges.bind(this),
+    tooltip: this.props.t("saveChanges")
+  };
 
-    get TRANSLATE_PREFIX() {
-        const {match} = this.props;
-        return `${match.params.groupType}:management`;
-    }
+  get TRANSLATE_PREFIX() {
+    const { match } = this.props;
+    return `${match.params.groupType}:management`;
+  }
 
     presaleQuotaChanged = async (group, quota) => {
         const {match} = this.props;

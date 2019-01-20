@@ -1,8 +1,8 @@
-FROM node:10.15.0-alpine
+FROM node:10.15.0
 RUN apt-get update && apt-get install -y build-essential mysql-client
 
 RUN adduser --system communities
-COPY .npmrc package.json package-lock.json /home/communities/
+COPY package.json package-lock.json /home/communities/
 RUN chown -R communities /home/communities/
 USER communities
 RUN cd /home/communities && npm install --ignore-scripts --pure-lockfile

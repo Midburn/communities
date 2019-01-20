@@ -22,8 +22,9 @@ class DatabaseService {
     }
 
     initsequelize() {
-        const db_name = process.env.MYSQL_DB_NAME || 'theme_and_arts';
         const envConfig = process.env.NODE_ENV === 'production' ? DBConfig.production : DBConfig.development;
+        console.info(`Communities DB connection running with ${process.env.NODE_ENV} configuration:`);
+        console.info(JSON.stringify(envConfig));
         this.sequelize = new Sequelize(envConfig);
     }
 

@@ -54,103 +54,122 @@ class BaseDGSGroupLeader extends React.Component {
         return this.audits[0].createdAt;
     }
 
-    constructor(props) {
-        super(props);
-        this.checkPermissions(props);
-        this.getGroupData(props);
-    }
+  constructor(props) {
+    super(props);
+    this.checkPermissions(props);
+    this.getGroupData(props);
+  }
 
-    checkPermissions(props) {
-        const {match} = props;
-        if (!this.permissionsService.isAllowedToAllocateTickets(match.params.id)) {
-            this.permissionsService.redirectToSpark();
+  checkPermissions(props) {
+    const { match } = props;
+    if (!this.permissionsService.isAllowedToAllocateTickets(match.params.id)) {
+      this.permissionsService.redirectToSpark();
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    this.getGroupData(props);
+  }
+
+  async getGroupData(props) {
+    const { match } = props;
+    try {
+      const group = await this.groupService.getGroup(match.params.id);
+      if (!group) {
+        // TODO - 404 group not found
+        return;
+      }
+      this.group = group;
+      try {
+        this.members = await this.groupService.getCampsMembers(
+          this.group.id,
+          this.eventsService.getFormerEventId()
+        );
+      } catch (e) {
+        console.warn(e.stack);
+        // TODO - what do we do with errors ?
+        this.members = [];
+        this.error = e;
+      }
+      try {
+        const tickets = await this.groupService.getCampsMembersTickets(
+          group.id
+        );
+        if (!tickets || !tickets.length) {
+          this.tickets = [];
+        } else {
+          this.tickets = tickets;
         }
+      } catch (e) {
+        console.warn(e.stack);
+        // TODO - what do we do with errors?
+        this.tickets = [];
+      }
+      await this.getGroupAllocations();
+      await this.getAudits();
+      await this.getGroupPermissions();
+    } catch (e) {
+      console.warn(e.stack);
+      this.error = e;
     }
+  }
 
-    componentWillReceiveProps(props) {
-        this.getGroupData(props);
+  getGroupPermissions = async () => {
+    try {
+      this.groupPermissions = await this.permissionsService.getPermissionsRelatedToEntity(
+        this.group.id
+      );
+    } catch (e) {
+      console.warn(e);
     }
+  };
 
-    async getGroupData(props) {
-        const {match} = props;
-        try {
-            const group = await this.groupService.getGroup(match.params.id);
-            if (!group) {
-                // TODO - 404 group not found
-                return;
-            }
-            this.group = group;
-            try {
-                this.members = await this.groupService.getCampsMembers(this.group.id, this.eventsService.getFormerEventId());
-            } catch (e) {
-                console.warn(e.stack);
-                // TODO - what do we do with errors ?
-                this.members = [];
-                this.error = e;
-            }
-            try {
-                const tickets = await this.groupService.getCampsMembersTickets(group.id);
-                if (!tickets || !tickets.length) {
-                    this.tickets = [];
-                } else {
-                    this.tickets = tickets;
-                }
-            } catch (e) {
-                console.warn(e.stack);
-                // TODO - what do we do with errors?
-                this.tickets = [];
-            }
-            await this.getGroupAllocations();
-            await this.getAudits();
-            await this.getGroupPermissions();
-        } catch (e) {
-            console.warn(e.stack);
-            this.error = e;
-        }
+  allocationsChanged = async () => {
+    try {
+      await this.getGroupAllocations();
+      await this.auditService.setAudit(
+        constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP,
+        { related_entity: this.group.id }
+      );
+      await this.getAudits();
+    } catch (e) {
+      console.warn(e.stack);
     }
+  };
 
-    getGroupPermissions = async () => {
-        try {
-            this.groupPermissions = await this.permissionsService.getPermissionsRelatedToEntity(this.group.id);
-        } catch (e) {
-            console.warn(e);
-        }
+  async getAudits() {
+    try {
+      this.audits = await this.auditService.getAuditsForEntity(
+        constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP,
+        this.group.id
+      );
+      if (this.audits && this.audits[0]) {
+        this.auditedUser =
+          (await this.usersService.getUserNameById(
+            this.audits[0].updated_by
+          )) || {};
+      }
+    } catch (e) {
+      // TODO - what do we do with errors
+      console.warn(e.stack);
     }
+  }
 
-    allocationsChanged = async () => {
-        try {
-            await this.getGroupAllocations();
-            await this.auditService.setAudit(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP, {related_entity: this.group.id});
-            await this.getAudits();
-        } catch (e) {
-            console.warn(e.stack);
-        }
-    };
-
-    async getAudits() {
-        try {
-            this.audits = await this.auditService.getAuditsForEntity(constants.AUDIT_TYPES.PRESALE_ALLOCATIONS_GROUP, this.group.id);
-            if (this.audits && this.audits[0]) {
-                this.auditedUser = (await this.usersService.getUserNameById(this.audits[0].updated_by)) || {};
-            }
-        } catch (e) {
-            // TODO - what do we do with errors
-            console.warn(e.stack);
-        }
+  getGroupAllocations = async () => {
+    try {
+      this.allocations =
+        (await this.allocationsService.getMembersAllocations([
+          this.members.map(member => member.user_id)
+        ])) || [];
+    } catch (e) {
+      console.warn(e);
     }
+  };
 
-    getGroupAllocations = async () => {
-        try {
-            this.allocations = (await this.allocationsService.getMembersAllocations([this.members.map(member => member.user_id)])) || [];
-        } catch (e) {
-            console.warn(e);
-        }
-    }
-
-    get TRANSLATE_PREFIX() {
-        const {match} = this.props;
-        return `${match.params.groupType}:groupLeader`;
-    }
+  get TRANSLATE_PREFIX() {
+    const { match } = this.props;
+    return `${match.params.groupType}:groupLeader`;
+  }
 
     getMemberAllocationId = (memberId, allocationType, bool) => {
         const allocations = this.allocations;

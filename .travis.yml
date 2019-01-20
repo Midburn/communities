@@ -1,0 +1,18 @@
+language: node_js
+sudo: required
+node_js:
+  - "10"
+env:
+  matrix:
+    - DEPLOY_ENVIRONMENT=staging DEPLOY_BRANCH=master
+    - DEPLOY_ENVIRONMENT=production DEPLOY_TAGS=true
+    - ""
+cache:
+  directories:
+install:
+  - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm install --dev --pure-lockfile; fi
+script:
+  - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm run build; fi
+  - .travis/continuous_deployment.sh
+services:
+  - docker
