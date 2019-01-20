@@ -16,7 +16,7 @@ done
           "--password=${MYSQL_ROOT_PASSWORD}" \
   && echo "Failed to create database, will try to continue anyway"
 
-! echo "GRANT ALL ON ${MYSQL_DB_NAME}.* '${MYSQL_DB_USERNAME}'@'%' IDENTIFIED BY '${MYSQL_DB_PASSWORD}'" \
+! echo "GRANT ALL ON ${MYSQL_DB_NAME}.* '${MYSQL_DB_USERNAME}'@'%' IDENTIFIED BY '${MYSQL_DB_PASSWORD}';" \
   | mysql "--host=${MYSQL_DB_HOST}" --protocol=tcp \
           "--user=root" \
           "--password=${MYSQL_ROOT_PASSWORD}" \
