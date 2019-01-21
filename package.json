@@ -90,7 +90,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "sequelize": "sequelize",
-    "createdb": "mysql -u root -p < db/migrations/create_db.sql"
+    "createdb": "mysql -u root -p < db/create_db.sql"
   },
   "eslintConfig": {
     "extends": "react-app"
