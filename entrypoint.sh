@@ -18,6 +18,4 @@ done
 
 ! node_modules/.bin/sequelize db:migrate && echo "Failed migrations" && exit 1
 
-! npm run seed && echo "Failed seed" && exit 1
-
 node server/server.js
