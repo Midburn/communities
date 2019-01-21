@@ -18,4 +18,5 @@ done
 
 ! node_modules/.bin/sequelize db:migrate && echo "Failed migrations" && exit 1
 
-node server/server.js
+npm install
+npm start
