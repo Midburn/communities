@@ -1,21 +1,13 @@
 require('dotenv').config();
 
-const pool = {
-    max: 5,
-    min: 0,
-    idle: 20000,
-    acquire: 20000
-} 
 module.exports = {
     development: {
         username: 'root',
+        password: process.env.MYSQL_LOCAL_DB_PASS,
+        database: 'communities',
         port: 3306,
-        password: 'root',
-        database: 'theme_and_arts',
         host: 'localhost',
-        dialect: 'mysql',
-        logging: process.env.MYSQL_DB_LOGGING,
-        pool
+        dialect: 'mysql'
     },
     production: {
         username: process.env.MYSQL_DB_USERNAME,
@@ -24,7 +16,6 @@ module.exports = {
         database: process.env.MYSQL_DB_NAME,
         host: process.env.MYSQL_DB_HOST,
         dialect: 'mysql',
-        logging: process.env.MYSQL_DB_LOGGING,
-        pool
+        logging: process.env.MYSQL_DB_LOGGING
     }
 };

@@ -6,7 +6,7 @@ import { OptionsInput } from './OptionsInput';
 import { CheckboxInput } from './CheckboxInput';
 import { CheckboxView } from './CheckboxView';
 
-export const EditableItem = ({title, value, type, editMode, onChange, options }) => {
+export const EditableItem = ({title, name, value, type, editMode, onChange, options }) => {
 
     function renderView(type) {
         // Render view items (currently only label and value)
@@ -40,7 +40,7 @@ export const EditableItem = ({title, value, type, editMode, onChange, options })
             case 'text':
             default:
                 value = value || '';
-                return <TextInput value={value} title={title} onChange={onChange} />;
+                return <TextInput name={name} value={value} title={title} onChange={onChange} />;
         }
     }
 

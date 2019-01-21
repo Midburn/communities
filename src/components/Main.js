@@ -6,6 +6,7 @@ import { Groups } from './groups/Groups';
 import { withI18n } from 'react-i18next';
 import { Group } from './groups/Group';
 import i18n from '../services/i18n';
+import { CreateGroup } from './groups/CreateGroup';
 import { GroupManagement } from './groups/Edit/GroupManagement';
 import { PresaleAdmin } from './allocations/PresaleAdmin';
 import { PresaleGroupLeader } from './allocations/PresaleGroupLeader';
@@ -41,6 +42,7 @@ class BaseMain extends React.Component {
                                         <Route path="/:lng(en|he)/:groupType" component={Groups} exact/>
                                         <PrivateRoute permit={this.permissionService.allowedToAllocateQuota}
                                                       path="/:lng(en|he)/:groupType/allocations" component={PresaleAdmin} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/create" component={CreateGroup} exact/>
                                         <Route path="/:lng(en|he)/:groupType/management" component={GroupsManagement} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/allocations" component={PresaleGroupLeader} exact/>
                                         <Route  path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
