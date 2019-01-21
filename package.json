@@ -11,7 +11,7 @@
     "babel-jest": "23.6.0",
     "babel-loader": "8.0.4",
     "babel-plugin-named-asset-import": "^0.2.3",
-    "babel-preset-react-app": "^6.1.0",
+    "babel-preset-react-app": "^7.0.0",
     "bfj": "6.1.1",
     "body-parser": "^1.18.3",
     "bootstrap-v4-rtl": "^4.1.1-1",
