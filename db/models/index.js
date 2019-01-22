@@ -4,6 +4,7 @@ const Audits = require('./audit'),
     LoggedUsers = require('./loggedusers'),
     Groups = require('./group'),
     GroupMembers = require('./groupmember');
+    NewGroupRequests = require('./newgrouprequests');
 
 module.exports = {
     Audits,
@@ -12,4 +13,5 @@ module.exports = {
     Allocations,
     Permissions,
     LoggedUsers,
+    NewGroupRequests,
 };

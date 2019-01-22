@@ -4,6 +4,25 @@ const constants = require('../../models/constants');
 module.exports = (sequelize, DataTypes) => {
   const Group = sequelize.define('Group', {
     group_name: DataTypes.STRING,
+    group_heb_name: DataTypes.STRING,
+    contact_person_name: DataTypes.STRING,
+    contact_person_phone: DataTypes.STRING,
+    contact_person_email: DataTypes.STRING,
+    contact_person_midburn_email: DataTypes.STRING,
+    group_additional_name: DataTypes.STRING,
+    group_content: DataTypes.STRING,
+    group_character: DataTypes.STRING,
+    group_is_new_members_open: DataTypes.BOOLEAN,
+    group_members_count: DataTypes.INTEGER,
+    group_moop_leader_name: DataTypes.STRING,
+    group_moop_leader_email: DataTypes.STRING,
+    group_security_leader_name: DataTypes.STRING,
+    group_security_leader_email: DataTypes.STRING,
+    group_sound_leader_name: DataTypes.STRING,
+    group_sound_leader_email: DataTypes.STRING,
+    group_content_leader_name: DataTypes.STRING,
+    group_content_leader_email: DataTypes.STRING,
+    group_comments: DataTypes.STRING,
     group_type: {
       type: DataTypes.ENUM,
       values: [constants.GROUP_TYPES.CAMP,
@@ -33,9 +52,6 @@ module.exports = (sequelize, DataTypes) => {
               ],
       defaultValue: constants.NOISE_LEVEL.MEDIUM
     },
-    contact_person_name: DataTypes.STRING,
-    contact_person_email: DataTypes.STRING,
-    contact_person_phone: DataTypes.STRING
   }, {});
   Group.associate = function(models) {
     // associations can be defined here

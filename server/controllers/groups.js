@@ -6,7 +6,7 @@ module.exports = class GroupsController {
 
     constructor() {
         this.config = services.config;
-        this.getGroupMembers = this.getGroups.bind(this);
+        this.getGroups = this.getGroups.bind(this);
     }
 
     async getGroups(req, res, next) {

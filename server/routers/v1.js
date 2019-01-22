@@ -9,6 +9,7 @@ const AllocationsRouter = require('./allocations');
 const PermissionsRouter = require('./permissions');
 const GroupMembersRouter = require('./groupMembers');
 const GroupsRouter = require('./groups');
+const NewGroupRequestRouter = require('./newGroupRequests');
 
 module.exports = class V1Router {
 
@@ -25,6 +26,7 @@ module.exports = class V1Router {
         this.permissions = new PermissionsRouter();
         this.groupMembers = new GroupMembersRouter();
         this.groups = new GroupsRouter();
+        this.newGroupRequests = new NewGroupRequestRouter();
         this.VERSION = '/v1';
         this.initMiddleware();
         this.initRoutes();
@@ -45,5 +47,6 @@ module.exports = class V1Router {
         this.router.use(this.VERSION, this.permissions.router);
         this.router.use(this.VERSION, this.groupMembers.router);
         this.router.use(this.VERSION, this.groups.router);
+        this.router.use(this.VERSION, this.newGroupRequests.router);
     }
 };

@@ -12,6 +12,7 @@ const AllocationsController = require('./allocations');
 const PermissionsController = require('./permissions');
 const GroupMembersController = require('./groupMembers');
 const GroupsController = require('./groups');
+const NewGroupRequestsController = require('./newGroupRequests');
 
 module.exports = {
     auth: new AuthController(),
@@ -23,5 +24,6 @@ module.exports = {
     allocations: new AllocationsController(),
     permissions: new PermissionsController(),
     groupMembers: new GroupMembersController(),
-    groups: new GroupsController()
+    groups: new GroupsController(),
+    newGroupRequests: new NewGroupRequestsController()
 };
