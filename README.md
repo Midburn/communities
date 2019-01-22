@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Midburn/communities.svg?branch=master)](https://travis-ci.org/Midburn/communities)
+
 ## Installation
 ### `npm install`
 
