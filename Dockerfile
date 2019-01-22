@@ -14,4 +14,5 @@ WORKDIR /home/communities
 
 ENV PATH="/home/communities/node_modules/.bin:${PATH}"
 
+EXPOSE 3006
 ENTRYPOINT ["/home/communities/entrypoint.sh"]
