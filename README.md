@@ -1,15 +1,9 @@
 ## Installation
 ### `npm install`
 
-## Features
-
-- Routing using [react-router-dom](https://github.com/ReactTraining/react-router#readme)
-- Translation using [react-i18next](https://github.com/i18next/react-i18next)
-- View components using [react-bootstrap](https://react-bootstrap.github.io/)
-
 ## Development
-
-### `npm start:dev`
+### Make sure to create a local `.env` file (see `.env.example` file)
+### Run `npm start:dev`
 
 Runs the app in the development mode.<br>
 Open [http://localhost:3006](http://localhost:3000) to view it in the browser.
@@ -35,3 +29,12 @@ The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Running in production
+### `npm start`
+Will run the service in production mode (Make sure to have all correct env variables (see `.env.example`)
+## Features
+
+- Routing using [react-router-dom](https://github.com/ReactTraining/react-router#readme)
+- Translation using [react-i18next](https://github.com/i18next/react-i18next)
+- View components using [react-bootstrap](https://react-bootstrap.github.io/)
