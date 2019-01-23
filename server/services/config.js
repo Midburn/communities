@@ -10,7 +10,7 @@ class ConfigService {
     }
 
     get JWT_KEY() {
-        return process.env.JWT_KEY;
+        return process.env.JWT_KEY || 'authToken';
     }
 
     get SECRET() {
