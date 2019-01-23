@@ -72,10 +72,11 @@ class Server {
     }
 
     initStaticServer() {
-        this.app.use('/public', express.static(path.join(__dirname, '../public/')));
-        this.app.use(express.static('public'));
+        const folder = process.env.NODE_ENV === 'production' ? 'build' : 'public';
+        this.app.use('/public', express.static(path.join(__dirname, `../${folder}/`)));
+        this.app.use(express.static(folder));
         this.app.get('*', (req, res, next) => {
-            if (req.path.startsWith('/api/') || req.path.startsWith('/public/')) {
+            if (req.path.startsWith('/api/') || req.path.startsWith(`/public/`)) {
                 next();
             } else {
                 return this.sendHTMLIndexFile(res);
@@ -107,7 +108,8 @@ class Server {
     }
 
     sendHTMLIndexFile(res) {
-        return res.sendFile(path.join(__dirname, '../public/index.html'));
+        const folder = process.env.NODE_ENV === 'production' ? 'build' : 'public';
+        return res.sendFile(path.join(__dirname, `../${folder}/index.html`));
     }
 
     handleGenericReposnse() {
