@@ -10,7 +10,7 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             record_status: {
-                type: DataTypes.ENUM,
+                type: Sequelize.ENUM,
                 values: [constants.DB_RECORD_STATUS_TYPES.ACTIVE, constants.DB_RECORD_STATUS_TYPES.DELETED],
                 defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE
             },
