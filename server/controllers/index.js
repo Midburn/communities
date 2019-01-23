@@ -10,6 +10,9 @@ const AuditController = require('./audit');
 const SparkUsersController = require('./sparkUsers');
 const AllocationsController = require('./allocations');
 const PermissionsController = require('./permissions');
+const GroupMembersController = require('./groupMembers');
+const GroupsController = require('./groups');
+const RequestsController = require('./requests');
 
 module.exports = {
     auth: new AuthController(),
@@ -19,5 +22,8 @@ module.exports = {
     audit: new AuditController(),
     users: new SparkUsersController(),
     allocations: new AllocationsController(),
-    permissions: new PermissionsController()
+    permissions: new PermissionsController(),
+    groupMembers: new GroupMembersController(),
+    groups: new GroupsController(),
+    requests: new RequestsController()
 };

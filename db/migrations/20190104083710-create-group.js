@@ -13,6 +13,21 @@ module.exports = {
       group_name: {
         type: Sequelize.STRING
       },
+      group_heb_name: { type: Sequelize.STRING },
+      group_additional_name: { type: Sequelize.STRING },
+      group_content: { type: Sequelize.STRING },
+      group_character: { type: Sequelize.STRING },
+      group_is_new_members_open: { type: Sequelize.BOOLEAN },
+      group_members_count: { type: Sequelize.INTEGER },
+      group_moop_leader_name: { type: Sequelize.STRING },
+      group_moop_leader_email: { type: Sequelize.STRING },
+      group_security_leader_name: { type: Sequelize.STRING },
+      group_security_leader_email: { type: Sequelize.STRING },
+      group_sound_leader_name: { type: Sequelize.STRING },
+      group_sound_leader_email: { type: Sequelize.STRING },
+      group_content_leader_name: { type: Sequelize.STRING },
+      group_content_leader_email: { type: Sequelize.STRING },
+      group_comments: { type: Sequelize.STRING },
       group_type: {
         type: Sequelize.ENUM,
         values: [constants.GROUP_TYPES.CAMP,
@@ -53,6 +68,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       contact_person_phone: {
+        type: Sequelize.STRING
+      },
+      contact_person_midburn_email: {
         type: Sequelize.STRING
       },
       createdAt: {

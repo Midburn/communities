@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const GroupMember = sequelize.define('GroupMember', {
     user_id: DataTypes.INTEGER,
-    role: DataTypes.STRING
+    role: DataTypes.STRING,
   }, {});
   GroupMember.associate = function(models) {
     models.GroupMember.belongsTo(models.Group, {
