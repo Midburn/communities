@@ -13,6 +13,6 @@ COPY . /home/communities
 WORKDIR /home/communities
 
 ENV PATH="/home/communities/node_modules/.bin:${PATH}"
+RUN npm run build
 
-EXPOSE 3006
 ENTRYPOINT ["/home/communities/entrypoint.sh"]
