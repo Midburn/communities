@@ -11,7 +11,6 @@ cache:
   directories:
 install:
   - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm install --dev --pure-lockfile; fi
-  - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm rebuild node-sass fi
 script:
   - if [ -z "${DEPLOY_ENVIRONMENT}" ]; then npm run build; fi
   - .travis/continuous_deployment.sh
