@@ -7,7 +7,8 @@ module.exports = {
     database: "communities",
     port: 3306,
     host: "localhost",
-    dialect: "mysql"
+    dialect: "mysql",
+    logging: process.env.MYSQL_DB_LOGGING
   },
   production: {
     username: process.env.MYSQL_DB_USERNAME,
@@ -15,7 +16,7 @@ module.exports = {
     password: process.env.MYSQL_DB_PASSWORD,
     database: process.env.MYSQL_DB_NAME,
     host: process.env.MYSQL_DB_HOST,
-    dialect: "mysql"
-    // logging: process.env.MYSQL_DB_LOGGING
+    dialect: "mysql",
+    logging: process.env.MYSQL_DB_LOGGING
   }
 };
