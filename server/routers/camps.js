@@ -20,7 +20,7 @@ module.exports = class CampsRouter {
         this.router.get('/spark/camps/open', controllers.sparkCamps.getOpenCamps);
         this.router.get('/spark/camps/arts/open', controllers.sparkCamps.getOpenArts);
         this.router.get('/spark/camps/all/:type', controllers.sparkCamps.getAllByType);
-        this.router.post('/spark/camps/updatePresaleQuota', controllers.sparkCamps.updatePresaleQuota);
+        this.router.post('/spark/camps/updatePresaleQuota/:group_type', controllers.sparkCamps.updatePresaleQuota);
         this.router.get('/spark/camps/:id', controllers.sparkCamps.getCamp);
         this.router.get('/spark/camps/:id/members', controllers.sparkCamps.getCampMembers);
         this.router.get('/spark/camps/:groupId/members/:memberId/:actionType', controllers.sparkCamps.sparkGroupMemberAction);

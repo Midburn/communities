@@ -65,6 +65,7 @@
       "fullGroups": "מחנות נושא שניצלו את הקצאותים"
     },
     "table": {
+      "publish": "פרסם הקצאות",
       "search": "חפש מחנות",
       "groupName": "שם המחנה",
       "leaderName": "מוביל המחנה",
@@ -75,7 +76,7 @@
       "totalEntered": "נכנסו לאירוע הקודם",
       "quota": "מכסה",
       "noQuota": "הקצה",
-      "allocated": "כרטיסים שהוקצו ע\"י המחנה",
+      "allocated": "אחוזי הקצאה",
       "allocatedAll": "כרטיסים שהוקצאו ע\"י המחנות"
     },
     "sums": {
@@ -90,6 +91,14 @@
   },
   "groupLeader": {
     "header": "הקצאת כרטיסי הוקרה",
-    "description": "הקצה כרטיסי הוקרה לחברי המחנה שלך מהאירוע הקודם"
+    "description": "הקצה כרטיסי הוקרה לחברי המחנה שלך מהאירוע הקודם",
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
+    }
   }
 }

@@ -65,6 +65,7 @@
       "fullGroups": "מיצבים שניצלו את הקצאותים"
     },
     "table": {
+      "publish": "פרסם הקצאות",
       "search": "חפש מיצב",
       "groupName": "שם המיצב",
       "leaderName": "מוביל המיצב",
@@ -75,7 +76,7 @@
       "totalEntered": "נכנסו לאירוע הקודם",
       "quota": "מכסה",
       "noQuota": "הקצה",
-      "allocated": "כרטיסים שהוקצו ע\"י המיצב",
+      "allocated": "אחוזי הקצאה",
       "allocatedAll": "כרטיסים שהוקצאו ע\"י המיצבים"
     },
     "sums": {
@@ -90,6 +91,14 @@
   },
   "groupLeader": {
     "header": "הקצאת כרטיסי הוקרה",
-    "description": "הקצה כרטיסי הוקרה לחברי המיצב שלך מהאירוע הקודם"
+    "description": "הקצה כרטיסי הוקרה לחברי המיצב שלך מהאירוע הקודם",
+    "charts": {
+      "allocationsUsage": "שימוש בהקצאות",
+      "allocationsUsed": "הקצאות ששומשו",
+      "allocationsLeft": "הקצאות שנותרו",
+      "membersTickets": "חלוקת כרטיסים",
+      "membersWithTickets": "חברים/ות עם כרטיס",
+      "membersWithoutTickets": "חברים/ות ללא כרטיס"
+    }
   }
 }

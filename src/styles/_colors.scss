@@ -5,22 +5,47 @@ $secondary-color: #ffa500;
 $card-bg: #fafafa;
 $card-text: black;
 
-
 $dark-gray: #7F8C8D;
-$gray: #95A5A6;
-$light-gray: #BDC3C7;
+$gray: #b9bfb8;
+$light-gray: #ece9f1;
+$pale: #f3f9f3;
 $dark-blue: #34495E;
-$blue: #3491f1;
+$blue: #6979f8;
 $light-blue: #61a6ef;
 $teal: #3ea4a6;
 $green: #16A085;
 $light-green: #1dd6b2;
-$yellow: #F1C40F;;
+$light-yellow: #fff9ca;;
+$yellow: #ffcf5c;;
 $orange: #F39C12;
 $red:  #E74C3C;
 $light-red: #ff6b5b;
 $purple:  #8E44AD;
 $pink: #d6569d;
+
+// Export vars to be used in JS
+:export {
+    dark-gray: $dark-gray;
+    gray: $gray;
+    light-gray: $light-gray;
+    dark-blue: $dark-blue;
+    blue: $blue;
+    light-blue: $light-blue;
+    teal: $teal;
+    green: $green;
+    light-green: $light-green;
+    yellow: $yellow;;
+    orange: $orange;
+    red:  $red;
+    light-red: $light-red;
+    purple:  $purple;
+    pink: $pink;
+}
+
+:local(.yellowBackgroud) {
+    background-color: $yellow !important;
+}
+
 .dark-blue {
     background-color: $dark-blue
 }
@@ -28,10 +53,13 @@ $pink: #d6569d;
     background-color: $green
 }
 .blue {
-    background-color: $blue;
+    background-color: $blue !important;
+}
+.border-blue {
+    border-color: $blue !important;
 }
 .yellow {
-    background-color: $yellow;
+    background-color: $yellow !important;
 }
 .orange {
     background-color: $orange;
@@ -55,6 +83,10 @@ $pink: #d6569d;
     background-color: $light-gray;
 }
 
+.text-gray {
+    color: $gray;
+}
+
 .text-dark-blue {
     color: $dark-blue;
 }
@@ -62,7 +94,7 @@ $pink: #d6569d;
     color: $green;
 }
 .text-blue {
-    color: $blue;
+    color: $blue !important;
 }
 .text-orange {
     color: $orange;

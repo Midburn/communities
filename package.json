@@ -60,15 +60,19 @@
     "postcss-preset-env": "6.0.6",
     "postcss-safe-parser": "4.0.1",
     "react": "^16.6.3",
+    "react-addons-css-transition-group": "^15.6.2",
     "react-app-polyfill": "^0.1.3",
     "react-chartjs-2": "^2.7.4",
     "react-csv": "^1.0.19",
     "react-dev-utils": "^6.1.1",
+    "react-device-detect": "^1.6.1",
     "react-dom": "^16.6.3",
     "react-flags": "^0.1.17",
     "react-flip-move": "^3.0.3",
     "react-i18next": "^8.3.9",
+    "react-icons": "^3.2.2",
     "react-moment": "^0.8.4",
+    "react-number-format": "^4.0.6",
     "react-router-bootstrap": "^0.24.4",
     "react-router-dom": "^4.3.1",
     "resolve": "1.8.1",
@@ -90,6 +94,7 @@
     "start:dev": "cross-env NODE_ENV=development node server/server.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:once": "jest",
     "sequelize": "sequelize",
     "createdb": "mysql -u root -p < db/create_db.sql"
   },
@@ -107,16 +112,23 @@
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "babel-preset-mobx": "^2.0.0",
-    "cross-env": "^5.2.0"
+    "cross-env": "^5.2.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
+    "enzyme-to-json": "^3.3.5"
   },
   "jest": {
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
     "resolver": "jest-pnp-resolver",
     "setupFiles": [
-      "react-app-polyfill/jsdom"
+      "react-app-polyfill/jsdom",
+      "<rootDir>/src/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",

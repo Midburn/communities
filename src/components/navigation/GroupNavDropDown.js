@@ -1,6 +1,5 @@
 import React from 'react';
-import { NavItem, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'mdbreact';
-import { NavLink } from "react-router-dom";
+import { NavItem, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, NavLink } from 'mdbreact';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { GroupsService } from '../../services/groups';

@@ -3,7 +3,7 @@
   "camps": "מחנות נושא",
   "arts": "מיצבים",
   "he": "עברית",
-  "en": "English",
+  "en": "ENG",
   "email": "דואר אלקטרוני",
   "password": "סיסמה",
   "login": "כניסה למערכת",
@@ -27,7 +27,7 @@
   "manage": "נהל",
   "actions": "פעולות",
   "saveChanges": "שמור שינויים",
-  "export": "ייצא לאקסל",
+  "export": "ייצא לקובץ",
   "lastUpdate": "עודכן לאחרונה ב",
   "theme_camps": "מחנה נושא",
   "art_installations": "מיצב",
@@ -35,7 +35,13 @@
   "summery": "סיכום",
   "allocationsLastDate": "תאריך אחרון להקצאת כרטיסים",
   "filterCharts": "הצג נתונים לאחר פילטר בסיכום",
+  "new": "חדש",
+  "round": "סבב",
+  "published": "פורסם",
   "nav": {
+    "allocations": {
+      "title": "הקצאות הוקרה {{year}}"
+    },
     "gate": {
       "manage": "ניהול כניסות",
       "suppliers": "ניהול כניסות ספקים",

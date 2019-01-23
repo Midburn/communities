@@ -44,6 +44,7 @@ module.exports = {
 
     ALLOCATION_GROUPS,
     GIVEN_BY_SYSTEM_CODE: -1,
+    UNPUBLISHED_ALLOCATION_KEY: 'unpublished',
     // Used to prevent conflicts in permission table
     ENTITY_TYPE: {
         USER: 'User',

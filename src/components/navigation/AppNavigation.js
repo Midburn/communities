@@ -10,7 +10,8 @@ import {
     NavItem,
     DropdownMenu,
     NavbarToggler,
-    NavLink
+    NavLink,
+    MDBBtn
 } from 'mdbreact';
 import i18n from '../../services/i18n';
 import './AppNavigation.scss';
@@ -25,6 +26,7 @@ import { PermissableComponent } from '../controls/PermissableComponent';
 import { ParsingService } from '../../services/parsing';
 import { PermissionService } from '../../services/permissions';
 import { EventRulesService } from '../../services/event-rules';
+import { AllocationsDropDown } from './AllocationNav';
 
 class BaseAppNavigation extends Component {
 
@@ -41,22 +43,6 @@ class BaseAppNavigation extends Component {
     changLng = () => {
         i18n.changeLanguage(i18n.language === 'he' ? 'en' : 'he');
     };
-    //
-    // getFlag = (lng) => {
-    //     const lngToFlagNameDict = {
-    //         he: 'IL',
-    //         en: 'US'
-    //     };
-    //     return <Flag
-    //         country={lngToFlagNameDict[lng]}
-    //         name={lngToFlagNameDict[lng]}
-    //         format="png"
-    //         pngSize={32}
-    //         basePath="/img/flags"
-    //         shiny={true}
-    //         alt={lngToFlagNameDict[lng] + 'Flag'}
-    //     />
-    // };
 
     toggleCollapse = () => {
         this.setState({
@@ -89,39 +75,6 @@ class BaseAppNavigation extends Component {
 
     render() {
         const {t, lng} = this.props;
-        // const LngFlagDropDown = (<Dropdown id="basic-nav-dropdown">
-        //     <DropdownToggle nav caret>{this.getFlag(lng)}</DropdownToggle>
-        //     <DropdownMenu basic>
-        //         <DropdownItem onClick={() => {
-        //             this.toggleCollapse();
-        //             this.changLng('en')
-        //         }}>
-        //             {t('en')}
-        //             <Flag
-        //                 name="US"
-        //                 country="US"
-        //                 format="png"
-        //                 pngSize={32}
-        //                 basePath="/img/flags"
-        //                 shiny={true}
-        //             />
-        //         </DropdownItem>
-        //         <DropdownItem onClick={() => {
-        //             this.toggleCollapse();
-        //             this.changLng('he')
-        //         }}>
-        //             {t('he')}
-        //             <Flag
-        //                 name="IL"
-        //                 country="IL"
-        //                 format="png"
-        //                 pngSize={32}
-        //                 basePath="/img/flags"
-        //                 shiny={true}
-        //             />
-        //         </DropdownItem>
-        //     </DropdownMenu>
-        // </Dropdown>);
         return (
             <Navbar color="white" light className={this.getNavClass(lng)} expand="md" scrolling fixed="top">
                 <NavbarBrand className="NavbarBrand" onClick={this.backToSpark}>
@@ -206,45 +159,17 @@ class BaseAppNavigation extends Component {
                                 </Dropdown>
                             </NavItem>
                         </PermissableComponent>
+                        <AllocationsDropDown onClick={this.toggleCollapse} t={t} lng={lng}/>
                     </NavbarNav>
                     <NavbarNav className="right-nav" right>
-                        {state.allocationGroups.map(group => {
-                            return (
-                                <PermissableComponent key={group.id}
-                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] &&
-                                                      this.eventRules.isPresaleAvailable &&
-                                                      this.permissionsService.isAllowedToAllocateTickets(group.id)}>
-                                    <NavItem onClick={this.toggleCollapse}>
-                                        <NavLink
-                                            to={`/${lng}/${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
-                                            {t(`nav.${this.parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}.allocate`)}
-                                        </NavLink>
-                                    </NavItem>
-                                </PermissableComponent>
-                            );
-                        })}
-                        {this.state.links.map(groupType => {
-                            // TODO - not only admin - more roles needed.
-                            return (
-                                <PermissableComponent key={groupType}
-                                                      permitted={!!this.permissionsService.isAdmin() && this.eventRules.isPresaleAvailable}>
-                                    <NavItem onClick={this.toggleCollapse}>
-                                        <NavLink
-                                            to={`/${lng}/${this.parsingService.getPlural(groupType)}/allocations`}>
-                                            {t(`nav.${this.parsingService.getPlural(groupType)}.allocateAdmin`)}
-                                        </NavLink>
-                                    </NavItem>
-                                </PermissableComponent>
-                            );
-                        })}
-                        <NavItem onClick={this.toggleCollapse}>
+                        <NavItem onClick={this.toggleCollapse} className="d-flex align-items-center">
                             <NavLink onClick={this.changLng}
                                      to={this.getToggledLngUrl()}>
-                                {t(`${lng === 'he' ? 'en' : 'he'}`)}
+                                <span className={`${lng === 'he' ? 'font-weight-bold' : 'font-weight-light'}`}>{t('he')}</span> / <span className={`${lng === 'en' ? 'font-weight-bold' : 'font-weight-light'}`}>{t('en')}</span>
                             </NavLink>
                         </NavItem>
-                        <NavItem onClick={this.logout}>
-                            <NavLink to={'#'}>{t('logout')}</NavLink>
+                        <NavItem >
+                            <MDBBtn className={"border-blue text-blue"} outline color="primary" onClick={this.logout}>{t('logout')}</MDBBtn>
                         </NavItem>
                     </NavbarNav>
                 </Collapse>

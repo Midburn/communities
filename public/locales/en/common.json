@@ -3,7 +3,7 @@
   "camps": "Camps",
   "arts": "Arts",
   "he": "עברית",
-  "en": "English",
+  "en": "ENG",
   "hebrew": "Hebrew",
   "email": "Email",
   "password": "Password",
@@ -34,7 +34,13 @@
   "by": "By",
   "allocationsLastDate": "Last date to allocate tickets",
   "filterCharts": "Filter charts by filter",
+  "new": "New",
+  "round": "Round",
+  "published": "Published",
   "nav": {
+    "allocations": {
+      "title": "Appreciation tickets {{year}}"
+    },
     "gate": {
       "manage": "Entry management",
       "suppliers": "Suppliers entries",
@@ -98,14 +104,6 @@
     "tooltips": {
       "allocate": "Add/Remove allocation",
       "allocatedByOtherGroup": "Has ticket allocated by another {{groupType}}"
-    },
-    "charts": {
-      "allocationsUsage": "Allocation Usage",
-      "allocationsUsed": "Allocations used",
-      "allocationsLeft": "Allocations left",
-      "membersTickets": "Tickets",
-      "membersWithTickets": "Members with tickets",
-      "membersWithoutTickets": "Members without tickets"
     },
     "allocationWarning": {
       "title": "Quota full",

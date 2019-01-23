@@ -1,7 +1,7 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Table, TableHead, TableBody, Input, MDBTooltip } from 'mdbreact';
-import { action, observable } from 'mobx';
+import { Table, TableHead, TableBody, MDBTooltip } from 'mdbreact';
+import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PermissableComponent } from '../../controls/PermissableComponent';
 import { TableSummery } from '../../controls/TableSummery';
@@ -9,9 +9,9 @@ import { WarningModal } from '../../controls/WarningModal';
 import * as constants from '../../../../models/constants';
 import { AllocationService } from '../../../services/allocations';
 import { ParsingService } from '../../../services/parsing';
-import { FloatingDashboard } from '../../controls/FloatingDashboard';
 import { state } from '../../../models/state';
 import { PermissionService } from '../../../services/permissions';
+import { isMobileOnly } from 'react-device-detect';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -25,8 +25,6 @@ class BaseGroupMembers extends React.Component {
         [constants.ALLOCATION_TYPES.PRE_SALE]: 'pre_sale_tickets_quota',
         [constants.ALLOCATION_TYPES.EARLY_ARRIVAL]: 'early_arrival_tickets_quota'
     };
-    @observable
-    query = '';
 
     @observable
     memberPermissions = {};
@@ -38,28 +36,6 @@ class BaseGroupMembers extends React.Component {
     allocationWarning = false;
 
     allocationTimeout = null;
-
-    @action
-    handleChange = (e) => {
-        this.query = e.target.value;
-    };
-
-    filter = (member) => {
-        if (!this.query || !this.query.length) {
-            // No query given - should return all camps
-            return true;
-        }
-        return this.match(member);
-    };
-
-    match(member) {
-        const name = member.name || '';
-        const email = member.email || '';
-        const phone = member.cell_phone || '';
-        return name.toLowerCase().includes(this.query) ||
-            email.toLowerCase().includes(this.query) ||
-            phone.toLowerCase().includes(this.query);
-    }
 
     changeAllocation = async (memberId, allocationType, e) => {
         const {allocations, match, group, allocationsChanged} = this.props;
@@ -124,8 +100,8 @@ class BaseGroupMembers extends React.Component {
     getMemberAllocationTooltip(memberId, allocationType) {
         const {t} = this.props;
         const isAllocatedByOtherGroup = this.isAllocatedByDifferentGroup(memberId, allocationType, true);
-        return  isAllocatedByOtherGroup ?
-            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, { groupType: t(isAllocatedByOtherGroup) }) :
+        return isAllocatedByOtherGroup ?
+            t(`${this.TRANSLATE_PREFIX}.tooltips.allocatedByOtherGroup`, {groupType: t(isAllocatedByOtherGroup)}) :
             t(`${this.TRANSLATE_PREFIX}.tooltips.allocate`);
     };
 
@@ -135,14 +111,6 @@ class BaseGroupMembers extends React.Component {
             return 0;
         }
         return tickets.filter(ticket => ticket.buyer_id === memberId || ticket.holder === memberId).length;
-    }
-
-    isMemberHoldingTicket(memberId) {
-        const {tickets} = this.props;
-        if (!tickets) {
-            return false;
-        }
-        return !!tickets.filter(ticket => ticket.holder === memberId);
     }
 
     getMemberTransfferedTicketCount(memberId) {
@@ -162,7 +130,7 @@ class BaseGroupMembers extends React.Component {
     }
 
     async changeMemberPermission(memberId, permissionType) {
-        const { permissions, permissionsChanged } = this.props;
+        const {permissions, permissionsChanged} = this.props;
         if (!permissions) {
             return;
         }
@@ -205,11 +173,11 @@ class BaseGroupMembers extends React.Component {
 
     get tableSums() {
         const {t, members, presale, group} = this.props;
-        let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
+        let allPurchasedTicketsCount = 0, totalAllocated = 0;
         if (presale) {
             for (const member of members) {
                 allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
-                allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
+                // allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
                 totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
                 && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
                     ? 1 : 0;
@@ -220,7 +188,7 @@ class BaseGroupMembers extends React.Component {
         };
         const preSaleSums = presale ? {
             [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: allPurchasedTicketsCount,
-            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
+            // [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
             [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: totalAllocated,
             [t(`${this.TRANSLATE_PREFIX}.sums.quota`)]: group.pre_sale_tickets_quota || 0,
         } : {};
@@ -242,7 +210,7 @@ class BaseGroupMembers extends React.Component {
             };
             const preSaleData = presale ? {
                 [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
-                [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
+                // [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
                     constants.ALLOCATION_TYPES.PRE_SALE,
                     true),
@@ -250,69 +218,6 @@ class BaseGroupMembers extends React.Component {
             } : {};
             return {...baseData, ...preSaleData}
         })
-    }
-
-    get chartData() {
-        const {t, group, presale, members, allocations} = this.props;
-        if (!allocations) {
-            return [];
-        }
-        let totalAllocated = 0, membersWithTickets = 0;
-        if (presale) {
-            for (const member of members) {
-                totalAllocated += this.getMemberAllocationId(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
-                && !this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE)
-                    ? 1 : 0;
-                membersWithTickets += this.isMemberHoldingTicket(member.user_id) ? 1 : 0;
-            }
-        }
-        const totalAllocationsUsageChart = {
-            title: t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsage`),
-            data: {
-                labels: [
-                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsUsed`),
-                    t(`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`)
-                ],
-                datasets: [
-                    {
-                        data: [totalAllocated, group.pre_sale_tickets_quota - totalAllocated],
-                        backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
-                        ],
-                        hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
-                        ]
-                    }
-                ],
-            }
-
-        };
-        const totalMembersWithTicketsChart = {
-            title: t(`${this.TRANSLATE_PREFIX}.charts.membersTickets`),
-            data: {
-                labels: [
-                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithTickets`),
-                    t(`${this.TRANSLATE_PREFIX}.charts.membersWithoutTickets`)
-                ],
-                datasets: [
-                    {
-                        data: [membersWithTickets, members.length - membersWithTickets],
-                        backgroundColor: [
-                            "#F7464A",
-                            "#949FB1",
-                        ],
-                        hoverBackgroundColor: [
-                            "#FF5A5E",
-                            "#A8B3C5",
-                        ]
-                    }
-                ],
-            }
-
-        };
-        return [totalAllocationsUsageChart, totalMembersWithTicketsChart];
     }
 
     isChangePermissionsDisabled(memberId) {
@@ -340,20 +245,11 @@ class BaseGroupMembers extends React.Component {
                     title={t(`${this.TRANSLATE_PREFIX}.allocationWarning.title`)}
                     toggle={this.toggleAllocationWarning}
                     text={t(`${this.TRANSLATE_PREFIX}.allocationWarning.text`)}/>
-                <PermissableComponent permitted={presale}>
-                    <FloatingDashboard charts={this.chartData} title={t('summery')}/>
+                <PermissableComponent permitted={!isMobileOnly}>
+                    <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`}
+                                  sums={this.tableSums}
+                                  csvData={this.CSVdata}/>
                 </PermissableComponent>
-                <TableSummery csvName={`GroupMembersSummery - ${(new Date()).toDateString()}.csv`} sums={this.tableSums}
-                              csvData={this.CSVdata}/>
-                <Input
-                    className="form-control"
-                    type="text"
-                    hint={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    placeholder={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    aria-label={t(`${this.TRANSLATE_PREFIX}.search`)}
-                    value={this.query}
-                    onChange={this.handleChange}
-                />
                 <Table responsive btn>
                     <TableHead>
                         <tr>
@@ -363,9 +259,9 @@ class BaseGroupMembers extends React.Component {
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.tickets`)}</th>
                             </PermissableComponent>
-                            <PermissableComponent permitted={presale}>
-                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>
-                            </PermissableComponent>
+                            {/*<PermissableComponent permitted={presale}>*/}
+                                {/*<th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>*/}
+                            {/*</PermissableComponent>*/}
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.presale`)}</th>
                             </PermissableComponent>
@@ -375,7 +271,7 @@ class BaseGroupMembers extends React.Component {
                         </tr>
                     </TableHead>
                     <TableBody>
-                        {members.filter(this.filter).map(member => {
+                        {members.map(member => {
                             return (
                                 <tr key={member.user_id}>
                                     <td>{member.name}</td>
@@ -386,11 +282,11 @@ class BaseGroupMembers extends React.Component {
                                             {this.getMemberTicketCount(member.user_id)}
                                         </td>
                                     </PermissableComponent>
-                                    <PermissableComponent permitted={ticketCount}>
-                                        <td>
-                                            {this.getMemberTransfferedTicketCount(member.user_id)}
-                                        </td>
-                                    </PermissableComponent>
+                                    {/*<PermissableComponent permitted={ticketCount}>*/}
+                                        {/*<td>*/}
+                                            {/*{this.getMemberTransfferedTicketCount(member.user_id)}*/}
+                                        {/*</td>*/}
+                                    {/*</PermissableComponent>*/}
                                     <PermissableComponent permitted={!!presale}>
                                         <td>
                                             <MDBTooltip

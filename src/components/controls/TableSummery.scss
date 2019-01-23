@@ -1,13 +1,23 @@
 .TableSummeryContainer {
-    position: relative;
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
     transition: 0.5s;
+    background-color: white;
     .TableSummery {
+        border-radius: 0;
+        width: 100%;
         .SummeryContent {
             max-height: 12vh;
             overflow-y: hidden;
             overflow-x: auto;
             width: 100%;
         }
+    }
+    .SummeryActions {
+        align-self: end;
     }
 }

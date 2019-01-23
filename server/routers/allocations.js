@@ -37,10 +37,22 @@ module.exports = class AllocationsRouter {
                 (req) => req.params.group_id), this.controller.removeAllocation);
         /**
          * get allocations for certain groups
-         * E.G - POST /api/VERSION/allocations/groups/:id
+         * E.G - POST /api/VERSION/allocations/groups
          */
         this.router.route('/allocations/groups')
             .post(this.controller.getGroupsAllocation);
+        /**
+         * set allocations for certain groups
+         * E.G - POST /api/VERSION/allocations/admin/
+         */
+        this.router.route('/allocations/admin')
+            .post(this.controller.adminAllocationToGroup);
+        /**
+         * get allocations for certain groups
+         * E.G - GET /api/VERSION/allocations/groups/:id
+         */
+        this.router.route('/allocations/admin/:event_id/:allocation_type/:group_type')
+            .get(this.controller.getAdminsAllocations);
         /**
          * get allocations for certain members
          * E.G - POST /api/VERSION/allocations/members/:id

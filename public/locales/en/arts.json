@@ -65,6 +65,7 @@
       "fullGroups": "Art installations who used all quota"
     },
     "table": {
+      "publish": "Publish allocations",
       "search": "Search art installations",
       "groupName": "Installation name",
       "leaderName": "Installation leader",
@@ -75,7 +76,7 @@
       "totalEntered": "Total entered former event",
       "quota": "Quota",
       "noQuota": "Allocate",
-      "allocated": "Allocated by the camp",
+      "allocated": "Allocation Percentage",
       "allocatedAll": "Allocated by the camps"
     },
     "sums": {
@@ -90,6 +91,14 @@
   },
   "groupLeader": {
     "header": "Allocate pre-sale tickets",
-    "description": "Allocate pre-sale tickets for your art installation members from former event"
+    "description": "Allocate pre-sale tickets for your art installation members from former event",
+    "charts": {
+      "allocationsUsage": "Allocation Usage",
+      "allocationsUsed": "Allocations used",
+      "allocationsLeft": "Allocations left",
+      "membersTickets": "Tickets",
+      "membersWithTickets": "Members with tickets",
+      "membersWithoutTickets": "Members without tickets"
+    }
   }
 }
