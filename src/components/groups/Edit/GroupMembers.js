@@ -173,7 +173,7 @@ class BaseGroupMembers extends React.Component {
 
     get tableSums() {
         const {t, members, presale, group} = this.props;
-        let allPurchasedTicketsCount = 0, allTransfferedTicketsCount = 0, totalAllocated = 0;
+        let allPurchasedTicketsCount = 0, totalAllocated = 0;
         if (presale) {
             for (const member of members) {
                 allPurchasedTicketsCount += this.getMemberTicketCount(member.user_id) || 0;
