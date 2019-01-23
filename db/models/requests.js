@@ -2,7 +2,7 @@
 const constants = require('../../models/constants');
 
 module.exports = (sequelize, DataTypes) => {
-  const NewGroupRequest = sequelize.define('NewGroupRequest', {
+  const Request = sequelize.define('Request', {
     // User ID of the user who created the request
     created_by_id: DataTypes.INTEGER,
 
@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     data: DataTypes.STRING,
 
   }, {});
-  NewGroupRequest.associate = function(models) {
+  Request.associate = function(models) {
     // associations can be defined here
   };
-  return NewGroupRequest;
+  return Request;
 };

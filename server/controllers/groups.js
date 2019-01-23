@@ -11,7 +11,7 @@ module.exports = class GroupsController {
 
     async getGroups(req, res, next) {
         try {
-            const groups = await services.db.GroupMembers.findAll();
+            const groups = await services.db.Groups.findAll();
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { groups }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed fetching groups- ${e.stack}`)));

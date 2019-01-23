@@ -70,6 +70,9 @@ module.exports = {
       contact_person_phone: {
         type: Sequelize.STRING
       },
+      contact_person_midburn_email: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -1,11 +1,11 @@
 const Router = require('express').Router;
 const controllers = require('../controllers');
 
-module.exports = class NewGroupRequestRouter {
+module.exports = class RequestRouter {
 
     constructor() {
         this.router = new Router();
-        this.controller = controllers.newGroupRequests;
+        this.controller = controllers.requests;
         this.initMiddleware();
         this.initRoutes();
     }
@@ -17,10 +17,10 @@ module.exports = class NewGroupRequestRouter {
     initRoutes() {
         /**
          * Get all groups
-         * E.G - /api/VERSION/new_group_request/
+         * E.G - /api/VERSION/request/
          */
-        this.router.route('/new_group_request')
-            .get(this.controller.getNewGroupRequests);
+        this.router.route('/request')
+            .get(this.controller.getRequests);
 
     }
 };

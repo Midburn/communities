@@ -3,7 +3,13 @@ const constants = require('../../models/constants');
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('NewGroupRequests', {
+    return queryInterface.createTable('Requests', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
       created_by_id: {
         type: Sequelize.INTEGER
       },
@@ -20,9 +26,17 @@ module.exports = {
       data: {
         type: Sequelize.STRING
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('NewGroupRequests');
+    return queryInterface.dropTable('Requests');
   }
 };
