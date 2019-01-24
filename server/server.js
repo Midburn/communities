@@ -44,8 +44,8 @@ class Server {
             if (req.url.includes(this.config.SPARK_HOST) || req.url.includes('api/v1/configurations')) {
                 return next();
             }
+            const token = req.cookies && req.cookies[this.config.JWT_KEY] && req.cookies[this.config.JWT_KEY].token;
             try {
-                const token = req.cookies && req.cookies[this.config.JWT_KEY] && req.cookies[this.config.JWT_KEY].token;
                 const userDetails = jwt.verify(token, this.config.SECRET);
                 req.token = token;
                 req.userDetails = userDetails;
@@ -54,7 +54,7 @@ class Server {
             catch (err) {
                 if (req.path.startsWith('/api/v1/') && !req.path.startsWith('/api/v1/public/')) {
                     res.clearCookie(this.config.JWT_KEY);
-                    return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {stack: err.stack, config: this.config}, 401));
+                    return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {stack: err.stack, key: this.config.JWT_KEY, token, secret: this.config.SECRET}, 401));
                 } else {
                     return next();
                 }
