@@ -14,7 +14,7 @@ class ConfigService {
     }
 
     get SECRET() {
-        return process.env.SECRET || "YWxseW91bmVlZGlzbG92ZWFsbHlvdW5lZWRpc2xvdmVsb3ZlbG92ZWlzYWxseW91";
+        return process.env.SPARK_SECRET_TOKEN || "YWxseW91bmVlZGlzbG92ZWFsbHlvdW5lZWRpc2xvdmVsb3ZlbG92ZWlzYWxseW91";
     }
 
     get LOCAL_SPARK() {
