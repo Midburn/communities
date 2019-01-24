@@ -12,7 +12,6 @@ const services = require('./services');
 const routers = require('./routers');
 const GenericResponse = require('../models/generic-response');
 const morganLogger = require('morgan');
-const session = require('express-session');
 
 class Server {
 
@@ -55,7 +54,7 @@ class Server {
             catch (err) {
                 if (req.path.startsWith('/api/v1/') && !req.path.startsWith('/api/v1/public/')) {
                     res.clearCookie(this.config.JWT_KEY);
-                    return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Unauthorized'), 401));
+                    return next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {stack: err.stack, config: this.config}, 401));
                 } else {
                     return next();
                 }
