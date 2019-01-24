@@ -108,6 +108,9 @@ export class PermissionService {
     }
 
     redirectToSpark() {
+        if (state.configurations && state.configurations.SPARK_HOST) {
+            window.location.href = state.configurations.SPARK_HOST;
+        }
         window.location.href = process.env.SPARK_HOST || 'https://spark.midburn.org';
     }
 
