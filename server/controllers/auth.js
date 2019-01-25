@@ -16,6 +16,7 @@ module.exports = class AuthController {
         const baseData = jwt.verify(req.cookies[this.config.JWT_KEY].token, this.config.SECRET);
         const user = (await this.spark.get(`users/email/${baseData.email}`, req.headers)).data;
         const userWithAxios = (await axios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
+        const userWithAxiosLocalSpark = (await axios.get(`http://spark:3000/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
         const sparkios = axios.create({baseURL: this.config.SPARK_HOST});
         const userWithSparkios = (await sparkios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
         try {
@@ -23,7 +24,7 @@ module.exports = class AuthController {
             user.permissions = await services.permissions.getPermissionsForUsers([user.user_id]);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { user, currentEventId: req.cookies[this.config.JWT_KEY].currentEventId}));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {error: e.stack, baseData, user, userWithSparkios, userWithAxios}));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {error: e.stack, userWithAxiosLocalSpark, baseData, user, userWithSparkios, userWithAxios}));
         }
     }
 };
