@@ -3,10 +3,6 @@ const axios = require('axios');
 
 class SparkService {
 
-    constructor() {
-        this.BASE_URL = configService.SPARK_HOST;
-    }
-
     get(url, headers) {
         return axios.get(this.createFullUrl(url), { withCredentials: true, headers });
     }
@@ -20,7 +16,7 @@ class SparkService {
     }
 
     createFullUrl(url) {
-        return `${this.BASE_URL}/${url}`;
+        return `${configService.SPARK_HOST}/${url}`;
     }
 
 }
