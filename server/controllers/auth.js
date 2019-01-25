@@ -15,9 +15,9 @@ module.exports = class AuthController {
     async getUser(req, res, next) {
         const baseData = jwt.verify(req.cookies[this.config.JWT_KEY].token, this.config.SECRET);
         const user = (await this.spark.get(`users/email/${baseData.email}`, req.headers)).data;
-        const userWithAxios = (await axios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, req.headers)).data;
+        const userWithAxios = (await axios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
         const sparkios = axios.create({baseURL: this.config.SPARK_HOST});
-        const userWithSparkios = (await sparkios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, req.headers)).data;
+        const userWithSparkios = (await sparkios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
         try {
             await this.initialLogin.initUser(user, req.headers);
             user.permissions = await services.permissions.getPermissionsForUsers([user.user_id]);
