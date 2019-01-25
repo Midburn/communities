@@ -20,7 +20,7 @@ module.exports = class AuthController {
             user.permissions = await services.permissions.getPermissionsForUsers([user.user_id]);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { user, currentEventId: req.cookies[this.config.JWT_KEY].currentEventId}));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {error: e.stack}));
         }
     }
 };

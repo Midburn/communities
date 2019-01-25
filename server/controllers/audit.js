@@ -31,7 +31,7 @@ module.exports = class AuditController {
             await services.db.Audits.create({ data_type, updated_by, ...req.body });
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed setting audit ${e.stack}`)));
         }
     }
 
@@ -58,7 +58,7 @@ module.exports = class AuditController {
             });
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { audits }));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed getting audits - ${e.stack}`)));
         }
     }
 
@@ -86,7 +86,7 @@ module.exports = class AuditController {
             });
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { audits }));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting logged user')));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed getting entity audits - ${e.stack}`)));
         }
     }
 };
