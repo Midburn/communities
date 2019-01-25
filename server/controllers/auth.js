@@ -17,10 +17,6 @@ module.exports = class AuthController {
         try {
              baseData = jwt.verify(req.cookies[this.config.JWT_KEY].token, this.config.SECRET);
              user = (await this.spark.get(`users/email/${baseData.email}`, req.headers)).data;
-             userWithAxios = (await axios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
-             userWithAxiosLocalSpark = (await axios.get(`http://spark:3000/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
-             sparkios = axios.create({baseURL: this.config.SPARK_HOST});
-             userWithSparkios = (await sparkios.get(`${this.config.SPARK_HOST}/users/email/${baseData.email}`, { withCredentials: true, headers: req.headers})).data;
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, {error: e.stack}));
         }
