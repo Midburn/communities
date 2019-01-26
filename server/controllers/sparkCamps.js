@@ -22,7 +22,7 @@ module.exports = class SparkCampsController {
 
     async getCamp(req, res, next) {
         try {
-            const camp = (await this.spark.get(`camps/${req.params.id}/get`, req.headers)).data;
+            const camp = (await this.spark.get(`camps/${req.params.id}/get`, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, camp));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting open camps')));
@@ -31,7 +31,7 @@ module.exports = class SparkCampsController {
 
     async getOpenCamps(req, res, next) {
         try {
-            const campList = (await this.spark.get(`camps_open`, req.headers)).data;
+            const campList = (await this.spark.get(`camps_open`, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, campList));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting open camps')));
@@ -40,7 +40,7 @@ module.exports = class SparkCampsController {
 
     async getOpenArts(req, res, next) {
         try {
-            const artList = (await this.spark.get(`camps/arts`, req.headers)).data;
+            const artList = (await this.spark.get(`camps/arts`, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, artList));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting open camps')));
@@ -53,7 +53,7 @@ module.exports = class SparkCampsController {
             if (req.query.eventId) {
                 path += `?eventId=${req.query.eventId}`;
             }
-            const members = (await this.spark.get(path, req.headers)).data;
+            const members = (await this.spark.get(path, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
@@ -62,7 +62,7 @@ module.exports = class SparkCampsController {
 
     async getCampMembersCount(req, res, next) {
         try {
-            const members = (await this.spark.get(`camps/${req.params.id}/members/count`, req.headers)).data;
+            const members = (await this.spark.get(`camps/${req.params.id}/members/count`, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
@@ -75,7 +75,7 @@ module.exports = class SparkCampsController {
             if (req.query.eventId) {
                 path += `?eventId=${req.query.eventId}`;
             }
-            const members = (await this.spark.get(path, req.headers)).data;
+            const members = (await this.spark.get(path, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
@@ -88,7 +88,7 @@ module.exports = class SparkCampsController {
             if (req.query.eventId) {
                 path += `?eventId=${req.query.eventId}`;
             }
-            const groups = (await this.spark.get(path, req.headers)).data;
+            const groups = (await this.spark.get(path, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
@@ -103,7 +103,7 @@ module.exports = class SparkCampsController {
             // We expect to receive an array of groups to update
             const groups = req.body.groups;
             for (const group of groups) {
-                await this.spark.post(`camps/${group.id}/updatePreSaleQuota`, { quota: group.pre_sale_tickets_quota }, req.headers);
+                await this.spark.post(`camps/${group.id}/updatePreSaleQuota`, { quota: group.pre_sale_tickets_quota }, req);
             }
             await db.AdminAllocationRounds.update({publication_date: new Date()}, { where: {
                     allocation_type: constants.ALLOCATION_TYPES.PRE_SALE,
@@ -133,7 +133,7 @@ module.exports = class SparkCampsController {
             if (req.query.eventId) {
                 path += `?eventId=${req.query.eventId}`;
             }
-            const groups = (await this.spark.get(path, req.headers)).data;
+            const groups = (await this.spark.get(path, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, groups.camps));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
@@ -154,7 +154,7 @@ module.exports = class SparkCampsController {
                 path += `?eventId=${req.query.eventId}`;
             }
             // We expect to receive an array of groups to update
-            await this.spark.get(path, req.headers);
+            await this.spark.get(path, req);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { success: true }));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
