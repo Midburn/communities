@@ -16,7 +16,7 @@ class SparkService {
     }
 
     createFullUrl(url) {
-        const HOST = ['production', 'staging'].includes(process.env.NODE_ENV) ? 'http;//spark:3000' : configService.SPARK_HOST;
+        const HOST = ['production', 'staging'].includes(process.env.NODE_ENV) ? 'http://spark:3000' : configService.SPARK_HOST;
         return `${HOST}/${url}`;
     }
 
