@@ -8,7 +8,7 @@ const db = require('./database'),
  */
 class InitialLoginService {
 
-    async initUser(sparkUser, headers) {
+    async initUser(sparkUser, req) {
         const wasLogged = !!(await db.LoggedUsers.findByPk(sparkUser.user_id));
         if (wasLogged) {
             return;
@@ -29,7 +29,7 @@ class InitialLoginService {
             });
             return;
         }
-        await this.initCampManagerPermissions(sparkUser, headers);
+        await this.initCampManagerPermissions(sparkUser, req);
         await db.LoggedUsers.upsert({
             email: sparkUser.email,
             user_id: sparkUser.user_id,
@@ -37,19 +37,19 @@ class InitialLoginService {
         });
     }
 
-    initCampManagerPermissions(sparkUser, headers) {
+    initCampManagerPermissions(sparkUser, req) {
         const sparkEvents = [];
         for (let i = 0; i <= 6; i++) {
             sparkEvents.push(`MIDBURN${new Date().getFullYear() - i}`);
         }
-        return sparkEvents.map(sparkEvents => this.setPermissionsForEvent(sparkUser, sparkEvents, headers));
+        return sparkEvents.map(sparkEvents => this.setPermissionsForEvent(sparkUser, sparkEvents, req));
     }
 
-    async setPermissionsForEvent(sparkUser, eventId, headers) {
+    async setPermissionsForEvent(sparkUser, eventId, req) {
         try {
-            const groups = (await spark.get(`my_groups?eventId=${eventId}`, headers)).data.groups;
+            const groups = (await spark.get(`my_groups?eventId=${eventId}`, req)).data.groups;
             if (groups && groups.length) {
-                const groupData = (await Promise.all(groups.map(async g => (await spark.get(`camps/${g.group_id}/get`, headers)).data.camp)));
+                const groupData = (await Promise.all(groups.map(async g => (await spark.get(`camps/${g.group_id}/get`, req)).data.camp)));
                 for (const group of groupData) {
                     if (+group.main_contact === +sparkUser.user_id) {
                         await Promise.all([
