@@ -47,6 +47,5 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 Will run the service in production mode (Make sure to have all correct env variables (see `.env.example`)
 ## Features
 
-- Routing using [react-router-dom](https://github.com/ReactTraining/react-router#readme)
 - Translation using [react-i18next](https://github.com/i18next/react-i18next)
-- View components using [react-bootstrap](https://react-bootstrap.github.io/)
+- View components using [MDBootstrap](https://mdbootstrap.com)
