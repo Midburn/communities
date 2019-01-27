@@ -101,5 +101,7 @@ module.exports = {
         JSON: 'JSON',
         STATIC: 'STATIC',
         ERROR: 'ERROR'
-    }
+    },
+
+    GLOBAL_DATE_FORMAT: 'DD.MM.YY HH:mm'
 };

@@ -17,6 +17,7 @@ import {AllocationService} from '../../services/allocations';
 import {action} from 'mobx/lib/mobx';
 import {SearchInput} from '../controls/SearchInput';
 import {PermissableComponent} from '../controls/PermissableComponent';
+import {state} from '../../models/state';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -271,12 +272,12 @@ class BasePresaleAdmin extends React.Component {
             <div className="DGSAdmin">
                 <Row>
                     <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.allocations.header`)}</h1>
+                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.allocations.header`, {event: this.eventsService.getFormerEventId()})}</h1>
                     </Col>
                 </Row>
                 <Row>
-                    <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.allocations.description`)} ({this.eventsService.getFormerEventId()})</p>
+                    <Col md="8">
+                        <p >{t(`${this.TRANSLATE_PREFIX}.allocations.description`, {event: state.currentEventId}).replace('.', '. \n')}</p>
                     </Col>
                 </Row>
                 <Row className="mt-4 mb-4">
@@ -287,7 +288,7 @@ class BasePresaleAdmin extends React.Component {
                     <PermissableComponent permitted={!!this.lastAudit}>
                         <Col md="6" className="text-gray d-flex align-items-center">
                             <span>{t(`lastUpdate`)}: </span><Moment className="pl-2 pr-2"
-                                                                    format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
+                                                                    format={constants.GLOBAL_DATE_FORMAT}>{this.lastAudit}</Moment>
                             <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
                         </Col>
                     </PermissableComponent>

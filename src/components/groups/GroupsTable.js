@@ -170,7 +170,6 @@ class BaseGroupsTable extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.groupName`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.leaderName`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.totalMembers`)}</th>
-                            <th>{t(`${this.TRANSLATE_PREFIX}.table.totalPurchased`)}</th>
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)}</th>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.quota`)}</th>
@@ -205,9 +204,6 @@ class BaseGroupsTable extends React.Component {
                                     </td>
                                     <td>
                                         {g.members_count}
-                                    </td>
-                                    <td>
-                                        {(g.tickets || []).length}
                                     </td>
                                     <PermissableComponent permitted={presale}>
                                         <td>

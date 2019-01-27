@@ -57,8 +57,8 @@
       "presale": "Appreciation tickets management"
     },
     "allocations": {
-      "header": "Manage camps appreciation tickets quota",
-      "description": "Allocate appreciation tickets quota to camps participating in the last event"
+      "header": "Appreciation tickets allocations based on former event participation ({{event}})",
+      "description": "View the camps and members who participated in the last event, which you could allocate tickets for this years event ({{event}}). You can edit the amount without the need to save the changes, but camp leaders could only get access to the allocation after clicking on 'Publish'. you cannot cancel or reduce the allocation once published."
     },
     "charts": {
       "allocationsUsage": "Allocations usage",
@@ -67,16 +67,16 @@
     "table": {
       "publish": "Publish allocations",
       "search": "Search camps",
-      "groupName": "Camp name",
-      "leaderName": "Camp leader",
+      "groupName": "Name",
+      "leaderName": "Leader",
       "leaderEmail": "Leader's Email",
       "leaderPhone": "Leader phone",
-      "totalMembers": "Total members",
+      "totalMembers": "Registered members",
       "totalPurchased": "Total purchased",
       "totalEntered": "Total entered former event",
       "quota": "Quota",
       "noQuota": "Allocate",
-      "allocated": "Allocation Percentage",
+      "allocated": "Usage",
       "allocatedAll": "Allocated by the art installations"
     },
     "sums": {
