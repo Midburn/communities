@@ -2,6 +2,7 @@
 
 :local(.NumberCounter) {
   width: 100%;
+  max-width: 7rem;
   display: flex;
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {

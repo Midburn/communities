@@ -81,7 +81,8 @@
     },
     "sums": {
       "groups": "Art Installations",
-      "members": "Members",
+      "members": "Registered",
+      "entered": "Ticketed",
       "ticketsAll": "Purchased tickets",
       "allocated": "Allocated",
       "allocationsLeft": "Allocations left",

@@ -81,7 +81,8 @@
     },
     "sums": {
       "groups": "Camps",
-      "members": "Members",
+      "members": "Registered",
+      "entered": "Ticketed",
       "ticketsAll": "Purchased tickets",
       "allocated": "Allocated",
       "allocationsLeft": "Allocations left",

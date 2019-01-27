@@ -9,7 +9,7 @@
     background-color: white;
     .TableSummery {
         border-radius: 0;
-        width: 100%;
+        width: 75%;
         .SummeryContent {
             max-height: 12vh;
             overflow-y: hidden;
@@ -18,6 +18,8 @@
         }
     }
     .SummeryActions {
-        align-self: end;
+        button {
+            margin: 0 2rem;
+        }
     }
 }

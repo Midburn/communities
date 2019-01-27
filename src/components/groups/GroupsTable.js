@@ -36,19 +36,19 @@ class BaseGroupsTable extends React.Component {
 
     get tableSums() {
         const {t, groups, presale} = this.props;
-        let membersSum = 0, ticketsSum = 0, allocatedSum = 0;
+        let membersSum = 0, allocatedSum = 0, entered = 0;
         for (const group of groups) {
             membersSum += group.members_count || 0;
-            ticketsSum += (group.tickets || []).length;
             allocatedSum += +group.pre_sale_tickets_quota || 0;
+            entered += +this.getFormerEventEntries(group) || 0;
         }
         const baseSums = {
             [t(`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,
-            [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: membersSum,
-            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: ticketsSum,
+            [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: membersSum
         };
         const presaleSums = presale ? {
-            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: allocatedSum
+            [t(`${this.TRANSLATE_PREFIX}.sums.entered`)]: entered,
+            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: allocatedSum,
         } : {};
         return {
             ...baseSums,
@@ -180,7 +180,7 @@ class BaseGroupsTable extends React.Component {
                                                 <MDBTooltip placement="bottom"
                                                             key={key}
                                                             tag="th"
-                                                            tooltipContent={`${t('published')}: ${moment(new Date(key)).format('DD/MM/YYYY, HH:mm:ss')}`}>
+                                                            tooltipContent={`${t('published')}: ${moment(new Date(key)).format(constants.GLOBAL_DATE_FORMAT)}`}>
                                                     {t('round')} {i + 1}
                                                 </MDBTooltip>
                                             );

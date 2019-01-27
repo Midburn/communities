@@ -277,7 +277,7 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="8">
-                        <p >{t(`${this.TRANSLATE_PREFIX}.allocations.description`, {event: state.currentEventId}).replace('.', '. \n')}</p>
+                        <p >{t(`${this.TRANSLATE_PREFIX}.allocations.description`, {event: state.currentEventId})}</p>
                     </Col>
                 </Row>
                 <Row className="mt-4 mb-4">

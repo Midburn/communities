@@ -31,7 +31,7 @@ export const TableSummery = ({sums, csvData, csvName, moreButtons}) => {
                         </TableBody>
                     </Table>
 
-                    <div className="SummeryActions d-flex">
+                    <div className="SummeryActions d-flex justify-content-between">
                         <PermissableComponent permitted={!!csvData}>
                             <ExportCSV
                                 data={csvData}

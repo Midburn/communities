@@ -65,7 +65,7 @@
       "fullGroups": "מחנות נושא שניצלו את הקצאותים"
     },
     "table": {
-      "publish": "פרסם הקצאות",
+      "publish": "פירסום הקצאות",
       "search": "חפש",
       "groupName": "שם",
       "leaderName": "מוביל",
@@ -73,7 +73,7 @@
       "leaderPhone": "טלפון מוביל המיצב",
       "totalMembers": "חברים רשומים",
       "totalPurchased": "חברים מכורטסים",
-      "totalEntered": "נכנסו לאירוע הקודם",
+      "totalEntered": "חברים שכורטסו",
       "quota": "מכסה",
       "noQuota": "הקצאות להוקרה",
       "allocated": "אחוזי שימוש",
@@ -81,9 +81,10 @@
     },
     "sums": {
       "groups": "מחנות נושא",
-      "members": "חברים",
+      "members": "רשומים",
+      "entered": "מכורטסים",
       "ticketsAll": "כרטיסים שנרכשו",
-      "allocated": "הוקצאו למחנות",
+      "allocated": "הקצאות הוקרה",
       "allocationsLeft": "הקצאות שנותרו",
       "allocationsFull": "מחנות נושא שניצלו את ההקצאות",
       "allocationsTotal": "מחנות נושא עם הקצאות זמינות"
