@@ -270,15 +270,24 @@ class BasePresaleAdmin extends React.Component {
         return (
             <div className="DGSAdmin">
                 <Row>
-                    <Col md="12">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.allocations.header`)}</h1>
+                    <Col md="8">
+                        <h1 className="h1-responsive headerText">
+                            <span>{t(`${this.TRANSLATE_PREFIX}.allocations.header`)}</span>
+                            {' '}
+                            <span style={{ color: '#007bff' }}>{t(`${this.TRANSLATE_PREFIX}.allocations.headerLink`)}</span>
+                        </h1>
+                        <p className="headerDescription p-1">
+                            <div className="subheaderText">{t(`${this.TRANSLATE_PREFIX}.allocations.subheader`)} ({this.eventsService.getFormerEventId()})</div>
+                            <span>{t(`${this.TRANSLATE_PREFIX}.allocations.description`)}</span>
+                        </p>
+                    </Col>
+                    <Col md="4">
+                        <div className="ChartWrap">
+                            df
+                        </div>
                     </Col>
                 </Row>
-                <Row>
-                    <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.allocations.description`)} ({this.eventsService.getFormerEventId()})</p>
-                    </Col>
-                </Row>
+
                 <Row className="mt-4 mb-4">
                     <Col md="6">
                         <SearchInput value={this.query} onChange={this.handleChange}

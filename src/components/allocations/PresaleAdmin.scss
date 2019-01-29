@@ -10,4 +10,23 @@
     }
     z-index: 1;
   }
+
+  .headerText {
+    margin-bottom: 20px;
+  }
+
+  .subheaderText {
+    font-weight: bold;
+  }
+
+  .headerDescription {
+    font-size: 14px;
+  }
+
+  .ChartWrap {
+    display: flex;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 7px 20px 0 rgba(0, 0, 0, 0.08);
+  }
 }
