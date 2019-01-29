@@ -6,7 +6,7 @@
 You should have Node.JS ver. 10+ installed ([NVM](https://github.com/creationix/nvm)/[NVM Windows](https://github.com/coreybutler/nvm-windows) is recommended)
 ### MySQL
 You should have MySQL Server ver. 5.6/5.7 (Important!) installed and running.
-
+#### Make sure to run `npm run createdb` in order to set up a new local db for development
 ### Spark
 This application uses [Spark](https://github.com/midburn/spark) as parent application and logging in is done through spark.
 
