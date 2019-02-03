@@ -8,11 +8,13 @@
     transition: 0.5s;
     background-color: white;
     height: 77px;
+    z-index: 2;
     .TableSummery {
         border-radius: 0;
         width: 100%;
         .SummeryContent {
             max-height: 12vh;
+            font-weight: 600;
             overflow-y: hidden;
             overflow-x: auto;
             width: 100%;
