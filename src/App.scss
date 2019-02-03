@@ -39,3 +39,9 @@ body {
   transition: 0.8s;
   min-height: 60vh;
 }
+
+
+.disabled {
+   pointer-events: none;
+   opacity: 0.3 !important;
+ }
