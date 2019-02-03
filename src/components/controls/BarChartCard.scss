@@ -1,8 +1,14 @@
 @import "../../styles/colors";
+@import "../../styles/vars";
 
 .BarChartCard {
-  height: 10rem;
+  
+  border: 0;
+  box-shadow: $card-shadow;
   .chart-container {
+    min-width: 300px;
+    min-height: 170px;
+    padding: 2rem 3rem;
     overflow-x: auto;
     min-width: 100%;
     width: max-content;

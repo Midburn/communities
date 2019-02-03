@@ -95,7 +95,7 @@ class BaseAppNavigation extends Component {
                         <PermissableComponent permitted={state.loggedUser.isAdmin || state.loggedUser.isGateManager}>
                             <NavItem>
                                 <Dropdown id="basic-nav-dropdown">
-                                    <DropdownToggle nav caret>{t('nav.gate.title')}</DropdownToggle>
+                                    <DropdownToggle nav>{t('nav.gate.title')}</DropdownToggle>
                                     <DropdownMenu basic>
                                         <DropdownItem onClick={this.toggleCollapse}>
                                             <NavItem>
@@ -117,7 +117,7 @@ class BaseAppNavigation extends Component {
                             permitted={state.loggedUser.isAllowedToViewSuppliers || state.loggedUser.isAdmin}>
                             <NavItem>
                                 <Dropdown id="basic-nav-dropdown">
-                                    <DropdownToggle nav caret>{t('nav.management.title')}</DropdownToggle>
+                                    <DropdownToggle nav>{t('nav.management.title')}</DropdownToggle>
                                     <DropdownMenu basic>
                                         <PermissableComponent permitted={state.loggedUser.isAllowedToViewSuppliers}>
                                             <DropdownItem onClick={this.toggleCollapse}>

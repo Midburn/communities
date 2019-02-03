@@ -15,8 +15,16 @@
 }
 .btn {
   box-shadow: unset;
-  max-height: 50px;
+  height: 40px;
   margin: 0 0.5rem;
+  line-height: 1;
+  &.btn[class*="btn-outline-"] {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  &:hover {
+    box-shadow: unset;
+  }
 }
 .dropdown-menu {
   width: max-content;

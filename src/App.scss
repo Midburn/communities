@@ -15,11 +15,6 @@ body {
   cursor: pointer;
 }
 
-.MainContainer {
-  margin-top: 10vh;
-  margin-bottom: 10vh;
-}
-
 *::-webkit-scrollbar {
   width: 0.5em;
   height: 0.5em;
@@ -37,7 +32,9 @@ body {
 
 .MainPanel {
   transition: 0.8s;
-  min-height: 60vh;
+  min-height: 100vh;
+  padding-top: 16vh;
+  padding-bottom: 16vh;
 }
 
 

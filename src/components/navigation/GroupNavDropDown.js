@@ -30,7 +30,7 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
     return (
         <NavItem>
             <Dropdown id={`${type}-nav-fropdown`}>
-                <DropdownToggle className="disabled" nav caret>{t(`${getTranslateModule()}.title`)}</DropdownToggle>
+                <DropdownToggle className="disabled" nav>{t(`${getTranslateModule()}.title`)}</DropdownToggle>
                 <DropdownMenu basic>
                     {/*SEARCH GROUPS LINK*/}
                     <DropdownItem onClick={onClick}>
