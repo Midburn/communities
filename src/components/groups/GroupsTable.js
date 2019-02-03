@@ -13,6 +13,7 @@ import * as moment from "moment";
 import {DataHoverCard} from "../controls/DataHoverCard";
 import {MdMailOutline} from "react-icons/md";
 import NumberFormat from 'react-number-format';
+import { Loader } from '../Loader';
 
 class BaseGroupsTable extends React.Component {
 
@@ -42,18 +43,10 @@ class BaseGroupsTable extends React.Component {
             ticketsSum += (group.tickets || []).length;
             allocatedSum += +group.pre_sale_tickets_quota || 0;
         }
-        const baseSums = {
+        return {
             [t(`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: membersSum,
-            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: ticketsSum,
         };
-        const presaleSums = presale ? {
-            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: allocatedSum
-        } : {};
-        return {
-            ...baseSums,
-            ...presaleSums
-        }
     }
 
 
@@ -152,7 +145,11 @@ class BaseGroupsTable extends React.Component {
     }
 
     render() {
-        const {t, groups, presale, groupQuotas, publishQuota} = this.props;
+        const {t, groups, isLoading, presale, groupQuotas, publishQuota} = this.props;
+        if (isLoading) 
+        {
+            return <Loader />
+        }
         const PublishButton = <MDBBtn className="blue" onClick={publishQuota}>
             <FiCheckCircle/>
             {t(`${this.TRANSLATE_PREFIX}.table.publish`)}

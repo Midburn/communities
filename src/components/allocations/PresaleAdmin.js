@@ -46,6 +46,9 @@ class BasePresaleAdmin extends React.Component {
   @observable
   allocations = [];
 
+  @observable
+  isLoading = true;
+
     @observable
     groupQuotas = [];
 
@@ -71,6 +74,7 @@ class BasePresaleAdmin extends React.Component {
     async init(props) {
         try {
             const {match} = props;
+            this.isLoading = true;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
             await this.getGroupsMembersCount();
             await this.getGroupsTickets();
@@ -78,7 +82,9 @@ class BasePresaleAdmin extends React.Component {
             await this.getAdminAllocations();
             await this.getGroupsAllocations();
             await this.getAudits();
+            this.isLoading = false;
         } catch (e) {
+            this.isLoading = false;
             // TODO - what do we do with errors?
             this.error = e;
         }
@@ -302,7 +308,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable publishQuota={this.saveChanges}
+                        <GroupsTable isLoading={this.isLoading}
+                                     publishQuota={this.saveChanges}
                                      allocations={this.allocations}
                                      groupQuotas={this.groupQuotas}
                                      presale={true} groups={(this.groups || []).filter(this.filter)}
