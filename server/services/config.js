@@ -24,6 +24,10 @@ class ConfigService {
     get PORT() {
         return process.env.PORT;
     }
+
+    get ALLOCATIONS_SERVER_HOST() {
+        return process.env.ALLOCATIONS_SERVER_HOST;
+    }
 }
 
 module.exports = new ConfigService();

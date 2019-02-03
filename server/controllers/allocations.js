@@ -6,12 +6,42 @@ module.exports = class AllocationsController {
 
     constructor() {
         this.config = services.config;
+        this.allocationsService = services.allocations;
         this.allocate = this.allocate.bind(this);
         this.getGroupsAllocation = this.getGroupsAllocation.bind(this);
         this.getMembersAllocations = this.getMembersAllocations.bind(this);
         this.removeAllocation = this.removeAllocation.bind(this);
         this.adminAllocationToGroup = this.adminAllocationToGroup.bind(this);
         this.getAdminsAllocations = this.getAdminsAllocations.bind(this);
+        this.getAllocationRounds = this.getAllocationRounds.bind(this);
+        this.getBuckets = this.getBuckets.bind(this);
+    }
+
+    async getAllocationRounds(req, res, next) {
+        try {
+            const data = await this.allocationsService.get('rounds', req);
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, data));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed getting allocation rounds - ${e.stack}`)));
+        }
+    }
+
+    async getBuckets(req, res, next) {
+        try {
+            const data = await this.allocationsService.get('buckets', req);
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, data));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed getting allocation rounds - ${e.stack}`)));
+        }
+    }
+
+    async getBuckets(req, res, next) {
+        try {
+            const data = await this.allocationsService.get('allocations', req);
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, data));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed getting allocation rounds - ${e.stack}`)));
+        }
     }
 
     async allocate(req, res, next) {
