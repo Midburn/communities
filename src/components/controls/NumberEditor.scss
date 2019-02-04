@@ -2,6 +2,7 @@
 
 :local(.NumberCounter) {
   width: 100%;
+  max-width: 7rem;
   display: flex;
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
@@ -23,18 +24,16 @@
   }
   .handle {
     color: $gray;
+    background-color: white;
     padding: 0.5rem;
     border-radius: 8px;
     display: flex;
     cursor: pointer;
     border: 1px solid $light-gray;
     transition: 0.5s;
-    &:hover {
-      background-color: $yellow;
-      color: white;
-    }
     &[disabled] {
-      color:$pale;
+      z-index: 0;
+      opacity: 0.2;
       pointer-events: none;
     }
   }

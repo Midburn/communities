@@ -27,7 +27,7 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
         <PermissableComponent permitted={hasAllocationGroups || permissionsService.isAdmin()}>
             <NavItem>
                 <Dropdown id={`${type}-nav-fropdown`}>
-                    <DropdownToggle nav caret className="d-flex align-items-center">
+                    <DropdownToggle nav className="d-flex align-items-center">
                         {t(`nav.allocations.title`, {year: state.currentEventId.match(/\d+/)[0]})}
                         <MDBBadge className={`ml-2 mr-2 ${colors.yellowBackgroud}`}>
                             <IoIosBonfire />{t('new')}!

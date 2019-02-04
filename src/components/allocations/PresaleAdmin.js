@@ -17,6 +17,7 @@ import {AllocationService} from '../../services/allocations';
 import {action} from 'mobx/lib/mobx';
 import {SearchInput} from '../controls/SearchInput';
 import {PermissableComponent} from '../controls/PermissableComponent';
+import { BarChartCard } from '../controls/BarChartCard';
 
 @observer
 class BasePresaleAdmin extends React.Component {
@@ -45,6 +46,9 @@ class BasePresaleAdmin extends React.Component {
   @observable
   allocations = [];
 
+  @observable
+  isLoading = true;
+
     @observable
     groupQuotas = [];
 
@@ -70,6 +74,7 @@ class BasePresaleAdmin extends React.Component {
     async init(props) {
         try {
             const {match} = props;
+            this.isLoading = true;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
             await this.getGroupsMembersCount();
             await this.getGroupsTickets();
@@ -77,7 +82,9 @@ class BasePresaleAdmin extends React.Component {
             await this.getAdminAllocations();
             await this.getGroupsAllocations();
             await this.getAudits();
+            this.isLoading = false;
         } catch (e) {
+            this.isLoading = false;
             // TODO - what do we do with errors?
             this.error = e;
         }
@@ -274,7 +281,7 @@ class BasePresaleAdmin extends React.Component {
                         <h1 className="h1-responsive headerText">
                             <span>{t(`${this.TRANSLATE_PREFIX}.allocations.header`)}</span>
                             {' '}
-                            <span style={{ color: '#007bff' }}>{t(`${this.TRANSLATE_PREFIX}.allocations.headerLink`)}</span>
+                            <span className="text-blue">{t(`${this.TRANSLATE_PREFIX}.allocations.headerLink`)}</span>
                         </h1>
                         <p className="headerDescription p-1">
                             <div className="subheaderText">{t(`${this.TRANSLATE_PREFIX}.allocations.subheader`)} ({this.eventsService.getFormerEventId()})</div>
@@ -282,9 +289,7 @@ class BasePresaleAdmin extends React.Component {
                         </p>
                     </Col>
                     <Col md="4">
-                        <div className="ChartWrap">
-                            df
-                        </div>
+                        <BarChartCard/>
                     </Col>
                 </Row>
 
@@ -303,7 +308,8 @@ class BasePresaleAdmin extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupsTable publishQuota={this.saveChanges}
+                        <GroupsTable isLoading={this.isLoading}
+                                     publishQuota={this.saveChanges}
                                      allocations={this.allocations}
                                      groupQuotas={this.groupQuotas}
                                      presale={true} groups={(this.groups || []).filter(this.filter)}
