@@ -9,7 +9,6 @@ import { GroupsTable } from './GroupsTable';
 import { ParsingService } from '../../services/parsing';
 import { GroupsService } from '../../services/groups';
 import { Tabs } from '../controls/Tabs';
-import { PresaleAdmin } from '../allocations/PresaleAdmin';
 import { EventRulesService } from '../../services/event-rules';
 import { PermissionService } from '../../services/permissions';
 

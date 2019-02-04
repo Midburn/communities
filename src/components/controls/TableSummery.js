@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Table, TableBody} from 'mdbreact';
+import {Container} from 'mdbreact';
 import './TableSummery.scss';
 import {ExportCSV} from './ExportCSV';
 import {PermissableComponent} from './PermissableComponent';

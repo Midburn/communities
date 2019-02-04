@@ -36,12 +36,10 @@ class BaseGroupsTable extends React.Component {
     }
 
     get tableSums() {
-        const {t, groups, presale} = this.props;
-        let membersSum = 0, ticketsSum = 0, allocatedSum = 0;
+        const {t, groups} = this.props;
+        let membersSum = 0;
         for (const group of groups) {
             membersSum += group.members_count || 0;
-            ticketsSum += (group.tickets || []).length;
-            allocatedSum += +group.pre_sale_tickets_quota || 0;
         }
         return {
             [t(`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,

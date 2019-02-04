@@ -1,6 +1,5 @@
 import React from 'react';
 import { Card, CardBody } from 'mdbreact';
-import { BarChart } from 'react-chartjs-2';
 import './BarChartCard.scss';
 
 export const BarChartCard = ({data, className}) => {
