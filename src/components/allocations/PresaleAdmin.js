@@ -76,13 +76,13 @@ class BasePresaleAdmin extends React.Component {
             const {match} = props;
             this.isLoading = true;
             this.groups = (await this.groupService.getAllGroups(this.parsingService.getGroupTypeFromString(match.params.groupType), this.eventsService.getFormerEventId())) || [];
+            this.isLoading = false;
             await this.getGroupsMembersCount();
             await this.getGroupsTickets();
             await this.getGroupsFormerEventTickets();
             await this.getAdminAllocations();
             await this.getGroupsAllocations();
             await this.getAudits();
-            this.isLoading = false;
         } catch (e) {
             this.isLoading = false;
             // TODO - what do we do with errors?
