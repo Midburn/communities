@@ -17,10 +17,10 @@ export const TableSummery = ({sums, csvData, csvName, moreButtons}) => {
                 <div className="SummeryContent d-flex justify-content-between font-small align-items-center">
                     {Object.keys(sums || {}).map(key => {
                         return (
-                            <td key={key}>
+                            <div key={key}>
                                 <span className="pr-1 pl-1">{key}:</span>
                                 <span className="pr-1 pl-1">{sums[key]}</span>
-                            </td>
+                            </div>
                         );
                     })}
                     <div className="SummeryActions d-flex align-items-center h-100">
