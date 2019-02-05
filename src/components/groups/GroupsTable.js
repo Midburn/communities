@@ -173,13 +173,13 @@ class BaseGroupsTable extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.groupName`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.leaderName`)}</th>
                             <th>
-                                <span class="pl-1 pr-1">{t(`${this.TRANSLATE_PREFIX}.table.totalMembers`)}</span>
+                                <span className="pl-1 pr-1">{t(`${this.TRANSLATE_PREFIX}.table.totalMembers`)}</span>
                                 <PermissableComponent permitted={presale}>
                                       ({this.eventsService.getFormerEventId().replace('MIDBURN', '')})
                                 </PermissableComponent>
                             </th>
                             <PermissableComponent permitted={presale}>
-                                <th><span class="pl-1 pr-1">{t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)}</span> ({this.eventsService.getFormerEventId().replace('MIDBURN', '')})</th>
+                                <th><span className="pl-1 pr-1">{t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)}</span> ({this.eventsService.getFormerEventId().replace('MIDBURN', '')})</th>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.quota`)}</th>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.bucket`)}</th>        
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.allocated`)}</th>
