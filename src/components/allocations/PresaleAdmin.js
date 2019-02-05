@@ -136,7 +136,7 @@ class BasePresaleAdmin extends React.Component {
   async getGroupsTickets() {
       try {
         const tickets = await this.groupService.getAllCampsMembersTickets(this.groups.map(g => g.id));
-        if (!tickets || !tickets.length) {
+        if (!tickets || !Object.keys(tickets).length) {
           return;
         } else {
           for (const group of this.groups) {
@@ -156,11 +156,11 @@ class BasePresaleAdmin extends React.Component {
   async getGroupsFormerEventTickets() {
     try {
         const tickets = await this.groupService.getAllCampsMembersTickets(this.groups.map(g => g.id), this.eventsService.getFormerEventId());
-        if (!tickets || !tickets.length) {
+        if (!tickets || !Object.keys(tickets).length) {
           return;
         } else {
           for (const group of this.groups) {
-              group.tickets = tickets[group.id];
+              group.former_tickets = tickets[group.id];
           }
         }
       } catch (e) {
