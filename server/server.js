@@ -92,7 +92,7 @@ class Server {
             publicPath: "/",
             stats: false,
             proxy: {
-                "/api": "http://localhost:8080",
+                "/api": `http://localhost:${this.config.PORT}`,
                 "/public": {
                     target: "http://localhost:3006",
                     pathRewrite: {"^/public": ""}

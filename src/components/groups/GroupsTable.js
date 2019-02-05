@@ -13,6 +13,7 @@ import * as moment from "moment";
 import {DataHoverCard} from "../controls/DataHoverCard";
 import {MdMailOutline} from "react-icons/md";
 import NumberFormat from 'react-number-format';
+import { Loader } from '../Loader';
 
 class BaseGroupsTable extends React.Component {
 
@@ -35,25 +36,15 @@ class BaseGroupsTable extends React.Component {
     }
 
     get tableSums() {
-        const {t, groups, presale} = this.props;
-        let membersSum = 0, ticketsSum = 0, allocatedSum = 0;
+        const {t, groups} = this.props;
+        let membersSum = 0;
         for (const group of groups) {
             membersSum += group.members_count || 0;
-            ticketsSum += (group.tickets || []).length;
-            allocatedSum += +group.pre_sale_tickets_quota || 0;
         }
-        const baseSums = {
+        return {
             [t(`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,
             [t(`${this.TRANSLATE_PREFIX}.sums.members`)]: membersSum,
-            [t(`${this.TRANSLATE_PREFIX}.sums.ticketsAll`)]: ticketsSum,
         };
-        const presaleSums = presale ? {
-            [t(`${this.TRANSLATE_PREFIX}.sums.allocated`)]: allocatedSum
-        } : {};
-        return {
-            ...baseSums,
-            ...presaleSums
-        }
     }
 
 
@@ -152,7 +143,11 @@ class BaseGroupsTable extends React.Component {
     }
 
     render() {
-        const {t, groups, presale, groupQuotas, publishQuota} = this.props;
+        const {t, groups, isLoading, presale, groupQuotas, publishQuota} = this.props;
+        if (isLoading) 
+        {
+            return <Loader />
+        }
         const PublishButton = <MDBBtn className="blue" onClick={publishQuota}>
             <FiCheckCircle/>
             {t(`${this.TRANSLATE_PREFIX}.table.publish`)}
@@ -170,7 +165,6 @@ class BaseGroupsTable extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.groupName`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.leaderName`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.table.totalMembers`)}</th>
-                            <th>{t(`${this.TRANSLATE_PREFIX}.table.totalPurchased`)}</th>
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.totalEntered`)}</th>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.table.quota`)}</th>
@@ -205,9 +199,6 @@ class BaseGroupsTable extends React.Component {
                                     </td>
                                     <td>
                                         {g.members_count}
-                                    </td>
-                                    <td>
-                                        {(g.tickets || []).length}
                                     </td>
                                     <PermissableComponent permitted={presale}>
                                         <td>
