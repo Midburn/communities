@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavLink, withRouter} from 'react-router-dom';
-import {Table, TableHead, TableBody, MDBBtn, MDBTooltip} from 'mdbreact';
+import {Table, TableHead, TableBody, MDBBtn} from 'mdbreact';
 import {GroupsService} from '../../services/groups';
 import {EventsService} from '../../services/events';
 import {TableSummery} from '../controls/TableSummery';
@@ -10,10 +10,8 @@ import {isMobileOnly} from 'react-device-detect';
 import {NumberEditor} from "../controls/NumberEditor";
 import {FiCheckCircle, FiPhone} from 'react-icons/fi';
 import {withI18n} from 'react-i18next';
-import * as moment from "moment";
 import {DataHoverCard} from "../controls/DataHoverCard";
 import {MdMailOutline} from "react-icons/md";
-import NumberFormat from 'react-number-format';
 import { Loader } from '../Loader';
 
 class BaseGroupsTable extends React.Component {
