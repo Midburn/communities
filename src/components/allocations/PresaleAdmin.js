@@ -106,19 +106,19 @@ class BasePresaleAdmin extends React.Component {
    */
   async getGroupsMembersCount() {
     for (const group of this.groups) {
-      try {
-        const members = await this.groupService.getCampsMembersCount(group.id);
-        for (const member of members) {
-          if (member.status === "approved_mgr") {
-            group.members_count = !isNaN(group.members_count)
-              ? group.members_count++
-              : 1;
+        try {
+          const members = await this.groupService.getCampsMembersCount(group.id);
+          for (const member of members) {
+            if (member.status === "approved_mgr") {
+              group.members_count = !isNaN(group.members_count)
+                ? group.members_count++
+                : 1;
+            }
           }
+        } catch (e) {
+          // TODO - what do we do with errors?
+          group.members_count = 0;
         }
-      } catch (e) {
-        // TODO - what do we do with errors?
-        group.members_count = 0;
-      }
     }
   }
 
@@ -127,21 +127,19 @@ class BasePresaleAdmin extends React.Component {
    * @returns {Promise<void>}
    */
   async getGroupsTickets() {
-    for (const group of this.groups) {
       try {
-        const tickets = await this.groupService.getCampsMembersTickets(
-          group.id
-        );
+        const tickets = await this.groupService.getAllCampsMembersTickets(this.groups.map(g => g.id));
         if (!tickets || !tickets.length) {
-          group.tickets = [];
+          return;
         } else {
-          group.tickets = tickets;
+          for (const group of this.groups) {
+              group.tickets = tickets[group.id];
+          }
         }
       } catch (e) {
         // TODO - what do we do with errors?
-        group.members_count = 0;
+        console.warn(e);
       }
-    }
   }
 
   /**
@@ -149,22 +147,19 @@ class BasePresaleAdmin extends React.Component {
    * @returns {Promise<void>}
    */
   async getGroupsFormerEventTickets() {
-    for (const group of this.groups) {
-      try {
-        const tickets = await this.groupService.getCampsMembersTickets(
-          group.id,
-          this.eventsService.getFormerEventId()
-        );
+    try {
+        const tickets = await this.groupService.getAllCampsMembersTickets(this.groups.map(g => g.id), this.eventsService.getFormerEventId());
         if (!tickets || !tickets.length) {
-          group.former_tickets = [];
+          return;
         } else {
-          group.former_tickets = tickets;
+          for (const group of this.groups) {
+              group.tickets = tickets[group.id];
+          }
         }
       } catch (e) {
         // TODO - what do we do with errors?
-        group.members_count = 0;
+        console.warn(e);
       }
-    }
   }
 
   async getGroupsAllocations() {
