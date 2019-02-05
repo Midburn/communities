@@ -12,6 +12,7 @@ import { ParsingService } from '../../../services/parsing';
 import { state } from '../../../models/state';
 import { PermissionService } from '../../../services/permissions';
 import { isMobileOnly } from 'react-device-detect';
+import { Loader } from '../../Loader';
 
 @observer
 class BaseGroupMembers extends React.Component {
@@ -237,7 +238,10 @@ class BaseGroupMembers extends React.Component {
     }
 
     render() {
-        const {t, members, presale, ticketCount} = this.props;
+        const {t, members, presale, ticketCount, isLoading } = this.props;
+        if (isLoading) {
+            return <Loader />
+        }
         return (
             <div>
                 <WarningModal

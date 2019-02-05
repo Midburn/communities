@@ -57,8 +57,10 @@
       "presale": "Appreciation tickets management"
     },
     "allocations": {
-      "header": "Manage art installations appreciation tickets quota",
-      "description": "Allocate appreciation  tickets quota to art installations participating in the last event"
+      "header": "Appreciation Quota",
+      "headerLink": "Arts (admin)",
+      "subheader": "Allocate appreciation tickets quota to art installations participants last event",
+      "description": "In the list bellow are the art installations who participated in the last event. You may allocate tickets quota to this year’s event. The amounts are editable and there’s no need to save your changes, yet the updated quota will be available only after clicking on “Publish Allocations”. You cannot cancel or reduce allocations once published."
     },
     "charts": {
       "allocationsUsage": "Allocations usage",
@@ -81,7 +83,7 @@
     },
     "sums": {
       "groups": "Art Installations",
-      "members": "Members",
+      "members": "All registered members",
       "ticketsAll": "Purchased tickets",
       "allocated": "Allocated",
       "allocationsLeft": "Allocations left",

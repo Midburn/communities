@@ -47,6 +47,9 @@ class BaseDGSGroupLeader extends React.Component {
     @observable
     groupPermissions = [];
 
+    @observable
+    isLoading = true;
+
     get lastAudit() {
         if (!this.audits || !this.audits[0]) {
             return null;
@@ -72,6 +75,7 @@ class BaseDGSGroupLeader extends React.Component {
   }
 
   async getGroupData(props) {
+    this.isLoading = true;
     const { match } = props;
     try {
       const group = await this.groupService.getGroup(match.params.id);
@@ -108,7 +112,9 @@ class BaseDGSGroupLeader extends React.Component {
       await this.getGroupAllocations();
       await this.getAudits();
       await this.getGroupPermissions();
+      this.isLoading = false;
     } catch (e) {
+      this.isLoading = false;
       console.warn(e.stack);
       this.error = e;
     }
@@ -282,7 +288,8 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <GroupMembers permissions={this.groupPermissions}
+                        <GroupMembers isLoading={this.isLoading}
+                                      permissions={this.groupPermissions}
                                       permissionsChanged={this.getGroupPermissions}
                                       allocationsChanged={this.allocationsChanged}
                                       allocations={this.allocations}
