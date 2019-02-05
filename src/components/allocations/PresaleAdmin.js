@@ -291,7 +291,7 @@ class BasePresaleAdmin extends React.Component {
                 <Row className="mt-4 mb-4">
                     <Col md="6">
                         <SearchInput value={this.query} onChange={this.handleChange}
-                                     placeholder={t(`${match.params.groupType}:search.title`)}/>
+                                     placeholder={t(`search`)}/>
                     </Col>
                     <PermissableComponent permitted={!!this.lastAudit}>
                         <Col md="6" className="text-gray d-flex align-items-center">
