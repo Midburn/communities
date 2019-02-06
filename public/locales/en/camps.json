@@ -67,19 +67,20 @@
       "fullGroups": "Camps who used all quota"
     },
     "table": {
-      "publish": "Publish allocations",
-      "search": "Search camps",
-      "groupName": "Camp name",
-      "leaderName": "Camp leader",
-      "leaderEmail": "Leader's Email",
-      "leaderPhone": "Leader phone",
-      "totalMembers": "Total members",
-      "totalPurchased": "Total purchased",
-      "totalEntered": "Total entered former event",
-      "quota": "Quota",
+      "publish": "Publish {{allocationsCount}}",
+      "search": "Search",
+      "groupName": "Name",
+      "leaderName": "Leader",
+      "leaderEmail": "Email",
+      "leaderPhone": "Phone",
+      "totalMembers": "Members",
+      "totalPurchased": "Tickets owners",
+      "totalEntered": "Ticket holders",
+      "quota": "Allocate",
+      "bucket": "Bucket",
       "noQuota": "Allocate",
-      "allocated": "Allocation Percentage",
-      "allocatedAll": "Allocated by the art installations"
+      "allocated": "Used",
+      "allocatedAll": "Totally used"
     },
     "sums": {
       "groups": "Camps",

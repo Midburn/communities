@@ -67,19 +67,20 @@
       "fullGroups": "מחנות נושא שניצלו את הקצאותים"
     },
     "table": {
-      "publish": "פרסם הקצאות",
-      "search": "חפש מחנות",
-      "groupName": "שם המחנה",
-      "leaderName": "מוביל המחנה",
-      "leaderEmail": "אימייל מוביל המחנה",
-      "leaderPhone": "טלפון מוביל המחנה",
-      "totalMembers": "כמות חברי מחנה",
+      "publish": "מתן {{allocationsCount}} הקצאות",
+      "search": "חיפוש",
+      "groupName": "שם",
+      "leaderName": "מוביל\\ה",
+      "leaderEmail": "אימייל מוביל המיצב",
+      "leaderPhone": "טלפון מוביל המיצב",
+      "totalMembers": "סה\"כ רשומים",
       "totalPurchased": "כרטיסים שנרכשו",
-      "totalEntered": "נכנסו לאירוע הקודם",
-      "quota": "מכסה",
+      "totalEntered": "בעלי כרטיס",
+      "quota": "מתן הקצאות",
+      "bucket": "סה\"כ ניתנו",
       "noQuota": "הקצה",
-      "allocated": "אחוזי הקצאה",
-      "allocatedAll": "כרטיסים שהוקצאו ע\"י המחנות"
+      "allocated": "סה\"כ שויכו בפועל",
+      "allocatedAll": "כרטיסים שהוקצאו ע\"י המיצבים"
     },
     "sums": {
       "groups": "סהכ מחנות נושא",

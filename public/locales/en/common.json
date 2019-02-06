@@ -37,6 +37,7 @@
   "new": "New",
   "round": "Round",
   "published": "Published",
+  "search": "Search",
   "nav": {
     "allocations": {
       "title": "Appreciation tickets {{year}}"
