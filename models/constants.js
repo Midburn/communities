@@ -101,5 +101,10 @@ module.exports = {
         JSON: 'JSON',
         STATIC: 'STATIC',
         ERROR: 'ERROR'
+    },
+
+    ALLOCATIONS_SERVICE: {
+        ALLOCATION_TYPES: ['EARLY_ARRAIVAL', 'APPRICIATION_TICKETS', 'TICKETS'],
+        GROUP_TYPES: ['VOLUNTEER', 'CAMP', 'ART']
     }
 };
