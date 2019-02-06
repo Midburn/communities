@@ -268,7 +268,7 @@ class BasePresaleAdmin extends React.Component {
     }
 
     render() {
-        const {t, match} = this.props;
+        const {t} = this.props;
         return (
             <div className="DGSAdmin">
                 <Row>
