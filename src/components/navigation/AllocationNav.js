@@ -1,5 +1,13 @@
 import React from 'react';
-import { NavItem, Dropdown, DropdownToggle, DropdownMenu, NavLink, DropdownItem, MDBBadge } from 'mdbreact';
+import {
+    NavItem,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    NavLink,
+    DropdownItem,
+    MDBBadge
+} from 'mdbreact';
 import { PermissableComponent } from '../controls/PermissableComponent';
 import { PermissionService } from '../../services/permissions';
 import { GroupsService } from '../../services/groups';
@@ -15,36 +23,60 @@ import { IoIosBonfire } from 'react-icons/io';
  * @returns {*}
  * @constructor
  */
-export const AllocationsDropDown = ({type, t, onClick, lng}) => {
-
+export const AllocationsDropDown = ({ type, t, onClick, lng }) => {
     const groupsService = new GroupsService();
     const permissionsService = new PermissionService();
     const parsingService = new ParsingService();
     const eventRulesService = new EventRulesService();
 
-    const hasAllocationGroups = !!state.allocationGroups && eventRulesService.isPresaleAvailable;
+    const hasAllocationGroups =
+        !!state.allocationGroups && eventRulesService.isPresaleAvailable;
     return (
-        <PermissableComponent permitted={hasAllocationGroups || permissionsService.isAdmin()}>
+        <PermissableComponent
+            permitted={hasAllocationGroups || permissionsService.isAdmin()}
+        >
             <NavItem>
                 <Dropdown id={`${type}-nav-fropdown`}>
                     <DropdownToggle nav className="d-flex align-items-center">
-                        {t(`nav.allocations.title`, {year: state.currentEventId.match(/\d+/)[0]})}
-                        <MDBBadge className={`ml-2 mr-2 ${colors.yellowBackgroud}`}>
-                            <IoIosBonfire />{t('new')}!
+                        {t(`nav.allocations.title`, {
+                            year: state.currentEventId.match(/\d+/)[0]
+                        })}
+                        <MDBBadge
+                            className={`ml-2 mr-2 ${colors.yellowBackgroud}`}
+                        >
+                            <IoIosBonfire />
+                            {t('new')}!
                         </MDBBadge>
                     </DropdownToggle>
                     <DropdownMenu basic>
                         {(state.allocationGroups || []).map(group => {
                             return (
-                                <PermissableComponent key={group.id}
-                                                      permitted={!!constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype] &&
-                                                      eventRulesService.isPresaleAvailable &&
-                                                      permissionsService.isAllowedToAllocateTickets(group.id)}>
+                                <PermissableComponent
+                                    key={group.id}
+                                    permitted={
+                                        !!constants.SPARK_TYPES_TO_GROUP_TYPES[
+                                            group.__prototype
+                                        ] &&
+                                        eventRulesService.isPresaleAvailable &&
+                                        permissionsService.isAllowedToAllocateTickets(
+                                            group.id
+                                        )
+                                    }
+                                >
                                     <DropdownItem onClick={onClick}>
                                         <NavItem>
                                             <NavLink
-                                                to={`/${lng}/${parsingService.getPlural(constants.SPARK_TYPES_TO_GROUP_TYPES[group.__prototype])}/${group.id}/allocations`}>
-                                                {groupsService.getPropertyByLang(group, 'name')}
+                                                to={`/${lng}/${parsingService.getPlural(
+                                                    constants
+                                                        .SPARK_TYPES_TO_GROUP_TYPES[
+                                                        group.__prototype
+                                                    ]
+                                                )}/${group.id}/allocations`}
+                                            >
+                                                {groupsService.getPropertyByLang(
+                                                    group,
+                                                    'name'
+                                                )}
                                             </NavLink>
                                         </NavItem>
                                     </DropdownItem>
@@ -54,13 +86,22 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
                         {Object.values(constants.GROUP_TYPES).map(groupType => {
                             // TODO - not only admin - more roles needed.
                             return (
-                                <PermissableComponent key={groupType}
-                                                      permitted={!!permissionsService.isAdmin()}>
+                                <PermissableComponent
+                                    key={groupType}
+                                    permitted={!!permissionsService.isAdmin()}
+                                >
                                     <DropdownItem onClick={onClick}>
                                         <NavItem>
                                             <NavLink
-                                                to={`/${lng}/${parsingService.getPlural(groupType)}/allocations`}>
-                                                {t(`nav.${parsingService.getPlural(groupType)}.allocateAdmin`)}
+                                                to={`/${lng}/${parsingService.getPlural(
+                                                    groupType
+                                                )}/allocations`}
+                                            >
+                                                {t(
+                                                    `nav.${parsingService.getPlural(
+                                                        groupType
+                                                    )}.allocateAdmin`
+                                                )}
                                             </NavLink>
                                         </NavItem>
                                     </DropdownItem>
