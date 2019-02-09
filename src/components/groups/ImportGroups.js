@@ -5,10 +5,12 @@ import {Row, Col, MDBBtn} from 'mdbreact';
 import {GroupsService} from '../../services/groups';
 import {observable} from 'mobx';
 import {observer} from 'mobx-react';
-
+import {state} from '../../models/state';
+import {ParsingService} from '../../services/parsing';
 @observer class BaseImportGroups extends React.Component {
   permissionsService = new PermissionService ();
   groupService = new GroupsService ();
+  parsingService = new ParsingService ();
   @observable loading = false;
   @observable done = false;
   state = {
@@ -59,12 +61,17 @@ import {observer} from 'mobx-react';
     this.setState ({importData: groups.map (this.parseGroup)});
   };
 
-  parseGroup (group) {
+  parseGroup = group => {
+    const {match} = this.props;
     /**
      * Perform group data parsing here.
      */
+    group.event_id = state.currentEventId;
+    group.group_type = this.parsingService.getGroupTypeFromString (
+      match.params.groupType
+    );
     return group;
-  }
+  };
 
   performImport = async () => {
     this.loading = true;

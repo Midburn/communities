@@ -101,7 +101,9 @@ module.exports = {
     STATIC: 'STATIC',
     ERROR: 'ERROR',
   },
-
+  /**
+   * Roles important for production purposes  
+   */
   GROUP_STATIC_ROLES: {
     LEADER: 'LEADER',
     MOOP: 'MOOP',
