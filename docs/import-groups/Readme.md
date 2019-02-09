@@ -19,4 +19,4 @@ We need to make sure we format the excel correctly for the DB to handle the data
 
 #### Roadmap
 
-[ ] Infer tags from CSV (Save in different DB)
+[] Infer tags from CSV (Save in different DB)
