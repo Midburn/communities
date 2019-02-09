@@ -15,11 +15,21 @@ module.exports = class GroupsController {
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
   }
 
+  addQueryParamsToWhere (query, where) {
+    const updatedWhere = {...where};
+    for (const paramName in query) {
+      const param = query[paramName];
+      updatedWhere[paramName] = param;
+    }
+    return updatedWhere;
+  }
+
   async getGroups (req, res, next) {
     try {
-      const where = this.DEFAULT_WHERE_OPTIONS;
-      where.group_type = req.query.group_type;
-      where.event_id = req.query.event_id;
+      const where = this.addQueryParamsToWhere (
+        req.query,
+        this.DEFAULT_WHERE_OPTIONS
+      );
       const groups = await services.db.Groups.findAll ({where});
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
     } catch (e) {
