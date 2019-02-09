@@ -30,7 +30,17 @@ module.exports = class GroupsController {
         req.query,
         this.DEFAULT_WHERE_OPTIONS
       );
-      const groups = await services.db.Groups.findAll ({where});
+      const groups = await services.db.Groups.findAll ({
+        where,
+        include: [
+          {
+            model: services.db.GroupMembers,
+            as: 'members',
+            where: this.DEFAULT_WHERE_OPTIONS,
+            required: false,
+          },
+        ],
+      });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
     } catch (e) {
       next (
@@ -80,7 +90,7 @@ module.exports = class GroupsController {
             'Some groups were sent without ids, could not update groups without id';
           continue;
         }
-        await services.db.Groups.update (group);
+        await services.db.Groups.update (group, {where: {id: group.id}});
         result.success.push (group.id);
         try {
         } catch (e) {
@@ -102,7 +112,7 @@ module.exports = class GroupsController {
     try {
       if (!req.body.members || !Array.isArray (req.body.members)) {
         throw new Error (
-          'Body must contain prop `members` which is an array of member ids'
+          'Body must contain prop `members` which is an array of members data'
         );
       }
       const result = {
@@ -113,19 +123,20 @@ module.exports = class GroupsController {
         where: {GroupId: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
       });
       const currentMembersIds = currentMembers.map (m => m.user_id.toString ());
-      const membersToAdd = req.body.member.filter (
+      const membersToAdd = req.body.members.filter (
         newMember =>
           newMember.id && !currentMembersIds.includes (newMember.id.toString ())
       );
       for (const member of membersToAdd) {
         try {
-          await services.db.GroupMembers.insert ({
+          await services.db.GroupMembers.create ({
             user_id: member.id,
             GroupId: req.params.groupId,
             role: member.role,
           });
           result.success.push (member.id);
         } catch (e) {
+          console.warn (e.stack);
           result.failures.push (member.id);
         }
       }
@@ -155,22 +166,21 @@ module.exports = class GroupsController {
         where: {GroupId: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
       });
       const currentMembersIds = currentMembers.map (m => m.user_id.toString ());
-      const membersToRemove = req.body.member.filter (
-        newMember =>
-          newMember.id && currentMembersIds.includes (newMember.id.toString ())
+      const membersToRemove = req.body.members.filter (newMemberId =>
+        currentMembersIds.includes (newMemberId.toString ())
       );
-      for (const member of membersToRemove) {
+      for (const id of membersToRemove) {
         try {
           await services.db.GroupMembers.update (
             {
-              user_id: member.id,
-              recored_status: constants.DB_RECORD_STATUS_TYPES.DELETED,
+              record_status: constants.DB_RECORD_STATUS_TYPES.DELETED,
             },
-            {where: {GroupId: req.params.groupId}}
+            {where: {user_id: id, GroupId: req.params.groupId}}
           );
-          result.success.push (member.id);
+          result.success.push (id);
         } catch (e) {
-          result.failures.push (member.id);
+          console.log (e);
+          result.failures.push (id);
         }
       }
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {result}));
