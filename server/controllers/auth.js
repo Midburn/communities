@@ -2,9 +2,8 @@ const jwt = require('jsonwebtoken');
 const services = require('../services');
 const GenericResponse = require('../../models/generic-response');
 const constants = require('../../models/constants');
-const axios = require('axios');
-module.exports = class AuthController {
 
+module.exports = class AuthController {
     constructor() {
         this.config = services.config;
         this.spark = services.spark;

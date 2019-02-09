@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     group_content_leader_name: DataTypes.STRING,
     group_content_leader_email: DataTypes.STRING,
     group_comments: DataTypes.STRING,
+    event_id: DataTypes.STRING,
     group_type: {
       type: DataTypes.ENUM,
       values: [constants.GROUP_TYPES.CAMP,

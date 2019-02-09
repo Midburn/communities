@@ -13,6 +13,7 @@ import { PresaleGroupLeader } from './allocations/PresaleGroupLeader';
 import { GroupsManagement } from './groups/GroupsManagement';
 import { PrivateRoute } from './navigation/PrivateRoute';
 import { PermissionService } from '../services/permissions';
+import { ImportGroups } from './groups/ImportGroups';
 
 class BaseMain extends React.Component {
 
@@ -44,6 +45,7 @@ class BaseMain extends React.Component {
                                                       path="/:lng(en|he)/:groupType/allocations" component={PresaleAdmin} exact/>
                                         <Route path="/:lng(en|he)/:groupType/create" component={CreateGroup} exact/>
                                         <Route path="/:lng(en|he)/:groupType/management" component={GroupsManagement} exact/>
+                                        <Route path="/:lng(en|he)/:groupType/management/import" component={ImportGroups} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/allocations" component={PresaleGroupLeader} exact/>
                                         <Route  path="/:lng(en|he)/:groupType/:id" component={Group} exact/>
                                         <Route path="/:lng(en|he)/:groupType/:id/manage" component={GroupManagement} exact/>

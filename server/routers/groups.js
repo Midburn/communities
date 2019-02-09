@@ -16,11 +16,19 @@ module.exports = class GroupRouter {
 
     initRoutes() {
         /**
-         * Get all groups
-         * E.G - /api/VERSION/group/
+         * all groups actions
+         * E.G - POST/GET/PUT /api/VERSION/group/
          */
         this.router.route('/group')
-            .get(this.controller.getGroups);
-
+            .get(this.controller.getGroups)
+            .post(this.controller.createGroups)
+            .put(this.controller.updateGroups);
+        /**
+         * groups members actions
+         * E.G - POST/DELETE /api/VERSION/group/1/members
+         */
+        this.router.route('/group/:groupId/members')
+            .post(this.controller.addGroupMembers)
+            .delete(this.controller.removeGroupMembers)
     }
 };

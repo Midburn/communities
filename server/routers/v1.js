@@ -7,7 +7,6 @@ const AuditRouter = require('./audit');
 const UserRouter = require('./users');
 const AllocationsRouter = require('./allocations');
 const PermissionsRouter = require('./permissions');
-const GroupMembersRouter = require('./groupMembers');
 const GroupsRouter = require('./groups');
 const RequestRouter = require('./requests');
 
@@ -24,7 +23,6 @@ module.exports = class V1Router {
         this.users = new UserRouter();
         this.allocations = new AllocationsRouter();
         this.permissions = new PermissionsRouter();
-        this.groupMembers = new GroupMembersRouter();
         this.groups = new GroupsRouter();
         this.requests = new RequestRouter();
         this.VERSION = '/v1';
@@ -45,7 +43,6 @@ module.exports = class V1Router {
         this.router.use(this.VERSION, this.users.router);
         this.router.use(this.VERSION, this.allocations.router);
         this.router.use(this.VERSION, this.permissions.router);
-        this.router.use(this.VERSION, this.groupMembers.router);
         this.router.use(this.VERSION, this.groups.router);
         this.router.use(this.VERSION, this.requests.router);
     }

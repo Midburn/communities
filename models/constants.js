@@ -101,5 +101,11 @@ module.exports = {
         JSON: 'JSON',
         STATIC: 'STATIC',
         ERROR: 'ERROR'
+    },
+
+    GROUP_STATIC_ROLES: {
+        LEADER: 'LEADER',
+        MOOP: 'MOOP',
+        SAFETY: 'SAFETY'
     }
 };
