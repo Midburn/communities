@@ -1,4 +1,4 @@
-### Importing groups
+## Importing groups
 
 #### Description
 
@@ -12,3 +12,11 @@ A route was added at /camps/management/import and contains a simple file input f
 #### Development
 
 Make sure to add columns to migration and parsing process (if needed) under [ImportGroup component](../../src/components/groups/ImportGroup.js)
+
+#### Formatting
+
+We need to make sure we format the excel correctly for the DB to handle the data (ENUMS and etc..) (e.g noise level)
+
+#### Roadmap
+
+[ ] Infer tags from CSV (Save in different DB)

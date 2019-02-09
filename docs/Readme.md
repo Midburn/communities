@@ -1,3 +1,3 @@
-### Communities docs
+## Communities docs
 
-#### [Imorting groups (Camps, Arts Etc)](import-groups/)
+### [Importing groups (Camps, Arts Etc)](import-groups/)
