@@ -1,25 +1,28 @@
-'use strict';
-const constants = require('../../models/constants');
+const constants = require ('../../models/constants');
 module.exports = {
   up: (queryInterface, Sequelize) => {
-      // logic for transforming into the new state
-      const recordStatus = {
-          type: Sequelize.ENUM,
-          values: [constants.DB_RECORD_STATUS_TYPES.ACTIVE, constants.DB_RECORD_STATUS_TYPES.DELETED],
-          defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE
-      };
-      return Promise.all([
-          queryInterface.addColumn(
-              'GroupMembers',
-              'record_status',
-              recordStatus
-          ),
-          queryInterface.addColumn(
-              'Groups',
-              'event_id',
-              {type: Sequelize.STRING}
-          ),
-      ])
+    // logic for transforming into the new state
+    const recordStatus = {
+      type: Sequelize.ENUM,
+      values: [
+        constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+        constants.DB_RECORD_STATUS_TYPES.DELETED,
+      ],
+      defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+    };
+    return Promise.all ([
+      queryInterface.addColumn ('GroupMembers', 'record_status', recordStatus),
+      queryInterface.addColumn ('Groups', 'event_id', {type: Sequelize.STRING}),
+      queryInterface.changeColumn ('Groups', 'group_content', {
+        type: Sequelize.TEXT,
+      }),
+      queryInterface.changeColumn ('Groups', 'group_character', {
+        type: Sequelize.TEXT,
+      }),
+      queryInterface.changeColumn ('Groups', 'group_comments', {
+        type: Sequelize.TEXT,
+      }),
+    ]);
   },
 
   down: (queryInterface, Sequelize) => {
@@ -30,5 +33,5 @@ module.exports = {
       Example:
       return queryInterface.dropTable('users');
     */
-  }
+  },
 };

@@ -1,48 +1,131 @@
 import React from 'react';
-import { Col, Row } from 'mdbreact';
-import { withI18n } from 'react-i18next';
-import { PermissionService } from '../../services/permissions';
+import {PermissionService} from '../../services/permissions';
 import * as Papa from 'papaparse';
+import {Row, Col, MDBBtn} from 'mdbreact';
+import {GroupsService} from '../../services/groups';
+import {observable} from 'mobx';
+import {observer} from 'mobx-react';
 
-class BaseImportGroups extends React.Component {
-    permissionsService = new PermissionService();
-    constructor(props) {
-        super(props);
-        this.checkPermissions(props);
+@observer class BaseImportGroups extends React.Component {
+  permissionsService = new PermissionService ();
+  groupService = new GroupsService ();
+  @observable loading = false;
+  @observable done = false;
+  state = {
+    importData: null,
+  };
+
+  constructor (props) {
+    super (props);
+    this.checkPermissions (props);
+  }
+
+  checkPermissions (props) {
+    const {match} = props;
+    if (
+      !this.permissionsService.isAllowedToManageGroups (match.params.groupType)
+    ) {
+      this.permissionsService.redirectToSpark ();
     }
+  }
 
-    checkPermissions(props) {
-        const {match} = props;
-        if (!this.permissionsService.isAllowedToManageGroups(match.params.groupType)) {
-            this.permissionsService.redirectToSpark();
+  handleFileInput = e => {
+    if (!e.target.files || !e.target.files.length) {
+      return;
+    }
+    const [file] = e.target.files;
+    Papa.parse (file, {
+      dynamicTyping: true,
+      encoding: 'utf-8',
+      complete: this.doneParsingFile,
+      error: this.parsingFileError,
+    });
+  };
+
+  doneParsingFile = e => {
+    const headers = e.data[0];
+    e.data.shift ();
+    const groups = [];
+    for (const csvGroup of e.data) {
+      const group = {};
+      for (let i = 0; i <= headers.length; i++) {
+        const header = headers[i];
+        if (header) {
+          group[header.trim ()] = csvGroup[i];
         }
+      }
+      groups.push (group);
     }
+    this.setState ({importData: groups.map (this.parseGroup)});
+  };
 
-    handleFileInput = (e) => {
-        if (!e.target.files || !e.target.files.length) {
-            return;
-        }
-        const [ file ] = e.target.files;
-        Papa.parse(file, {header: true, complete: this.doneParsingFile, error: this.parsingFileError })
+  parseGroup (group) {
+    /**
+     * Perform group data parsing here.
+     */
+    return group;
+  }
 
-    };
-
-    doneParsingFile(e) {
-        console.log(e)
+  performImport = async () => {
+    this.loading = true;
+    try {
+      await this.groupService.createGroups (this.state.importData);
+      this.loading = false;
+      this.done = true;
+    } catch (e) {
+      this.loading = false;
+      console.log (e);
+      this.setState ({e});
     }
+  };
 
-    parsingFileError(e) {
-        console.warn(e);
-    }
+  parsingFileError (e) {
+    console.warn (e);
+  }
 
-    render() {
+  get isButtonDisabled () {
+    return (
+      !this.state.importData ||
+      !this.state.importData.length ||
+      this.state.loading ||
+      this.state.e
+    );
+  }
 
-        return (
-            <div>
-                <input type="file" accept=".csv" onChange={this.handleFileInput}/>
-            </div>
-        );
-    }
+  render () {
+    return (
+      <div>
+
+        {this.done
+          ? <h1>בוצע בהצלחה!</h1>
+          : <Row>
+              <Col md="6">
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={this.handleFileInput}
+                />
+              </Col>
+              <Col md="6">
+                <MDBBtn
+                  className={'border-blue text-blue'}
+                  outline
+                  color="primary"
+                  disabled={this.isButtonDisabled}
+                  onClick={this.performImport}
+                >
+                  {this.loading ? <span>טוען...</span> : <span>בצע</span>}
+                </MDBBtn>
+                {this.state.e
+                  ? <span>
+                      קרתה תקלה! - {this.state.e.stack}
+                    </span>
+                  : null}
+              </Col>
+            </Row>}
+      </div>
+    );
+  }
 }
 
-export const ImportGroups = withI18n()(BaseImportGroups);
+export const ImportGroups = BaseImportGroups;
