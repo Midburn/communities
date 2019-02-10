@@ -13,6 +13,7 @@ module.exports = {
     return Promise.all ([
       queryInterface.addColumn ('GroupMembers', 'record_status', recordStatus),
       queryInterface.addColumn ('Groups', 'event_id', {type: Sequelize.STRING}),
+      queryInterface.addColumn ('Groups', 'dream_id', {type: Sequelize.STRING}),
       queryInterface.changeColumn ('Groups', 'group_content', {
         type: Sequelize.TEXT,
       }),
