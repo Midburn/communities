@@ -129,6 +129,8 @@ module.exports = class AllocationsController {
     }
   }
 
+  saveBucketLocally () {}
+
   /**
    * Log publications (admin updated bucket for group)
    * @param {*} allocation_type (from constants)

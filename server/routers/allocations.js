@@ -89,6 +89,9 @@ module.exports = class AllocationsRouter {
       .post (this.controller.updateGroupsBuckets);
 
     // ROUNDS
-    this.router.route ('/allocations/rounds').get (this.controller.getBuckets);
+
+    this.router
+      .route ('/allocations/rounds')
+      .get (this.controller.getAllocationRounds);
   }
 };
