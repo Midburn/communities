@@ -14,7 +14,59 @@ const ALLOCATION_GROUPS = {
   VOLUNTEER_DEPARTMENT: 'volunteer_department',
 };
 
+/**
+ * Ticket allocation types
+ * MAKE SURE TO ADD MIGRATIONS WHEN CHANGING THIS VALUE
+ */
+const ALLOCATION_TYPES = {
+  PRE_SALE: 'pre_sale',
+  EARLY_ARRIVAL: 'early_arrival',
+};
+
+/**
+ * Constants related to the allocations service server.
+ */
+const ALLOCATIONS_SERVICE = {
+  ALLOCATION_TYPES: ['EARLY_ARRIVAL', 'APPRICIATION_TICKETS', 'TICKETS'],
+  GROUP_TYPES: ['VOLUNTEER', 'CAMP', 'ART'],
+  // Translate local constants to allocations service constants
+  getAllocationType: localAllocationType => {
+    if (!ALLOCATION_TYPES.hasOwnProperty (localAllocationType)) {
+      return console.error (
+        'When using getAllocationType you must use a ALLOCATION_TYPE key from constants'
+      );
+    }
+    const dict = {
+      [ALLOCATION_TYPES.PRE_SALE]: 'APPRICIATION_TICKETS',
+      [ALLOCATION_TYPES.EARLY_ARRIVAL]: 'EARLY_ARRIVAL',
+    };
+    return dict[localAllocationType];
+  },
+  // Translate local constants to allocations service constants
+  getAllocationGroup: localAllocationGroup => {
+    if (!ALLOCATION_GROUPS.hasOwnProperty (localAllocationGroup)) {
+      return console.error (
+        'When using getAllocationGroup you must use a ALLOCATION_GROUPS key from constants'
+      );
+    }
+    const dict = {
+      [ALLOCATION_GROUPS.PRODUCTION]: null,
+      [ALLOCATION_GROUPS.THEME_CAMPS]: 'CAMP',
+      [ALLOCATION_GROUPS.ART_INSTALLATIONS]: 'ART',
+      [ALLOCATION_GROUPS.VOLUNTEER_DEPARTMENT]: 'VOLUNTEER',
+    };
+    return dict[localAllocationType];
+  },
+};
+
+function getFormerEventId (currentEventId) {
+  let eventYear = parseInt (currentEventId.replace ('MIDBURN', ''));
+  eventYear--;
+  return `MIDBURN${eventYear}`;
+}
+
 module.exports = {
+  getFormerEventId,
   /** 
      * Group-related enums
      */
@@ -74,14 +126,7 @@ module.exports = {
     DELETED: 'deleted',
     ACTIVE: 'active',
   },
-  /**
-     * Ticket allocation types
-     * MAKE SURE TO ADD MIGRATIONS WHEN CHANGING THIS VALUE
-     */
-  ALLOCATION_TYPES: {
-    PRE_SALE: 'pre_sale',
-    EARLY_ARRIVAL: 'early_arrival',
-  },
+  ALLOCATION_TYPES,
   /**
      * Used to save record of audits done by users.
      */
@@ -100,8 +145,5 @@ module.exports = {
     ERROR: 'ERROR',
   },
 
-  ALLOCATIONS_SERVICE: {
-    ALLOCATION_TYPES: ['EARLY_ARRAIVAL', 'APPRICIATION_TICKETS', 'TICKETS'],
-    GROUP_TYPES: ['VOLUNTEER', 'CAMP', 'ART'],
-  },
+  ALLOCATIONS_SERVICE,
 };
