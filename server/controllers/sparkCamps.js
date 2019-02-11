@@ -18,6 +18,7 @@ module.exports = class SparkCampsController {
         this.getCamp = this.getCamp.bind(this);
         this.updatePresaleQuota = this.updatePresaleQuota.bind(this);
         this.sparkGroupMemberAction = this.sparkGroupMemberAction.bind(this);
+        this.getCampsTickets = this.getCampsTickets.bind(this);
     }
 
     async getCamp(req, res, next) {
@@ -76,6 +77,19 @@ module.exports = class SparkCampsController {
                 path += `?eventId=${req.query.eventId}`;
             }
             const members = (await this.spark.get(path, req)).data;
+            next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
+        } catch (e) {
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
+        }
+    }
+
+    async getCampsTickets(req, res, next) {
+        try {
+            let path = `camps/members/tickets`;
+            if (req.query.eventId) {
+                path += `?eventId=${req.query.eventId}`;
+            }
+            const members = (await this.spark.post(path, {ids: req.body.ids}, req)).data;
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, members));
         } catch (e) {
             next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error('Failed getting camp members')));
