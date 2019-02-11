@@ -70,7 +70,6 @@ import {BarChartCard} from '../controls/BarChartCard';
         this.eventsService.getFormerEventId ()
       )) || [];
       this.isLoading = false;
-      await this.getGroupsMembersCount ();
       await this.getGroupsTickets ();
       await this.getGroupsFormerEventTickets ();
       await this.getAdminAllocations ();
@@ -100,46 +99,24 @@ import {BarChartCard} from '../controls/BarChartCard';
   }
 
   /**
-   * For displaying member count (for former event)
-   * @returns {Promise<void>}
-   */
-  async getGroupsMembersCount () {
-    for (const group of this.groups) {
-      try {
-        const members = await this.groupService.getCampsMembersCount (group.id);
-        for (const member of members) {
-          if (member.status === 'approved_mgr') {
-            group.members_count = !isNaN (group.members_count)
-              ? group.members_count++
-              : 1;
-          }
-        }
-      } catch (e) {
-        // TODO - what do we do with errors?
-        group.members_count = 0;
-      }
-    }
-  }
-
-  /**
    * For displaying ticket count (for this event)
    * @returns {Promise<void>}
    */
   async getGroupsTickets () {
-    for (const group of this.groups) {
-      try {
-        const tickets = await this.groupService.getCampsMembersTickets (
-          group.id
-        );
-        if (!tickets || !tickets.length) {
-          group.tickets = [];
-        } else {
-          group.tickets = tickets;
+    try {
+      const tickets = await this.groupService.getAllCampsMembersTickets (
+        this.groups.map (g => g.id)
+      );
+      if (!tickets || !Object.keys (tickets).length) {
+        return;
+      } else {
+        for (const group of this.groups) {
+          group.tickets = tickets[group.id];
         }
-      } catch (e) {
-        // TODO - what do we do with errors?
-        group.members_count = 0;
       }
+    } catch (e) {
+      // TODO - what do we do with errors?
+      console.warn (e);
     }
   }
 
@@ -148,21 +125,21 @@ import {BarChartCard} from '../controls/BarChartCard';
    * @returns {Promise<void>}
    */
   async getGroupsFormerEventTickets () {
-    for (const group of this.groups) {
-      try {
-        const tickets = await this.groupService.getCampsMembersTickets (
-          group.id,
-          this.eventsService.getFormerEventId ()
-        );
-        if (!tickets || !tickets.length) {
-          group.former_tickets = [];
-        } else {
-          group.former_tickets = tickets;
+    try {
+      const tickets = await this.groupService.getAllCampsMembersTickets (
+        this.groups.map (g => g.id),
+        this.eventsService.getFormerEventId ()
+      );
+      if (!tickets || !Object.keys (tickets).length) {
+        return;
+      } else {
+        for (const group of this.groups) {
+          group.former_tickets = tickets[group.id];
         }
-      } catch (e) {
-        // TODO - what do we do with errors?
-        group.members_count = 0;
       }
+    } catch (e) {
+      // TODO - what do we do with errors?
+      console.warn (e);
     }
   }
 
@@ -283,7 +260,7 @@ import {BarChartCard} from '../controls/BarChartCard';
   }
 
   render () {
-    const {t, match} = this.props;
+    const {t} = this.props;
     return (
       <div className="DGSAdmin">
         <Row>
@@ -296,13 +273,13 @@ import {BarChartCard} from '../controls/BarChartCard';
               </span>
             </h1>
             <p className="headerDescription p-1">
-              <div className="subheaderText">
+              <span className="subheaderText">
                 {t (`${this.TRANSLATE_PREFIX}.allocations.subheader`)}
                 {' '}
                 (
                 {this.eventsService.getFormerEventId ()}
                 )
-              </div>
+              </span>
               <span>
                 {t (`${this.TRANSLATE_PREFIX}.allocations.description`)}
               </span>
@@ -318,7 +295,7 @@ import {BarChartCard} from '../controls/BarChartCard';
             <SearchInput
               value={this.query}
               onChange={this.handleChange}
-              placeholder={t (`${match.params.groupType}:search.title`)}
+              placeholder={t (`search`)}
             />
           </Col>
           <PermissableComponent permitted={!!this.lastAudit}>

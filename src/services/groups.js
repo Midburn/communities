@@ -55,6 +55,14 @@ export class GroupsService {
         }
     }
 
+    async getAllCampsMembersTickets(ids, eventId) {
+        try {
+            return (await axios.post(`/api/v1/spark/camps/members/tickets?eventId=${eventId || ''}`, {ids},{withCredentials: true})).data.body.tickets;
+        } catch (e) {
+            console.warn(`Error fetching camp members ${e.stack}`);
+        }
+    }
+
     async getUserGroups(eventId) {
         try {
             return (await axios.get(`/api/v1/spark/usersGroups?eventId=${eventId || ''}`, {withCredentials: true})).data.body;
