@@ -111,4 +111,13 @@ module.exports = {
     SOUND: 'SOUND',
     CONTENT: 'CONTENT',
   },
+
+  /**
+   * Camp types determine content, space and other props
+   */
+  CAMP_TYPES: {
+    CONTENT: 'CONTENT',
+    HOSPITALITY: 'HOSPITALITY',
+    SPONTANEOUS: 'SPONTANEOUS',
+  },
 };

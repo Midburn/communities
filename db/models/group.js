@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       group_comments: DataTypes.TEXT,
       event_id: DataTypes.STRING,
       dream_id: DataTypes.STRING,
+      camp_type: DataTypes.STRING,
       group_type: {
         type: DataTypes.ENUM,
         values: [constants.GROUP_TYPES.CAMP, constants.GROUP_TYPES.ART],
