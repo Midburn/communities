@@ -67,6 +67,9 @@ module.exports = {
     ADMIN: 'admin_permission',
     ALLOCATE_PRESALE_TICKET: 'pre_sale_allocation_permission',
     GIVE_PERMISSION: 'give_permission',
+    MANAGE: 'manage',
+    EDIT: 'edit',
+    VIEW: 'view',
   },
   /**
      * We don't want to delete things from the tables.
