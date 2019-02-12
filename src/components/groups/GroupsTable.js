@@ -138,20 +138,7 @@ class BaseGroupsTable extends React.Component {
    * Methods relevant to getting manager details
    */
   getManagerName (group) {
-    if (!group || !group.manager) {
-      return ' ';
-    }
-    // We might have empty data in managers name - so we need to try and fetch it from several places
-    return group.manager.name || this.extractNameFromJSON (group.manager);
-  }
-
-  extractNameFromJSON (manager) {
-    try {
-      const extraData = JSON.parse (manager.json);
-      return `${extraData.drupal_data.address.first_name} ${extraData.drupal_data.address.last_name}`;
-    } catch (e) {
-      return ' ';
-    }
+    return group && group.manager ? group.manager.name : ' ';
   }
 
   getManagerPhone (group) {

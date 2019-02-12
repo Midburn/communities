@@ -125,10 +125,10 @@ export class GroupsService {
     const isHeb = lng === 'he';
     switch (propName) {
       case 'name':
-        propName = isHeb ? 'camp_name_he' : 'camp_name_en';
+        propName = isHeb ? 'group_name_he' : 'group_name_en';
         break;
       case 'description':
-        propName = isHeb ? 'camp_desc_he' : 'camp_desc_en';
+        propName = isHeb ? 'group_desc_he' : 'group_desc_en';
         break;
       default:
         break;
