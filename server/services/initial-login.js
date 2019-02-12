@@ -51,6 +51,13 @@ class InitialLoginService {
             if (groups && groups.length) {
                 const groupData = (await Promise.all(groups.map(async g => (await spark.get(`camps/${g.group_id}/get`, req)).data.camp)));
                 for (const group of groupData) {
+                    await permission.addPermissionForUser({
+                        user_id: sparkUser.user_id,
+                        permission_type: constants.PERMISSION_TYPES.VIEW,
+                        entity_type: constants.ENTITY_TYPE.GROUP,
+                        related_entity: group.id,
+                        permitted_by: constants.GIVEN_BY_SYSTEM_CODE
+                    });
                     if (+group.main_contact === +sparkUser.user_id) {
                         await Promise.all([
                             permissions.addPermissionForUser({

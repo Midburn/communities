@@ -67,7 +67,8 @@ module.exports = {
     PERMISSION_TYPES: {
         ADMIN: 'admin_permission',
         ALLOCATE_PRESALE_TICKET: 'pre_sale_allocation_permission',
-        GIVE_PERMISSION: 'give_permission'
+        GIVE_PERMISSION: 'give_permission',
+        VIEW: 'view_permission'
     },
     /**
      * We don't want to delete things from the tables.

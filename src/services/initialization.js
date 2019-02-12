@@ -28,7 +28,6 @@ export class InitilizationService {
          */
         state.camps = await this.groups.getOpenCamps();
         state.artInstallations = await this.groups.getOpenArts();
-        state.userGroups = await this.groups.getUserGroups();
         state.currentEvent = await this.events.getEvent(state.currentEventId);
         state.allocationGroups = (await this.groups.getPresaleAllocationGroups()) || [];
     }
