@@ -71,11 +71,16 @@ export class PermissionService {
 
   // Does the logged user has a group he manages
   isAGroupManager (groupType) {
-    if (!state.isUserGroups) {
+    if (!state.loggedUser.permissions) {
       return false;
     }
+      return state.loggedUser.permissions.some (
+          p =>
+              p.permission_type === constants.PERMISSION_TYPES.MANAGE &&
+              p.entity_type === constants.ENTITY_TYPE.GROUP
+      );
     return state.userGroups.groups.some (
-      g => g.group_type.toLowerCase ().includes (groupType) && g.can_edit
+      g => g.group_type === groupType && g.can_edit
     );
   }
 
@@ -90,7 +95,7 @@ export class PermissionService {
 
   // Does the logged user manage this specific group
   isGroupManager (groupId) {
-    if (!state.isUserGroups) {
+    if (!state.loggedUser.permissions) {
       return false;
     }
     return state.loggedUser.permissions.some (

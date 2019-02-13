@@ -140,7 +140,7 @@ module.exports = class SparkCampsController {
   async getUsersGroups (req, res, next) {
     function mergeGroups (sparkGroups, localGroups) {
       localGroups = (localGroups || []).map (g => new GroupMembership (g));
-      sparkGroups = (localGroups || []).map (g => new GroupMembership (g));
+      sparkGroups = (sparkGroups || []).map (g => new GroupMembership (g));
       return [...(sparkGroups || []), ...(localGroups || [])];
     }
     try {

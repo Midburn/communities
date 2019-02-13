@@ -154,7 +154,7 @@ export class GroupsService {
     }
     for (const g of state.userGroups.groups) {
       if (g.group_type.toLowerCase ().includes (type)) {
-        return g.group_id;
+        return g.id;
       }
     }
   }
@@ -165,7 +165,7 @@ export class GroupsService {
         this.eventService.getFormerEventId ()
       )).groups;
       return await Promise.all (
-        groups.map (group => this.getGroup (group.group_id))
+        groups.map (group => this.getGroup (group.id))
       );
     } catch (e) {
       console.warn ('Error getting allocation data');

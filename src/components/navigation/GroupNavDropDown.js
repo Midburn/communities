@@ -30,21 +30,21 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
     return (
         <NavItem>
             <Dropdown id={`${type}-nav-fropdown`}>
-                <DropdownToggle className="disabled" nav>{t(`${getTranslateModule()}.title`)}</DropdownToggle>
+                <DropdownToggle nav>{t(`${getTranslateModule()}.title`)}</DropdownToggle>
                 <DropdownMenu basic>
                     {/*SEARCH GROUPS LINK*/}
-                    <DropdownItem onClick={onClick}>
+                    <DropdownItem className="disabled" onClick={onClick}>
                         <NavLink to={`/${lng}/${parsingService.getPlural(type)}`}>{t(`${getTranslateModule()}.search`)}</NavLink>
                     </DropdownItem>
                     {/*MY GROUPS LINK*/}
                     <PermissableComponent permitted={permissionsService.hasGroup(type)}>
-                        <DropdownItem onClick={onClick}>
+                        <DropdownItem className="disabled" onClick={onClick}>
                             <NavLink
                                 to={`/${lng}/${parsingService.getPlural(type)}/${getMyGroupId()}`}>{t(`${getTranslateModule()}.my`)}</NavLink>
                         </DropdownItem>
                     </PermissableComponent>
                     {/*MANAGE MY GROUP LINK*/}
-                    <PermissableComponent permitted={permissionsService.isAGroupManager(type) && !eventRulesService.isGroupEditingDisabled(type)}>
+                    <PermissableComponent permitted={permissionsService.isAGroupManager(type) && getMyGroupId() && !eventRulesService.isGroupEditingDisabled(type)}>
                         <DropdownItem onClick={onClick}>
                             <NavLink
                                 to={`/${lng}/${parsingService.getPlural(type)}/${getMyGroupId()}/manage`}>{t(`${getTranslateModule()}.manage`)}</NavLink>
