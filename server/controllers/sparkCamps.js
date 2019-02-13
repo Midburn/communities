@@ -4,6 +4,8 @@ const constants = require ('../../models/constants');
 const db = require ('../services/database');
 const GroupMembership = require ('../../models/group-translator')
   .GroupMembership;
+const Group = require ('../../models/group-translator')
+    .Group;
 
 module.exports = class SparkCampsController {
   constructor () {
@@ -25,8 +27,9 @@ module.exports = class SparkCampsController {
   async getCamp (req, res, next) {
     try {
       const camp = (await this.spark.get (`camps/${req.params.id}/get`, req))
-        .data;
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, camp));
+        .data.camp;
+      const parsedCamp = new Group(camp);
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: parsedCamp}));
     } catch (e) {
       next (
         new GenericResponse (
@@ -40,7 +43,8 @@ module.exports = class SparkCampsController {
   async getOpenCamps (req, res, next) {
     try {
       const campList = (await this.spark.get (`camps_open`, req)).data;
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, campList));
+      const parsed = campList.camps.map(group => new Group(group));
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camps: parsed}));
     } catch (e) {
       next (
         new GenericResponse (
@@ -54,7 +58,8 @@ module.exports = class SparkCampsController {
   async getOpenArts (req, res, next) {
     try {
       const artList = (await this.spark.get (`camps/arts`, req)).data;
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, artList));
+        const parsed = artList.artInstallations.map(group => new Group(group));
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {artInstallations: parsed}));
     } catch (e) {
       next (
         new GenericResponse (
@@ -237,7 +242,8 @@ module.exports = class SparkCampsController {
         path += `?eventId=${req.query.eventId}`;
       }
       const groups = (await this.spark.get (path, req)).data;
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, groups.camps));
+      const parsed = groups.camps.map(group => new Group(group));
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, parsed));
     } catch (e) {
       next (
         new GenericResponse (

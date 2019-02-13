@@ -10,7 +10,7 @@ export class GroupsService {
     try {
       return (await axios.get (`/api/v1/spark/camps/${id}`, {
         withCredentials: true,
-      })).data.body.camp;
+      })).data.body.camp
     } catch (e) {
       console.warn (`Error fetching camps ${e.stack}`);
     }
