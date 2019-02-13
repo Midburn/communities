@@ -198,8 +198,13 @@ export class GroupsService {
       return;
     }
     try {
-      await axios.post (`/api/v1/groups/`, {groups}, {withCredentials: true})
-        .data;
+      const a = (await axios.post (
+        `/api/v1/groups/`,
+        {groups},
+        {withCredentials: true}
+      )).data.body.results;
+      console.log (a);
+      return a;
     } catch (e) {
       console.warn (`Error allocating quota data - ${e.stack}`);
       throw e;

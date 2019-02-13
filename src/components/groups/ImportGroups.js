@@ -13,6 +13,8 @@ import {ParsingService} from '../../services/parsing';
   parsingService = new ParsingService ();
   @observable loading = false;
   @observable done = false;
+  @observable error;
+  @observable results;
   state = {
     importData: null,
   };
@@ -70,19 +72,22 @@ import {ParsingService} from '../../services/parsing';
     group.group_type = this.parsingService.getGroupTypeFromString (
       match.params.groupType
     );
+    delete group.group_comments;
     return group;
   };
 
   performImport = async () => {
     this.loading = true;
     try {
-      await this.groupService.createGroups (this.state.importData);
+      this.results = await this.groupService.createGroups (
+        this.state.importData
+      );
+      console.log (this.results);
       this.loading = false;
       this.done = true;
     } catch (e) {
       this.loading = false;
-      console.log (e);
-      this.setState ({e});
+      this.error = e;
     }
   };
 
@@ -95,16 +100,30 @@ import {ParsingService} from '../../services/parsing';
       !this.state.importData ||
       !this.state.importData.length ||
       this.state.loading ||
-      this.state.e
+      this.error
     );
   }
 
   render () {
+    const Results = (
+      <div>
+        <h1>בוצע בהצלחה!</h1>
+        {this.results &&
+          <div>
+            <h2>הצלחות</h2>
+            <span>{this.results.success.length} הצלחות </span>
+            <h2>
+              כשלונות (בדוק האם קיימים אימוג'ים או סמלים לא חוקיים בנתוני המחנות הנ"ל)
+            </h2>
+            {this.results.failures.map (name => <span>{name}</span>)}
+          </div>}
+      </div>
+    );
     return (
       <div>
 
         {this.done
-          ? <h1>בוצע בהצלחה!</h1>
+          ? Results
           : <Row>
               <Col md="6">
                 <input
@@ -125,7 +144,7 @@ import {ParsingService} from '../../services/parsing';
                 </MDBBtn>
                 {this.state.e
                   ? <span>
-                      קרתה תקלה! - {this.state.e.stack}
+                      קרתה תקלה! - {this.e.stack}
                     </span>
                   : null}
               </Col>
