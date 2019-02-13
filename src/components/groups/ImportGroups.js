@@ -60,7 +60,7 @@ import {ParsingService} from '../../services/parsing';
       }
       groups.push (group);
     }
-    this.setState ({importData: groups.map (this.parseGroup)});
+    this.setState ({done: false,importData: groups.map (this.parseGroup)});
   };
 
   parseGroup = group => {
@@ -115,7 +115,17 @@ import {ParsingService} from '../../services/parsing';
             <h2>
               כשלונות (בדוק האם קיימים אימוג'ים או סמלים לא חוקיים בנתוני המחנות הנ"ל)
             </h2>
-            {this.results.failures.map (name => <span>{name}</span>)}
+              <ul>
+                  {this.results.failures.map (name => <li>{name}</li>)}
+              </ul>
+            <h2>אנשי קשר ראשיים ללא מיילים</h2>
+              <ul>
+                  {this.results.failedEmails.map (name => <li>{name}</li>)}
+              </ul>
+          <h2>קאמפים בעלי שם זהה בDB</h2>
+              <ul>
+                  {this.results.existing.map (name => <li>{name}</li>)}
+              </ul>
           </div>}
       </div>
     );

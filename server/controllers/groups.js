@@ -62,14 +62,37 @@ module.exports = class GroupsController {
       const results = {
         success: [],
         failures: [],
+        failedEmails: [],
+          existing: [],
       };
       for (const group of req.body.groups) {
         try {
-          const dbGroup = await services.db.Groups.create (group, {
-            returning: true,
-          });
-          await this.createMemberForNewGroup (group, req);
-          results.success.push (dbGroup);
+            let main_contact;
+            try {
+                 main_contact = (await services.spark.get (
+                    `users/email/${group.contact_person_email}`,
+                    req
+                )).data;
+            } catch (e) {
+                results.failedEmails.push(group.contact_person_email)
+            }
+            if (main_contact) {
+                try {
+                    await this.createMemberForNewGroup(group, main_contact);
+                } catch (e) {
+                    results.failedEmails.push(group.contact_person_email)
+                }
+            }
+            const existing = await services.db.Groups.findOne({where: {group_name: group.group_name} });
+            let dbGroup;
+            if (existing) {
+                results.existing.push(group.group_name);
+            } else {
+                dbGroup = await services.db.Groups.create (group, {
+                    returning: true,
+                });
+                results.success.push (dbGroup);
+            }
         } catch (e) {
           results.failures.push (group.group_name);
         }
@@ -86,12 +109,8 @@ module.exports = class GroupsController {
     }
   }
 
-  async createMemberForNewGroup (group, req) {
+  async createMemberForNewGroup (group, main_contact) {
     try {
-      const main_contact = (await services.spark.get (
-        `users/email/${group.contact_person_email}`,
-        req
-      )).data;
       await services.db.GroupMembers.create ({
         GroupId: group.id,
         role: constants.GROUP_STATIC_ROLES.LEADER,
@@ -99,7 +118,7 @@ module.exports = class GroupsController {
       });
       console.log (main_contact);
     } catch (e) {
-      console.warn ('Could not create main member for group', e.stack);
+      console.warn ('Could not create main member for group', main_contact, group.group_name);
     }
   }
 

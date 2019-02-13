@@ -31,11 +31,17 @@ class SparkService {
   }
 
   getHeadersFromRequest (req) {
-    return {
+    const headers = {
       cookie: req.headers.cookie || '',
-      USER_TOKEN: req.headers.token || req.cookies[configService.JWT_KEY].token,
+      USER_TOKEN: (req.cookies[configService.JWT_KEY] || {}).token,
       SECRET: req.headers.secret || configService.SECRET,
     };
+    Object.keys(headers).forEach(key => {
+      if (!headers[key]) {
+        delete headers[key];
+      }
+    });
+      return headers;
   }
 }
 
