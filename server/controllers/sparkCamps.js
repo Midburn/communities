@@ -291,12 +291,12 @@ module.exports = class SparkCampsController {
       if (fromSpark) {
         groups = await this.getAllFromSpark (req);
       } else {
-        groups = await services.db.Groups.findAll ({
+        groups = (await services.db.Groups.findAll ({
           where: {
             group_type: req.params.type,
-            event_id: req.MetaKeys.currentEventId || req.query.eventId,
+            event_id: req.MetaKeys.event_id || req.query.eventId,
           },
-        });
+        })).map(g => g.toJSON());
       }
       const parsed = groups.map (group => new Group (group));
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, parsed));
