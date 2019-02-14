@@ -45,6 +45,7 @@ class Server {
     this.app.use (cookieParser ());
     this.app.use (bodyParser.json ()); // for parsing application/json
     this.app.use (compression ()); // compress all responses
+    this.app.use (this.initRequesMetaKeysMiddleware(constants.REQUEST_METAKEYS)); // compress all responses
     this.app.use (async (req, res, next) => {
       if (
         req.url.includes (this.config.SPARK_HOST) ||
@@ -87,6 +88,27 @@ class Server {
         }
       }
     });
+  }
+
+    /**
+     * Augment request with data sent from headers
+     * @param keys - array of string keys to augment req.MetaKeys
+     * @returns {Function}
+     */
+  initRequesMetaKeysMiddleware(keys) {
+    return (req, res, next) => {
+        req.MetaKeys = {};
+      for (const key of keys) {
+        if (req.headers[key]) {
+          try {
+            req.MetaKeys[key] = JSON.parse(req.headers[key]);
+          } catch (e) {
+
+          }
+        }
+      }
+      return next();
+    }
   }
 
   initLogger () {

@@ -26,19 +26,35 @@ module.exports = class SparkCampsController {
 
   async getCamp (req, res, next) {
     try {
-      const camp = (await this.spark.get (`camps/${req.params.id}/get`, req))
-        .data.camp;
-      const parsedCamp = new Group(camp);
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: parsedCamp}));
-    } catch (e) {
-      next (
-        new GenericResponse (
-          constants.RESPONSE_TYPES.ERROR,
-          new Error ('Failed getting open camps')
-        )
-      );
+      let group;
+      let fromSpark;
+      try {
+          fromSpark = JSON.parse(req.query.from_spark)
+      } catch (e) {
+
+      }
+      if (req.MetaKeys.spark_active || fromSpark) {
+          group = (await this.spark.get (`camps/${req.params.id}/get`, req))
+              .data.camp;
+      } else {
+          group = (await services.db.Groups.findByPk(req.params.id)).toJSON()
+      }
+
+      if (!group) {
+            return next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: null}, 404));
+      }
+
+      const parsedCamp = new Group(group, fromSpark);
+      return next(new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: parsedCamp}));
+      } catch(e) {
+        next (
+            new GenericResponse (
+                constants.RESPONSE_TYPES.ERROR,
+                new Error ('Failed getting camp')
+            )
+        );
     }
-  }
+  };
 
   async getOpenCamps (req, res, next) {
     try {
@@ -145,7 +161,7 @@ module.exports = class SparkCampsController {
   async getUsersGroups (req, res, next) {
     function mergeGroups (sparkGroups, localGroups) {
       localGroups = (localGroups || []).map (g => new GroupMembership (g));
-      sparkGroups = (sparkGroups || []).map (g => new GroupMembership (g));
+      sparkGroups = (sparkGroups || []).map (g => new GroupMembership (g, true));
       return [...(sparkGroups || []), ...(localGroups || [])];
     }
     try {

@@ -4,6 +4,7 @@ import {GroupsService} from './groups';
 import {state} from '../models/state';
 import {ConfigurationsService} from './configurations';
 import {EventsService} from './events';
+import axios from 'axios';
 
 export class CookieError extends Error {}
 
@@ -29,6 +30,14 @@ export class InitilizationService {
     state.currentEvent = await this.events.getEvent (state.currentEventId);
     state.userGroups = await this.groups.getUserGroups (state.currentEventId);
     state.allocationGroups = (await this.groups.getPresaleAllocationGroups ()) || [];
+    this.setSparkFlag();
+  }
+
+  setSparkFlag() {
+      const eventYear = state.currentEventId.replace('MIDBURN', '');
+      axios.defaults.headers.common['active_spark'] = parseInt(eventYear) > 2018;
+      axios.defaults.headers.common['event_year'] = state.currentEventId.replace('MIDBURN', '');
+      axios.defaults.headers.common['logged_user_id'] = state.loggedUser.user_id;
   }
 
   async init () {

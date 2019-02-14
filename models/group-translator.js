@@ -3,7 +3,8 @@ const constants = require ('./constants');
  * This is used to unify Spark and Local way of describing group membership
  */
 class GroupMembership {
-  constructor (data) {
+  constructor (data, isFromSpark) {
+    this.isFromSpark = isFromSpark;
     this.data = data;
     this.id = data.id || data.group_id;
     this.group_type = (data.group_type || ' ').toLowerCase ();
@@ -32,6 +33,7 @@ class Group {
   }
 
   constructor (data, isFromSpark) {
+      this.isFromSpark = isFromSpark;
     Object.keys (data).forEach (key => {
       // Copy all keys for same name keys in model
       this[key] = data[key];
@@ -43,7 +45,7 @@ class Group {
       ? constants.GROUP_TYPES.ART
       : constants.GROUP_TYPES.CAMP;
     // parse all other keys
-    this.manager = isFromSpark
+    this.manager = isFromSpark && data.manager
       ? {
           name: this.extractNameFromJSON (data.manager),
           phone: data.manager.phone,
@@ -51,10 +53,10 @@ class Group {
         }
       : data.manager;
     this.group_desc_he = isFromSpark ? data.camp_desc_he : data.group_desc_he;
-    this.group_desc_en = isFromSpark ? data.camp_desc_en : data.camp_desc_en;
-    this.group_name_he = isFromSpark ? data.camp_name_he : data.camp_name_he;
-    this.group_name_en = isFromSpark ? data.camp_name_en : data.camp_name_en;
-    this.status = this.status || this.data.group_status;
+    this.group_desc_en = isFromSpark ? data.camp_desc_en : data.group_desc;
+    this.group_name_he = isFromSpark ? data.camp_name_he : data.group_name_he;
+    this.group_name_en = isFromSpark ? data.camp_name_en : data.group_name;
+    this.status = this.status || data.group_status;
   }
 }
 

@@ -6,9 +6,13 @@ import {EventsService} from './events';
 export class GroupsService {
   eventService = new EventsService ();
 
-  async getGroup (id) {
+  async getGroup (id, fromSpark) {
     try {
-      return (await axios.get (`/api/v1/spark/camps/${id}`, {
+      let path = `/api/v1/spark/camps/${id}`;
+      if (fromSpark) {
+        path += '?from_spark=true'
+      }
+       return (await axios.get (path, {
         withCredentials: true,
       })).data.body.camp
     } catch (e) {
@@ -165,7 +169,7 @@ export class GroupsService {
         this.eventService.getFormerEventId ()
       )).groups;
       return await Promise.all (
-        groups.map (group => this.getGroup (group.id))
+        groups.map (group => this.getGroup (group.id, group.isFromSpark))
       );
     } catch (e) {
       console.warn ('Error getting allocation data');

@@ -123,4 +123,10 @@ module.exports = {
     HOSPITALITY: 'HOSPITALITY',
     SPONTANEOUS: 'SPONTANEOUS',
   },
+
+    /**
+     * The server will try to parse these keys from request and put them in
+     * req.MetaKeys
+     */
+    REQUEST_METAKEYS: ['active_spark', 'event_year', 'logged_user_id']
 };
