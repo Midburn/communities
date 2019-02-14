@@ -78,7 +78,7 @@ module.exports = class SparkCampsController {
           group_type: type,
           group_status: constants.GROUP_STATUS.OPEN,
         },
-      });
+      }).map(group => group.toJSON());
     }
     return groups.map (group => new Group (group));
   }

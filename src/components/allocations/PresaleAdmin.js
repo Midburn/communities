@@ -166,7 +166,7 @@ import {BarChartCard} from '../controls/BarChartCard';
   }
 
   saveChanges = async () => {
-    const {match} = this.props;
+    const {match} =  this.props;
     try {
       if (
         !this.groupQuotas ||
