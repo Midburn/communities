@@ -4,8 +4,7 @@ const constants = require ('../../models/constants');
 const db = require ('../services/database');
 const GroupMembership = require ('../../models/group-translator')
   .GroupMembership;
-const Group = require ('../../models/group-translator')
-    .Group;
+const Group = require ('../../models/group-translator').Group;
 
 module.exports = class SparkCampsController {
   constructor () {
@@ -24,43 +23,78 @@ module.exports = class SparkCampsController {
     this.getCampsTickets = this.getCampsTickets.bind (this);
   }
 
+  getSparkFlagFromQuery (query) {
+    try {
+      return JSON.parse (query.from_spark);
+    } catch (e) {
+      return false;
+    }
+  }
+
   async getCamp (req, res, next) {
     try {
       let group;
-      let fromSpark;
-      try {
-          fromSpark = JSON.parse(req.query.from_spark)
-      } catch (e) {
-
-      }
+      const fromSpark = this.getSparkFlagFromQuery (req.query);
       if (req.MetaKeys.spark_active || fromSpark) {
-          group = (await this.spark.get (`camps/${req.params.id}/get`, req))
-              .data.camp;
+        group = (await this.spark.get (`camps/${req.params.id}/get`, req)).data
+          .camp;
       } else {
-          group = (await services.db.Groups.findByPk(req.params.id)).toJSON()
+        group = (await services.db.Groups.findByPk (req.params.id)).toJSON ();
       }
 
       if (!group) {
-            return next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: null}, 404));
+        return next (
+          new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: null}, 404)
+        );
       }
 
-      const parsedCamp = new Group(group, fromSpark);
-      return next(new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: parsedCamp}));
-      } catch(e) {
-        next (
-            new GenericResponse (
-                constants.RESPONSE_TYPES.ERROR,
-                new Error ('Failed getting camp')
-            )
-        );
+      const parsedCamp = new Group (group, fromSpark);
+      return next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: parsedCamp})
+      );
+    } catch (e) {
+      next (
+        new GenericResponse (
+          constants.RESPONSE_TYPES.ERROR,
+          new Error ('Failed getting camp')
+        )
+      );
     }
-  };
+  }
+
+  async getOpenGroupsByType (type, fromSpark, req) {
+    let groups;
+    if (fromSpark) {
+      const res = (await this.spark.get (
+        type === constants.GROUP_TYPES.CAMP ? `camps_open` : 'camps/arts',
+        req
+      )).data;
+      groups = type === constants.GROUP_TYPES.CAMP
+        ? res.camps
+        : res.artInstallations;
+    } else {
+      groups = await services.db.Groups.findAll ({
+        where: {
+          group_type: type,
+          group_status: constants.GROUP_STATUS.OPEN,
+        },
+      });
+    }
+    return groups.map (group => new Group (group));
+  }
 
   async getOpenCamps (req, res, next) {
     try {
-      const campList = (await this.spark.get (`camps_open`, req)).data;
-      const parsed = campList.camps.map(group => new Group(group));
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {camps: parsed}));
+      const fromSpark =
+        req.MetaKeys.spark_active || this.getSparkFlagFromQuery (req.query);
+      const groups = await this.getOpenGroupsByType (
+        constants.GROUP_TYPES.CAMP,
+        fromSpark,
+        req
+      );
+      next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {camps: groups})
+      );
     } catch (e) {
       next (
         new GenericResponse (
@@ -73,9 +107,18 @@ module.exports = class SparkCampsController {
 
   async getOpenArts (req, res, next) {
     try {
-      const artList = (await this.spark.get (`camps/arts`, req)).data;
-        const parsed = artList.artInstallations.map(group => new Group(group));
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {artInstallations: parsed}));
+      const fromSpark =
+        req.MetaKeys.spark_active || this.getSparkFlagFromQuery (req.query);
+      const groups = await this.getOpenGroupsByType (
+        constants.GROUP_TYPES.ART,
+        fromSpark,
+        req
+      );
+      next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+          artInstallations: groups,
+        })
+      );
     } catch (e) {
       next (
         new GenericResponse (
@@ -161,7 +204,8 @@ module.exports = class SparkCampsController {
   async getUsersGroups (req, res, next) {
     function mergeGroups (sparkGroups, localGroups) {
       localGroups = (localGroups || []).map (g => new GroupMembership (g));
-      sparkGroups = (sparkGroups || []).map (g => new GroupMembership (g, true));
+      sparkGroups = (sparkGroups || [])
+        .map (g => new GroupMembership (g, true));
       return [...(sparkGroups || []), ...(localGroups || [])];
     }
     try {
@@ -241,24 +285,20 @@ module.exports = class SparkCampsController {
 
   async getAllByType (req, res, next) {
     try {
-      let path = '';
-      switch (req.params.type) {
-        case constants.GROUP_TYPES.CAMP:
-          path = 'camps_all';
-          break;
-        case constants.GROUP_TYPES.ART:
-          path = 'art_all';
-          break;
-        default:
-          throw new Error (
-            'You must specify type when fetching all camps/arts'
-          );
+      const fromSpark =
+        req.MetaKeys.spark_active || this.getSparkFlagFromQuery (req.query);
+      let groups;
+      if (fromSpark) {
+        groups = await this.getAllFromSpark (req);
+      } else {
+        groups = await services.db.Groups.findAll ({
+          where: {
+            group_type: req.params.type,
+            event_id: req.MetaKeys.currentEventId || req.query.eventId,
+          },
+        });
       }
-      if (req.query.eventId) {
-        path += `?eventId=${req.query.eventId}`;
-      }
-      const groups = (await this.spark.get (path, req)).data;
-      const parsed = groups.camps.map(group => new Group(group));
+      const parsed = groups.map (group => new Group (group));
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, parsed));
     } catch (e) {
       next (
@@ -268,6 +308,24 @@ module.exports = class SparkCampsController {
         )
       );
     }
+  }
+
+  async getAllFromSpark (req) {
+    let path = '';
+    switch (req.params.type) {
+      case constants.GROUP_TYPES.CAMP:
+        path = 'camps_all';
+        break;
+      case constants.GROUP_TYPES.ART:
+        path = 'art_all';
+        break;
+      default:
+        throw new Error ('You must specify type when fetching all camps/arts');
+    }
+    if (req.query.eventId) {
+      path += `?eventId=${req.query.eventId}`;
+    }
+    return (await this.spark.get (path, req)).data.camps;
   }
 
   async sparkGroupMemberAction (req, res, next) {
