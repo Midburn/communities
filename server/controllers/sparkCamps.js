@@ -73,12 +73,14 @@ module.exports = class SparkCampsController {
         ? res.camps
         : res.artInstallations;
     } else {
-      groups = await services.db.Groups.findAll ({
-        where: {
-          group_type: type,
-          group_status: constants.GROUP_STATUS.OPEN,
-        },
-      }).map(group => group.toJSON());
+      groups = await services.db.Groups
+        .findAll ({
+          where: {
+            group_type: type,
+            group_status: constants.GROUP_STATUS.OPEN,
+          },
+        })
+        .map (group => group.toJSON ());
     }
     return groups.map (group => new Group (group));
   }
@@ -286,7 +288,7 @@ module.exports = class SparkCampsController {
   async getAllByType (req, res, next) {
     try {
       const fromSpark =
-        req.MetaKeys.spark_active || this.getSparkFlagFromQuery (req.query);
+        req.MetaKeys.active_spark || this.getSparkFlagFromQuery (req.query);
       let groups;
       if (fromSpark) {
         groups = await this.getAllFromSpark (req);
@@ -296,9 +298,9 @@ module.exports = class SparkCampsController {
             group_type: req.params.type,
             event_id: req.MetaKeys.event_id || req.query.eventId,
           },
-        })).map(g => g.toJSON());
+        })).map (g => g.toJSON ());
       }
-      const parsed = groups.map (group => new Group (group));
+      const parsed = groups.map (group => new Group (group, fromSpark));
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, parsed));
     } catch (e) {
       next (
@@ -325,7 +327,8 @@ module.exports = class SparkCampsController {
     if (req.query.eventId) {
       path += `?eventId=${req.query.eventId}`;
     }
-    return (await this.spark.get (path, req)).data.camps;
+    const response = (await this.spark.get (path, req)).data;
+    return response.camps;
   }
 
   async sparkGroupMemberAction (req, res, next) {

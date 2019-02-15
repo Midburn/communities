@@ -32,8 +32,16 @@ class Group {
     }
   }
 
+  initManager (group) {
+    return {
+      name: group.contact_person_name,
+      email: group.contact_person_email,
+      phone: group.contact_person_phone,
+    };
+  }
+
   constructor (data, isFromSpark) {
-      this.isFromSpark = isFromSpark;
+    this.isFromSpark = isFromSpark;
     Object.keys (data).forEach (key => {
       // Copy all keys for same name keys in model
       this[key] = data[key];
@@ -51,7 +59,7 @@ class Group {
           phone: data.manager.phone,
           email: data.manager.email,
         }
-      : data.manager;
+      : this.initManager (data);
     this.group_desc_he = isFromSpark ? data.camp_desc_he : data.group_desc_he;
     this.group_desc_en = isFromSpark ? data.camp_desc_en : data.group_desc;
     this.group_name_he = isFromSpark ? data.camp_name_he : data.group_name_he;

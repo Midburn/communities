@@ -10,11 +10,11 @@ export class GroupsService {
     try {
       let path = `/api/v1/spark/camps/${id}`;
       if (fromSpark) {
-        path += '?from_spark=true'
+        path += '?from_spark=true';
       }
-       return (await axios.get (path, {
+      return (await axios.get (path, {
         withCredentials: true,
-      })).data.body.camp
+      })).data.body.camp;
     } catch (e) {
       console.warn (`Error fetching camps ${e.stack}`);
     }
@@ -100,8 +100,13 @@ export class GroupsService {
       if (!type) {
         throw new Error ('You must specify type when fetching all camps/arts');
       }
+      let from_spark;
+      if (eventId) {
+        const eventYear = eventId.currentEventId.replace ('MIDBURN', '');
+        from_spark = parseInt (eventYear) < 2019;
+      }
       return (await axios.get (
-        `/api/v1/spark/camps/all/${type}?eventId=${eventId || ''}`,
+        `/api/v1/spark/camps/all/${type}?eventId=${eventId || ''}&from_spark=${from_spark || ''}`,
         {withCredentials: true}
       )).data.body;
     } catch (e) {
