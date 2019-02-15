@@ -42,8 +42,13 @@ export class GroupsService {
 
   async getCampsMembers (campId, eventId) {
     try {
+      let from_spark;
+      if (eventId) {
+        const eventYear = eventId.replace ('MIDBURN', '');
+        from_spark = parseInt (eventYear) < 2019;
+      }
       return (await axios.get (
-        `/api/v1/spark/camps/${campId}/members?eventId=${eventId || ''}`,
+        `/api/v1/spark/camps/${campId}/members?eventId=${eventId || ''}&from_spark=${from_spark || ''}`,
         {withCredentials: true}
       )).data.body.members;
     } catch (e) {
@@ -51,11 +56,19 @@ export class GroupsService {
     }
   }
 
-  async getCampsMembersCount (campId) {
+  async getCampsMembersCount (campId, eventId) {
     try {
-      return (await axios.get (`/api/v1/spark/camps/${campId}/members/count`, {
-        withCredentials: true,
-      })).data.body.members;
+      let from_spark;
+      if (eventId) {
+        const eventYear = eventId.replace ('MIDBURN', '');
+        from_spark = parseInt (eventYear) < 2019;
+      }
+      return (await axios.get (
+        `/api/v1/spark/camps/${campId}/members/count?from_spark=${from_spark || ''}`,
+        {
+          withCredentials: true,
+        }
+      )).data.body.members;
     } catch (e) {
       console.warn (`Error fetching camp members ${e.stack}`);
     }

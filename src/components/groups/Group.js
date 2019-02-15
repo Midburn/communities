@@ -86,7 +86,6 @@ import {ParsingService} from '../../services/parsing';
 
   async getGroupData (props) {
     const {match, location} = props;
-    console.log (this.props);
     try {
       const fromSpark =
         location.search && location.search.includes ('spark=true');
