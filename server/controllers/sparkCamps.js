@@ -19,7 +19,6 @@ module.exports = class SparkCampsController {
     this.getCampMembersTickets = this.getCampMembersTickets.bind (this);
     this.getCamp = this.getCamp.bind (this);
     this.updatePresaleQuota = this.updatePresaleQuota.bind (this);
-    this.sparkGroupMemberAction = this.sparkGroupMemberAction.bind (this);
     this.getCampsTickets = this.getCampsTickets.bind (this);
   }
 
@@ -39,9 +38,11 @@ module.exports = class SparkCampsController {
         group = (await this.spark.get (`camps/${req.params.id}/get`, req)).data
           .camp;
       } else {
-        group = (await services.db.Groups.findByPk (req.params.id)).toJSON ();
+        group = await services.db.Groups.findByPk (req.params.id);
+        if (group) {
+          group = group.toJSON ();
+        }
       }
-
       if (!group) {
         return next (
           new GenericResponse (constants.RESPONSE_TYPES.JSON, {camp: null}, 404)
@@ -138,6 +139,7 @@ module.exports = class SparkCampsController {
         path += `?eventId=${req.query.eventId}`;
       }
       const members = (await this.spark.get (path, req)).data;
+      console.log (members);
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, members));
     } catch (e) {
       next (
@@ -155,6 +157,7 @@ module.exports = class SparkCampsController {
         `camps/${req.params.id}/members/count`,
         req
       )).data;
+      console.log (members);
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, members));
     } catch (e) {
       next (
@@ -329,39 +332,5 @@ module.exports = class SparkCampsController {
     }
     const response = (await this.spark.get (path, req)).data;
     return response.camps;
-  }
-
-  async sparkGroupMemberAction (req, res, next) {
-    try {
-      const groupId = req.params.groupId,
-        memberId = req.params.memberId,
-        action = req.params.actionType;
-      if (!groupId || !memberId || !action) {
-        throw new Error (
-          'Must specify groupId, memberId and actionType when spark executing member action'
-        );
-      }
-      if (!Object.values (constants.SPARK_ACTION_TYPES).includes (action)) {
-        throw new Error (
-          `Unknown action sent - currently only ${Object.values (constants.SPARK_ACTION_TYPES).join (', ')} action type are allowed`
-        );
-      }
-      let path = `camps/${groupId}/members/${memberId}/${action}`;
-      if (req.query.eventId) {
-        path += `?eventId=${req.query.eventId}`;
-      }
-      // We expect to receive an array of groups to update
-      await this.spark.get (path, req);
-      next (
-        new GenericResponse (constants.RESPONSE_TYPES.JSON, {success: true})
-      );
-    } catch (e) {
-      next (
-        new GenericResponse (
-          constants.RESPONSE_TYPES.ERROR,
-          new Error ('Failed getting camp members')
-        )
-      );
-    }
   }
 };

@@ -36,14 +36,12 @@ export class InitilizationService {
 
   setSparkFlag () {
     const eventYear = state.currentEventId.replace ('MIDBURN', '');
-    axios.defaults.headers.common['active_spark'] = parseInt (eventYear) < 2019;
-    axios.defaults.headers.common['event_year'] = state.currentEventId.replace (
-      'MIDBURN',
-      ''
-    );
+    if (parseInt (eventYear) < 2019) {
+      axios.defaults.headers.common['active_spark'] = true;
+    }
+    axios.defaults.headers.common['event_year'] = eventYear;
     axios.defaults.headers.common['logged_user_id'] = state.loggedUser.user_id;
     axios.defaults.headers.common['event_id'] = state.currentEventId;
-    console.log (axios.defaults.headers.common);
   }
 
   async init () {

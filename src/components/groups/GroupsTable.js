@@ -236,7 +236,7 @@ class BaseGroupsTable extends React.Component {
               return (
                 <tr key={g.id}>
                   <td>
-                    <NavLink to={`${g.id}`}>
+                    <NavLink to={`${g.id}${presale ? '#spark' : ''}`}>
                       {this.groupsService.getPropertyByLang (g, 'name')}
                     </NavLink>
                   </td>

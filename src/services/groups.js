@@ -102,7 +102,7 @@ export class GroupsService {
       }
       let from_spark;
       if (eventId) {
-        const eventYear = eventId.currentEventId.replace ('MIDBURN', '');
+        const eventYear = eventId.replace ('MIDBURN', '');
         from_spark = parseInt (eventYear) < 2019;
       }
       return (await axios.get (
@@ -111,18 +111,6 @@ export class GroupsService {
       )).data.body;
     } catch (e) {
       console.warn (`Error fetching all ${type}s ${e.stack}`);
-    }
-  }
-
-  async sparkGroupMemberAction (groupId, memberId, actionType, eventId) {
-    try {
-      return (await axios.get (
-        `/api/v1/spark/camps/${groupId}/members/${memberId}/${actionType}?eventId=${eventId || ''}`,
-        {withCredentials: true}
-      )).data.body;
-    } catch (e) {
-      console.warn (`Error performing action - ${actionType} - ${e.stack}`);
-      throw e;
     }
   }
 
