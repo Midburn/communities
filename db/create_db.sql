@@ -7,8 +7,8 @@ flush privileges;
 
 CREATE DATABASE IF NOT EXISTS communities;
 
-ALTER DATABASE communities CHARACTER SET utf8;
-ALTER DATABASE communities COLLATE utf8_general_ci;
+ALTER DATABASE communities CHARACTER SET utf8mb4;
+ALTER DATABASE communities COLLATE utf8mb4_general_ci;
 
 CREATE USER 'theme'@'localhost'
   IDENTIFIED BY 'theme';
