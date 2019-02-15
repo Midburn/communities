@@ -88,7 +88,8 @@ import {ParsingService} from '../../services/parsing';
     const {match, location} = props;
     console.log (this.props);
     try {
-      const fromSpark = location.hash && location.hash === '#spark';
+      const fromSpark =
+        location.search && location.search.includes ('spark=true');
       const group = await this.groupService.getGroup (
         match.params.id,
         fromSpark
