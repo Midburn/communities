@@ -2,30 +2,10 @@ import i18n from './i18n';
 import axios from 'axios';
 import {state} from '../models/state';
 import {EventsService} from './events';
+import * as constants from '../../models/constants';
 
 export class GroupsService {
   eventService = new EventsService ();
-
-  async getOpenCamps () {
-    try {
-      return (await axios.get ('/api/v1/spark/camps/open', {
-        withCredentials: true,
-      })).data.body.camps;
-    } catch (e) {
-      console.warn (`Error fetching camps ${e.stack}`);
-    }
-  }
-
-  async getOpenArts () {
-    try {
-      return (await axios.get ('/api/v1/spark/camps/arts/open', {
-        withCredentials: true,
-      })).data.body.artInstallations;
-    } catch (e) {
-      console.warn (`Error fetching camps ${e.stack}`);
-    }
-  }
-
   async getCampsMembers (campId, eventId) {
     try {
       return (await axios.get (
@@ -78,14 +58,27 @@ export class GroupsService {
       const groupResponses = await Promise.all (
         memberships.map (m => this.getGroup (m.group_id))
       );
-
-      const a = groupResponses.filter (
+      return groupResponses.filter (
         res => res && res.event_id === (eventId || state.currentEventId)
       );
-      console.log (a);
-      return a;
     } catch (e) {
       console.warn ('Error getting users groups');
+    }
+  }
+
+  async getAllOpenGroups (type, eventId) {
+    try {
+      if (!type) {
+        throw new Error ('You must specify type when fetching all camps/arts');
+      }
+      const params = {
+        group_type: type,
+        event_id: eventId || state.currentEventId,
+        group_status: constants.GROUP_STATUS.OPEN,
+      };
+      return this.getGroups (params);
+    } catch (e) {
+      console.warn (`Error fetching all ${type}s ${e.stack}`);
     }
   }
 
@@ -94,10 +87,11 @@ export class GroupsService {
       if (!type) {
         throw new Error ('You must specify type when fetching all camps/arts');
       }
-      return (await axios.get (
-        `/api/v1/spark/camps/all/${type}?eventId=${eventId || ''}`,
-        {withCredentials: true}
-      )).data.body;
+      const params = {
+        group_type: type,
+        event_id: eventId,
+      };
+      return this.getGroups (params);
     } catch (e) {
       console.warn (`Error fetching all ${type}s ${e.stack}`);
     }
@@ -174,17 +168,13 @@ export class GroupsService {
     }
   }
 
-  async getGroups (groups, params) {
-    if (!groups || !Array.isArray (groups)) {
-      console.warn ('Must specify groups for creating groups');
-      return;
-    }
+  async getGroups (params) {
     try {
       return (await axios.get (
         `/api/v1/groups/`,
         {params},
         {withCredentials: true}
-      )).data.body.results;
+      )).data.body.groups;
     } catch (e) {
       console.warn (`Error getting groups data - ${e.stack}`);
       throw e;

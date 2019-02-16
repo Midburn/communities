@@ -4,6 +4,7 @@ import {GroupsService} from './groups';
 import {state} from '../models/state';
 import {ConfigurationsService} from './configurations';
 import {EventsService} from './events';
+import * as constants from '../../models/constants';
 
 export class CookieError extends Error {}
 
@@ -24,8 +25,12 @@ export class InitilizationService {
     /**
          * Put all requests for initial business logic data here (logged user, event rules etc...).
          */
-    state.camps = await this.groups.getOpenCamps ();
-    state.artInstallations = await this.groups.getOpenArts ();
+    state.camps = await this.groups.getAllOpenGroups (
+      constants.GROUP_TYPES.CAMP
+    );
+    state.artInstallations = await this.groups.getAllOpenGroups (
+      constants.GROUP_TYPES.ART
+    );
     state.userGroups = await this.groups.getUserGroups ();
     state.currentEvent = await this.events.getEvent (state.currentEventId);
     state.allocationGroups = (await this.groups.getUserGroups (
