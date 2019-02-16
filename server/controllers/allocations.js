@@ -162,7 +162,19 @@ module.exports = class AllocationsController {
           record_status: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
         },
       });
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {allocations}));
+      const buckets = await services.db.AdminAllocationRounds.findAll ({
+        where: {
+          group_id: {$in: related_group},
+          publication_date: {$ne: null},
+          record_status: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+        },
+      });
+      next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+          allocations,
+          buckets,
+        })
+      );
     } catch (e) {
       next (
         new GenericResponse (

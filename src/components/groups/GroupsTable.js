@@ -116,7 +116,7 @@ class BaseGroupsTable extends React.Component {
       : 0;
   }
 
-  getGroupsBucketCount (group, allocationType) {
+  getGroupsBucketCount (group) {
     const {groupQuotas} = this.props;
     if (!groupQuotas) {
       return 0;

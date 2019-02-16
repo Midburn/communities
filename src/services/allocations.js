@@ -72,7 +72,7 @@ export class AllocationService {
         `/api/v1/allocations/groups`,
         {ids},
         {withCredentials: true}
-      )).data.body.allocations;
+      )).data.body;
     } catch (e) {
       console.warn (`Error fetching camps ${e.stack}`);
     }
