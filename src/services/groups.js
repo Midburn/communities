@@ -6,16 +6,6 @@ import {EventsService} from './events';
 export class GroupsService {
   eventService = new EventsService ();
 
-  async getGroup (id) {
-    try {
-      return (await axios.get (`/api/v1/spark/camps/${id}`, {
-        withCredentials: true,
-      })).data.body.camp;
-    } catch (e) {
-      console.warn (`Error fetching camps ${e.stack}`);
-    }
-  }
-
   async getOpenCamps () {
     try {
       return (await axios.get ('/api/v1/spark/camps/open', {
@@ -82,12 +72,20 @@ export class GroupsService {
 
   async getUserGroups (eventId) {
     try {
-      return (await axios.get (
-        `/api/v1/spark/usersGroups?eventId=${eventId || ''}`,
-        {withCredentials: true}
-      )).data.body;
+      const memberships = (await this.getGroupMembers ({
+        user_id: state.loggedUser.user_id,
+      })).members;
+      const groupResponses = await Promise.all (
+        memberships.map (m => this.getGroup (m.group_id))
+      );
+
+      const a = groupResponses.filter (
+        res => res && res.event_id === (eventId || state.currentEventId)
+      );
+      console.log (a);
+      return a;
     } catch (e) {
-      console.warn (`Error fetching camp members ${e.stack}`);
+      console.warn ('Error getting users groups');
     }
   }
 
@@ -105,18 +103,6 @@ export class GroupsService {
     }
   }
 
-  async sparkGroupMemberAction (groupId, memberId, actionType, eventId) {
-    try {
-      return (await axios.get (
-        `/api/v1/spark/camps/${groupId}/members/${memberId}/${actionType}?eventId=${eventId || ''}`,
-        {withCredentials: true}
-      )).data.body;
-    } catch (e) {
-      console.warn (`Error performing action - ${actionType} - ${e.stack}`);
-      throw e;
-    }
-  }
-
   getPropertyByLang (group, propName) {
     if (!group || !propName) {
       return '';
@@ -125,10 +111,10 @@ export class GroupsService {
     const isHeb = lng === 'he';
     switch (propName) {
       case 'name':
-        propName = isHeb ? 'camp_name_he' : 'camp_name_en';
+        propName = isHeb ? 'group_name_he' : 'group_name_en';
         break;
       case 'description':
-        propName = isHeb ? 'camp_desc_he' : 'camp_desc_en';
+        propName = isHeb ? 'group_desc_he' : 'group_desc_en';
         break;
       default:
         break;
@@ -159,19 +145,6 @@ export class GroupsService {
     }
   }
 
-  async getPresaleAllocationGroups () {
-    try {
-      const groups = (await this.getUserGroups (
-        this.eventService.getFormerEventId ()
-      )).groups;
-      return await Promise.all (
-        groups.map (group => this.getGroup (group.group_id))
-      );
-    } catch (e) {
-      console.warn ('Error getting allocation data');
-    }
-  }
-
   async updatePresaleQuota (groups, group_type, eventId) {
     if (!groups || !Array.isArray (groups)) {
       console.warn ('Must specify groups for allocating presale tickets');
@@ -191,6 +164,15 @@ export class GroupsService {
   /**
      * GROUPS CRUD
      */
+  async getGroup (id) {
+    try {
+      return (await axios.get (`/api/v1/groups/${id}`, {
+        withCredentials: true,
+      })).data.body.group;
+    } catch (e) {
+      console.warn (`Error fetching camps ${e.stack}`);
+    }
+  }
 
   async getGroups (groups, params) {
     if (!groups || !Array.isArray (groups)) {
@@ -245,14 +227,10 @@ export class GroupsService {
 
   // Group members
 
-  async getGroupMembers (groupId, params) {
-    if (!groupId) {
-      console.warn ('Must specify groupId!');
-      return;
-    }
+  async getGroupMembers (params) {
     try {
       return (await axios.get (
-        `/api/v1/groups/${groupId}/members`,
+        `/api/v1/groups/members`,
         {params},
         {withCredentials: true}
       )).data.body;

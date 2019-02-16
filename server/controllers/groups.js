@@ -9,6 +9,7 @@ module.exports = class GroupsController {
     };
     this.config = services.config;
     this.getGroups = this.getGroups.bind (this);
+    this.getGroup = this.getGroup.bind (this);
     this.createGroups = this.createGroups.bind (this);
     this.updateGroups = this.updateGroups.bind (this);
     this.getGroupMembers = this.getGroupMembers.bind (this);
@@ -43,6 +44,32 @@ module.exports = class GroupsController {
         ],
       });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
+    } catch (e) {
+      next (
+        new GenericResponse (
+          constants.RESPONSE_TYPES.ERROR,
+          new Error (`Failed fetching groups- ${e.stack}`)
+        )
+      );
+    }
+  }
+
+  async getGroup (req, res, next) {
+    try {
+      if (!req.params.groupId) {
+        throw new Error ('Must send groupId param!');
+      }
+      const group = await services.db.Groups.findByPk (req.params.groupId, {
+        include: [
+          {
+            model: services.db.GroupMembers,
+            as: 'members',
+            where: this.DEFAULT_WHERE_OPTIONS,
+            required: false,
+          },
+        ],
+      });
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {group}));
     } catch (e) {
       next (
         new GenericResponse (
@@ -170,17 +197,16 @@ module.exports = class GroupsController {
     try {
       const where = this.addQueryParamsToWhere (req.query, {
         ...this.DEFAULT_WHERE_OPTIONS,
-        group_id: req.params.groupId,
       });
-      const groups = await services.db.GroupMembers.findAll ({
+      const members = await services.db.GroupMembers.findAll ({
         where,
       });
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {members}));
     } catch (e) {
       next (
         new GenericResponse (
           constants.RESPONSE_TYPES.ERROR,
-          new Error (`Failed fetching groups- ${e.stack}`)
+          new Error (`Failed fetching members- ${e.stack}`)
         )
       );
     }

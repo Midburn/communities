@@ -42,6 +42,12 @@ class DatabaseService {
       this.sequelize,
       Sequelize
     );
+
+    this.Groups.hasMany (this.GroupMembers, {
+      as: 'members',
+      foreignKey: 'group_id',
+    });
+
     // DO NOT USE FORCE TRUE - this will recreate the data base
     return await this.sequelize.sync ({force: false});
   }
