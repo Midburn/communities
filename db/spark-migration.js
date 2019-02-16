@@ -1,6 +1,7 @@
 const Sequelize = require ('sequelize');
 const Models = require ('./models');
 const constants = require ('../models/constants');
+const args = require ('args');
 
 async function getCommunitiesDb (config) {
   console.log (
@@ -116,21 +117,30 @@ async function getGroupMembersData (group, members) {
  * Starting function
  */
 (async function () {
+  args
+    .option ('spark-host', 'Spark db host', 'localhost')
+    .option ('spark-user', 'Spark db user', 'spark')
+    .option ('spark-db', 'Spark db name', 'spark')
+    .option ('spark-pass', 'Spark db password', 'spark')
+    .option ('com-host', 'Communities db host', 'localhost')
+    .option ('com-user', 'Communities db user', 'root')
+    .option ('com-db', 'Communities db name', 'communities')
+    .option ('com-pass', 'Communities db password');
+  const flags = args.parse (process.argv);
   try {
-    const communitiesConfig = {
-      username: process.env.MYSQL_DB_USERNAME || 'root',
-      password: process.env.MYSQL_LOCAL_DB_PASS,
-      database: process.env.MYSQL_DB_NAME || 'communities',
-      port: process.env.MYSQL_DB_PORT || 3306,
-      host: process.env.MYSQL_DB_HOST || 'localhost',
+    const sparkConfig = {
+      username: flags.sparkUser,
+      password: flags.sparkPass,
+      database: flags.sparkDb,
+      host: flags.sparkHost,
       dialect: 'mysql',
     };
-    const sparkConfig = {
-      dialect: process.env.SPARK_DB_CLIENT || 'mysql',
-      host: process.env.SPARK_DB_HOSTNAME || 'localhost',
-      database: process.env.SPARK_DB_DBNAME || 'spark',
-      username: process.env.SPARK_DB_USER || 'spark',
-      password: process.env.SPARK_DB_PASSWORD || 'spark',
+    const communitiesConfig = {
+      dialect: 'mysql',
+      host: flags.comHost,
+      database: flags.comDb,
+      username: flags.comUser,
+      password: flags.comPass,
     };
     const communitiesDb = await getCommunitiesDb (communitiesConfig);
     const sparkDb = await getSparkDb (sparkConfig);
@@ -161,7 +171,9 @@ async function getGroupMembersData (group, members) {
     }
     console.log (`Migrated ${results.success.length} groups`);
     console.log (`Faild ${results.failure.length} groups`);
+    process.exit (0);
   } catch (e) {
     console.warn (e.stack);
+    process.exit (1);
   }
 }) ();
