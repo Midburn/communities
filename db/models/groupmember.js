@@ -1,16 +1,39 @@
-'use strict';
+const constants = require ('../../models/constants');
+
 module.exports = (sequelize, DataTypes) => {
-  const GroupMember = sequelize.define('GroupMember', {
-    user_id: DataTypes.INTEGER,
-    role: DataTypes.STRING,
-  }, {});
-  GroupMember.associate = function(models) {
-    models.GroupMember.belongsTo(models.Group, {
+  const GroupMember = sequelize.define (
+    'GroupMember',
+    {
+      record_status: {
+        type: DataTypes.ENUM,
+        values: [
+          constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+          constants.DB_RECORD_STATUS_TYPES.DELETED,
+        ],
+        defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+        allowNull: false,
+      },
+      user_id: DataTypes.INTEGER,
+      role: DataTypes.STRING,
+      group_id: {
+        type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'Groups',
+          key: 'id',
+        },
+      },
+    },
+    {}
+  );
+  GroupMember.associate = function (models) {
+    models.GroupMember.belongsTo (models.Group, {
       onDelete: 'CASCADE',
-      foreignKey: { 
+      foreignKey: {
         allowNull: false,
         fieldName: 'GroupId',
-       }
+      },
     });
   };
   return GroupMember;
