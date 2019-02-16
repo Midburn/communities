@@ -53,6 +53,9 @@ module.exports = {
         defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
         allowNull: false,
       },
+      event_id: {
+        type: Sequelize.STRING,
+      },
       group_status: {
         type: Sequelize.ENUM,
         values: [

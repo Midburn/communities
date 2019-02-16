@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
       contact_person_id: {
         type: DataTypes.INTEGER,
       },
+      event_id: {
+        type: DataTypes.STRING,
+      },
       record_status: {
         type: DataTypes.ENUM,
         values: [
