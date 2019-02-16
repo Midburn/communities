@@ -220,7 +220,7 @@ import {Loader} from '../../Loader';
       }
     }
     const baseSums = {
-      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
+      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: (members || []).length,
     };
     const preSaleSums = presale
       ? {
@@ -242,7 +242,7 @@ import {Loader} from '../../Loader';
 
   get CSVdata () {
     const {presale, t, members} = this.props;
-    return members.map (member => {
+    return (members || []).map (member => {
       const baseData = {
         [t (`${this.TRANSLATE_PREFIX}.columns.name`)]: member.name,
         [t (`${this.TRANSLATE_PREFIX}.columns.email`)]: member.email,
@@ -335,7 +335,7 @@ import {Loader} from '../../Loader';
             </tr>
           </TableHead>
           <TableBody>
-            {members.map (member => {
+            {(members || []).map (member => {
               return (
                 <tr key={member.user_id}>
                   <td>{(member.info || {}).name}</td>
