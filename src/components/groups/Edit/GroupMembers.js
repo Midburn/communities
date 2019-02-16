@@ -205,7 +205,6 @@ import {Loader} from '../../Loader';
       for (const member of members) {
         allPurchasedTicketsCount +=
           this.getMemberTicketCount (member.user_id) || 0;
-        // allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
         totalAllocated += this.getMemberAllocationId (
           member.user_id,
           constants.ALLOCATION_TYPES.PRE_SALE,
