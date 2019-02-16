@@ -118,11 +118,11 @@ async function getGroupMembersData (group, members) {
  */
 async function Migrate () {
   args
-    .option ('spark-host', 'Spark db host', 'localhost')
+    .option ('spark-host', 'Spark db host', 'sparkdb')
     .option ('spark-user', 'Spark db user', 'spark')
     .option ('spark-db', 'Spark db name', 'spark')
     .option ('spark-pass', 'Spark db password', 'spark')
-    .option ('com-host', 'Communities db host', 'localhost')
+    .option ('com-host', 'Communities db host', 'communitiesdb')
     .option ('com-user', 'Communities db user', 'root')
     .option ('com-db', 'Communities db name', 'communities')
     .option ('com-pass', 'Communities db password');
@@ -132,12 +132,12 @@ async function Migrate () {
       username: flags.sparkUser || process.env.SPARK_DB_USER || 'spark',
       password: flags.sparkPass || process.env.SPARK_DB_PASSWORD || 'spark',
       database: flags.sparkDb || process.env.SPARK_DB_DBNAME || 'spark',
-      host: flags.sparkHost || process.env.SPARK_DB_HOSTNAME || 'localhost',
+      host: flags.sparkHost || process.env.SPARK_DB_HOSTNAME || 'sparkdb',
       dialect: 'mysql',
     };
     const communitiesConfig = {
       dialect: 'mysql',
-      host: flags.comHost || process.env.MYSQL_DB_HOST || 'localhost',
+      host: flags.comHost || process.env.MYSQL_DB_HOST || 'communitiesdb',
       database: flags.comDb || process.env.MYSQL_DB_NAME || 'communities',
       username: flags.comUser || process.env.MYSQL_DB_USERNAME || 'root',
       password: flags.comPass || process.env.MYSQL_DB_PASSWORD,
