@@ -17,16 +17,6 @@ export class GroupsService {
     }
   }
 
-  async getCampsMembersCount (campId) {
-    try {
-      return (await axios.get (`/api/v1/spark/camps/${campId}/members/count`, {
-        withCredentials: true,
-      })).data.body.members;
-    } catch (e) {
-      console.warn (`Error fetching camp members ${e.stack}`);
-    }
-  }
-
   async getCampsMembersTickets (campId, eventId) {
     try {
       return (await axios.get (
@@ -37,7 +27,6 @@ export class GroupsService {
       console.warn (`Error fetching camp members ${e.stack}`);
     }
   }
-
   async getAllCampsMembersTickets (ids, eventId) {
     try {
       return (await axios.post (

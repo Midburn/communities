@@ -38,7 +38,7 @@ class BaseGroupsTable extends React.Component {
     const {t, groups} = this.props;
     let membersSum = 0;
     for (const group of groups) {
-      membersSum += group.members_count || 0;
+      membersSum += (group.members || []).length || 0;
     }
     return {
       [t (`${this.TRANSLATE_PREFIX}.sums.groups`)]: groups.length,
@@ -63,7 +63,8 @@ class BaseGroupsTable extends React.Component {
         [t (
           `${this.TRANSLATE_PREFIX}.table.leaderPhone`
         )]: this.getManagerProp (g, 'cell_phone'),
-        [t (`${this.TRANSLATE_PREFIX}.table.totalMembers`)]: g.members_count,
+        [t (`${this.TRANSLATE_PREFIX}.table.totalMembers`)]: (g.members || [])
+          .length,
         [t (`${this.TRANSLATE_PREFIX}.table.totalPurchased`)]: (g.tickets || [])
           .length,
       };
