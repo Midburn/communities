@@ -1,22 +1,24 @@
-const Router = require('express').Router;
-const controllers = require('../controllers');
+const Router = require ('express').Router;
+const controllers = require ('../controllers');
 
 module.exports = class UsersRouter {
+  constructor () {
+    this.router = new Router ();
+    this.initMiddleware ();
+    this.initRoutes ();
+  }
 
-    constructor() {
-        this.router = new Router();
-        this.initMiddleware();
-        this.initRoutes();
-    }
+  initMiddleware () {
+    // Version Router level middlewares
+  }
 
-    initMiddleware() {
-        // Version Router level middlewares
-    }
-
-    initRoutes() {
-        /**
+  initRoutes () {
+    /**
          * E.G - /api/VERSION/spark/camps/open
          */
-        this.router.get('/spark/users/:id/name', controllers.users.getUserNameById);
-    }
+    this.router.get (
+      '/spark/users/:id/name',
+      controllers.users.getUserNameById
+    );
+  }
 };

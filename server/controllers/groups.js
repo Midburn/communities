@@ -26,6 +26,26 @@ module.exports = class GroupsController {
     return updatedWhere;
   }
 
+  async getMembersInfo (members, req) {
+    const sparkMembers = [];
+    for (let member of members) {
+      member = member.toJSON ();
+      try {
+        member.info = (await services.spark.get (
+          `users/${member.user_id}`,
+          req
+        )).data;
+      } catch (e) {
+        members.info = {
+          e: 'Error fetching data from spark',
+          message: e.message,
+        };
+      }
+      sparkMembers.push (member);
+    }
+    return sparkMembers;
+  }
+
   async getGroups (req, res, next) {
     try {
       const where = this.addQueryParamsToWhere (
@@ -43,7 +63,17 @@ module.exports = class GroupsController {
           },
         ],
       });
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
+      const parsedGroups = [];
+      for (const group of groups) {
+        const parsedGroup = group.toJSON ();
+        parsedGroup.members = await this.getMembersInfo (group.members, req);
+        parsedGroups.push (parsedGroup);
+      }
+      next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+          groups: parsedGroups,
+        })
+      );
     } catch (e) {
       next (
         new GenericResponse (
@@ -69,7 +99,13 @@ module.exports = class GroupsController {
           },
         ],
       });
-      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {group}));
+      const parsedGroup = group.toJSON ();
+      parsedGroup.members = await this.getMembersInfo (group.members, req);
+      next (
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+          group: parsedGroup,
+        })
+      );
     } catch (e) {
       next (
         new GenericResponse (

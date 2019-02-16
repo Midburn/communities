@@ -53,15 +53,16 @@ class BaseGroupsTable extends React.Component {
         [t (
           `${this.TRANSLATE_PREFIX}.table.groupName`
         )]: this.groupsService.getPropertyByLang (g, 'name'),
-        [t (`${this.TRANSLATE_PREFIX}.table.leaderName`)]: this.getManagerName (
-          g
+        [t (`${this.TRANSLATE_PREFIX}.table.leaderName`)]: this.getManagerProp (
+          g,
+          'name'
         ),
         [t (
           `${this.TRANSLATE_PREFIX}.table.leaderEmail`
-        )]: this.getManagerEmail (g),
+        )]: this.getManagerProp (g, 'email'),
         [t (
           `${this.TRANSLATE_PREFIX}.table.leaderPhone`
-        )]: this.getManagerPhone (g),
+        )]: this.getManagerProp (g, 'cell_phone'),
         [t (`${this.TRANSLATE_PREFIX}.table.totalMembers`)]: g.members_count,
         [t (`${this.TRANSLATE_PREFIX}.table.totalPurchased`)]: (g.tickets || [])
           .length,
@@ -137,44 +138,34 @@ class BaseGroupsTable extends React.Component {
   /**
    * Methods relevant to getting manager details
    */
-  getManagerName (group) {
+  getManagerProp (group, propName) {
     if (!group || !group.members) {
       return ' ';
     }
-    // We might have empty data in managers name - so we need to try and fetch it from several places
-    return group.manager.name || this.extractNameFromJSON (group.manager);
-  }
-
-  extractNameFromJSON (manager) {
-    try {
-      const extraData = JSON.parse (manager.json);
-      return `${extraData.drupal_data.address.first_name} ${extraData.drupal_data.address.last_name}`;
-    } catch (e) {
-      return ' ';
+    const manager = group.members.find (
+      member => member.role === constants.GROUP_STATIC_ROLES.LEADER
+    );
+    if (manager) {
+      return manager.info[propName];
+    } else {
+      return '';
     }
-  }
-
-  getManagerPhone (group) {
-    return group && group.manager ? group.manager.phone : ' ';
-  }
-
-  getManagerEmail (group) {
-    return group && group.manager ? group.manager.email : ' ';
   }
 
   getManagerExtraDetails (group) {
-    if (!group || !group.manager) {
-      return ' ';
-    }
     return (
       <div>
         <div className="d-flex align-items-center">
           <FiPhone />
-          <span className="ml-2 mr-2">{this.getManagerPhone (group)}</span>
+          <span className="ml-2 mr-2">
+            {this.getManagerProp (group, 'cell_phone')}
+          </span>
         </div>
         <div className="d-flex align-items-center">
           <MdMailOutline />
-          <span className="ml-2 mr-2">{this.getManagerEmail (group)}</span>
+          <span className="ml-2 mr-2">
+            {this.getManagerProp (group, 'email')}
+          </span>
         </div>
       </div>
     );
@@ -255,7 +246,7 @@ class BaseGroupsTable extends React.Component {
                   </td>
                   <td>
                     <DataHoverCard
-                      title={this.getManagerName (g)}
+                      title={this.getManagerProp (g, 'name')}
                       panel={this.getManagerExtraDetails (g)}
                     />
                   </td>
