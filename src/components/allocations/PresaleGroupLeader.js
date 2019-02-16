@@ -189,7 +189,7 @@ import {action} from 'mobx/lib/mobx';
   get chartData () {
     const {t} = this.props;
     let totalAllocated = 0;
-    for (const member of this.group.members) {
+    for (const member of this.group.members || []) {
       totalAllocated += this.getMemberAllocationId (
         member.user_id,
         constants.ALLOCATION_TYPES.PRE_SALE,
