@@ -195,8 +195,8 @@ import {BarChartCard} from '../controls/BarChartCard';
       if (!update || !update.length) {
         return;
       }
-      await this.groupService.updatePresaleQuota (
-        update,
+      await this.allocationsService.publishAdminsAllocations (
+        constants.ALLOCATION_TYPES.PRE_SALE,
         this.parsingService.getGroupTypeFromString (match.params.groupType)
       );
       await this.auditService.setAudit (
