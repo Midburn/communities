@@ -11,6 +11,7 @@ module.exports = class GroupsController {
     this.getGroups = this.getGroups.bind (this);
     this.createGroups = this.createGroups.bind (this);
     this.updateGroups = this.updateGroups.bind (this);
+    this.getGroupMembers = this.getGroupMembers.bind (this);
     this.addGroupMembers = this.addGroupMembers.bind (this);
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
   }
@@ -158,6 +159,28 @@ module.exports = class GroupsController {
         new GenericResponse (
           constants.RESPONSE_TYPES.ERROR,
           new Error (`Failed updating groups- ${e.stack}`)
+        )
+      );
+    }
+  }
+
+  // GROUP MEMBERS
+
+  async getGroupMembers (req, res, next) {
+    try {
+      const where = this.addQueryParamsToWhere (req.query, {
+        ...this.DEFAULT_WHERE_OPTIONS,
+        group_id: req.params.groupId,
+      });
+      const groups = await services.db.GroupMembers.findAll ({
+        where,
+      });
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {groups}));
+    } catch (e) {
+      next (
+        new GenericResponse (
+          constants.RESPONSE_TYPES.ERROR,
+          new Error (`Failed fetching groups- ${e.stack}`)
         )
       );
     }

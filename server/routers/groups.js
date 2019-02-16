@@ -29,6 +29,7 @@ module.exports = class GroupRouter {
          */
     this.router
       .route ('/groups/:groupId/members')
+      .get (this.controller.getGroupMembers)
       .post (this.controller.addGroupMembers)
       .delete (this.controller.removeGroupMembers);
   }
