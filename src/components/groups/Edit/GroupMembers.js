@@ -193,13 +193,12 @@ import {Loader} from '../../Loader';
   }
 
   get tableSums () {
-    const {t, members, presale, group} = this.props;
+    const {t, members, presale} = this.props;
     let allPurchasedTicketsCount = 0, totalAllocated = 0;
     if (presale) {
       for (const member of members) {
         allPurchasedTicketsCount +=
           this.getMemberTicketCount (member.user_id) || 0;
-        // allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
         totalAllocated += this.getMemberAllocationId (
           member.user_id,
           constants.ALLOCATION_TYPES.PRE_SALE,
