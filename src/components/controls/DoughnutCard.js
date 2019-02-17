@@ -60,7 +60,7 @@ export const DoughnutCard = ({data, note, className}) => {
                         {data.map(stat => {
                             return (
                                 stat.focus ? <div key={stat.label}>
-                                        <h5>{stat.label}</h5>
+                                        <div className="FocusAreaLabel">{stat.label}</div>
                                         <div className="FocusLine"></div>
                                     </div>
                                     : null

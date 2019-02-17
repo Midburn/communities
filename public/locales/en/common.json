@@ -116,7 +116,8 @@
       "presale": "Presale ticket allocated?",
       "tickets": "Purchased tickets",
       "ticketsTransferred": "Transferred tickets",
-      "allowToAllocate": "Allow this member to allocate tickets"
+      "allowToAllocate": "Allow this member to allocate tickets",
+      "additionalVolunteering": "Additional volunteering"
     },
     "sums": {
       "ticketsAll": "Purchased tickets",

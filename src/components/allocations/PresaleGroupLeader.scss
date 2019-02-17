@@ -1,0 +1,33 @@
+@import "../../styles/colors";
+
+.PresaleGroupLeader {
+  .group-header-name {
+    font-size: 40px;
+  }
+  .allocation-description-primary {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .allocation-description {
+    font-size: 14px;
+  }
+  .allocation-help {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .mailto-help-link {
+    margin: 0 5px;
+  }
+  .last-update-text {
+    font-size: 13px;
+    color: $dark-gray;
+    margin-left: 7px;
+  }
+  .last-updated-text-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

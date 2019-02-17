@@ -37,13 +37,19 @@
       margin: 0 0.3rem;
     }
     .FocusArea {
-      h5 {
+      .FocusAreaLabel {
         background-color: white;
         position: relative;
         z-index: 6;
         font-size: 1.7rem;
         width: fit-content;
-        word-break: break-all;
+
+        width: 81px;
+        height: 40px;
+        font-family: Rubik;
+        font-size: 14px;
+        font-weight: bold;
+        text-align: right;
       }
     }
     .NoteArea, .LegendArea {

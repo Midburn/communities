@@ -19,6 +19,7 @@ import { DoughnutCard } from '../controls/DoughnutCard';
 import { isMobileOnly } from "react-device-detect";
 import { SearchInput } from '../controls/SearchInput';
 import { action } from 'mobx/lib/mobx';
+import './PresaleGroupLeader.scss';
 
 @observer
 class BaseDGSGroupLeader extends React.Component {
@@ -255,12 +256,15 @@ class BaseDGSGroupLeader extends React.Component {
                     format={'DD/MM/YYYY, HH:mm:ss'}>{this.eventRules.lastDateToAllocatePreSale}</Moment>
         </div>;
         return (
-            <div>
+            <div className="PresaleGroupLeader">
                 <Row>
-                    <Col md="6">
-                        <h1 className="h1-responsive">{t(`${this.TRANSLATE_PREFIX}.header`)} - {this.groupService.getPropertyByLang(this.group, 'name')}</h1>
+                    <Col md="7">
+                      <h1 className="h1-responsive group-header-name">{t(`${this.TRANSLATE_PREFIX}.header`)} <span className="text-blue">{this.groupService.getPropertyByLang(this.group, 'name')}</span></h1>
+                      <b className="allocation-description-primary">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</b>
+                      <div className="allocation-description">{t(`${this.TRANSLATE_PREFIX}.descriptionSecondary`)}</div>
+                      <div className="allocation-help"><span>{t(`${this.TRANSLATE_PREFIX}.needHelp`)}</span><a href="mailto:support@midburn.org" className="mailto-help-link">{t(`${this.TRANSLATE_PREFIX}.mailtoLink`)}</a></div>
                     </Col>
-                    <Col md="6">
+                    <Col md="5">
                         <PermissableComponent permitted={!isMobileOnly}>
                             <DoughnutCard data={this.chartData} note={AllocationLastDate}/>
                         </PermissableComponent>
@@ -268,7 +272,7 @@ class BaseDGSGroupLeader extends React.Component {
                 </Row>
                 <Row>
                     <Col md="12">
-                        <p className="p-1">{t(`${this.TRANSLATE_PREFIX}.description`)} ({this.eventsService.getFormerEventId()})</p>
+
                     </Col>
                 </Row>
 
@@ -279,10 +283,12 @@ class BaseDGSGroupLeader extends React.Component {
                     </Col>
                     <Col md="6">
                         <PermissableComponent permitted={this.lastAudit}>
-                            <span>{t(`lastUpdate`)}: </span>
-                            <Moment className="pl-2 pr-2"
+                          <div className="last-updated-text-container">
+                            <span className="last-update-text">{t(`lastUpdate`)}: </span>
+                            <Moment className="last-update-text"
                                     format={'DD/MM/YYYY, HH:mm:ss'}>{this.lastAudit}</Moment>
-                            <span className="pl-2 pr-2">{t('by')}: </span><span>{this.auditedUser.name}</span>
+                            <span className="last-update-text">{t('by')}: </span><span className="last-update-text">{this.auditedUser.name}</span>
+                          </div>
                         </PermissableComponent>
                     </Col>
                 </Row>

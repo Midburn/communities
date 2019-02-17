@@ -210,12 +210,14 @@ class BaseGroupMembers extends React.Component {
                 [t(`${this.TRANSLATE_PREFIX}.columns.phone`)]: member.cell_phone
             };
             const preSaleData = presale ? {
-                [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
+                // [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: 'TBD',//this.getMemberTicketCount(member.user_id),
+                // [t(`${this.TRANSLATE_PREFIX}.columns.tickets`)]: this.getMemberTicketCount(member.user_id),
                 // [t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)]: this.getMemberTransfferedTicketCount(member.user_id),
                 [t(`${this.TRANSLATE_PREFIX}.columns.presale`)]: this.getMemberAllocationId(member.user_id,
                     constants.ALLOCATION_TYPES.PRE_SALE,
                     true),
-                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberPermission(member.user_id)
+                [t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)]: this.getMemberPermission(member.user_id),
+                [t(`${this.TRANSLATE_PREFIX}.columns.additionalVolunteering`)]: false,//this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)
             } : {};
             return {...baseData, ...preSaleData}
         })
@@ -226,6 +228,9 @@ class BaseGroupMembers extends React.Component {
         if (memberId === group.main_contact) {
             // This is the camp manager - can't change his permissions.
             return true;
+        }
+        if (this.permissionsService.isAdmin()) {
+            return false //a little hacky
         }
         return permissions && !permissions.some(permission => {
             return permission.permission_type === constants.PERMISSION_TYPES.GIVE_PERMISSION &&
@@ -260,9 +265,9 @@ class BaseGroupMembers extends React.Component {
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.name`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.email`)}</th>
                             <th>{t(`${this.TRANSLATE_PREFIX}.columns.phone`)}</th>
-                            <PermissableComponent permitted={presale}>
-                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.tickets`)}</th>
-                            </PermissableComponent>
+                            {/*<PermissableComponent permitted={presale}>*/}
+                                {/*<th>{t(`${this.TRANSLATE_PREFIX}.columns.tickets`)}</th>*/}
+                            {/*</PermissableComponent>*/}
                             {/*<PermissableComponent permitted={presale}>*/}
                                 {/*<th>{t(`${this.TRANSLATE_PREFIX}.columns.ticketsTransferred`)}</th>*/}
                             {/*</PermissableComponent>*/}
@@ -271,6 +276,9 @@ class BaseGroupMembers extends React.Component {
                             </PermissableComponent>
                             <PermissableComponent permitted={presale}>
                                 <th>{t(`${this.TRANSLATE_PREFIX}.columns.allowToAllocate`)}</th>
+                            </PermissableComponent>
+                            <PermissableComponent permitted={presale}>
+                                <th>{t(`${this.TRANSLATE_PREFIX}.columns.additionalVolunteering`)}</th>
                             </PermissableComponent>
                         </tr>
                     </TableHead>
@@ -281,11 +289,11 @@ class BaseGroupMembers extends React.Component {
                                     <td>{member.name}</td>
                                     <td>{member.email}</td>
                                     <td>{member.cell_phone}</td>
-                                    <PermissableComponent permitted={ticketCount}>
-                                        <td>
-                                            {this.getMemberTicketCount(member.user_id)}
-                                        </td>
-                                    </PermissableComponent>
+                                    {/*<PermissableComponent permitted={ticketCount}>*/}
+                                        {/*<td>*/}
+                                            {/*{this.getMemberTicketCount(member.user_id)}*/}
+                                        {/*</td>*/}
+                                    {/*</PermissableComponent>*/}
                                     {/*<PermissableComponent permitted={ticketCount}>*/}
                                         {/*<td>*/}
                                             {/*{this.getMemberTransfferedTicketCount(member.user_id)}*/}
@@ -306,11 +314,19 @@ class BaseGroupMembers extends React.Component {
                                         </td>
                                     </PermissableComponent>
                                     <PermissableComponent permitted={presale}>
-                                        <td className="d-flex justify-content-center">
+                                        <td>
                                             <input
                                                 disabled={this.isChangePermissionsDisabled(member.user_id)}
                                                 onChange={(e) => this.changeMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
                                                 checked={this.getMemberPermission(member.user_id, constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET)}
+                                                type="checkbox"/>
+                                        </td>
+                                    </PermissableComponent>
+                                    <PermissableComponent permitted={presale}>
+                                        <td>
+                                            <input
+                                                disabled={true}
+                                                defaultChecked={this.isAllocatedByDifferentGroup(member.user_id, constants.ALLOCATION_TYPES.PRE_SALE, true)}
                                                 type="checkbox"/>
                                         </td>
                                     </PermissableComponent>

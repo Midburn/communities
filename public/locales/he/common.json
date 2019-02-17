@@ -108,8 +108,8 @@
     },
     "charts": {
       "allocationsUsage": "שימוש בהקצאות",
-      "allocationsUsed": "הקצאות ששומשו",
-      "allocationsLeft": "הקצאות שנותרו",
+      "allocationsUsed": "הקצאות ששויכו",
+      "allocationsLeft": "הקצאות שטרם שויכו",
       "membersTickets": "חלוקת כרטיסים",
       "membersWithTickets": "חברים/ות עם כרטיס",
       "membersWithoutTickets": "חברים/ות ללא כרטיס"
@@ -119,13 +119,14 @@
       "text": "הגעת למכסה שהוקצבה לך, אתה יכול להעביר הקצאות אך לא להוסיף."
     },
     "columns": {
-      "name": "שם מלא",
-      "email": "כתובת אימייל",
-      "phone": "מספר טלפון",
-      "presale": "הוקצה כרטיס הוקרה?",
+      "name": "שם",
+      "email": "אימייל",
+      "phone": "טלפון",
+      "presale": "הקצה כרטיס הוקרה",
+      "allowToAllocate": "הרשאה למתן הקצאות",
+      "additionalVolunteering": "האם רשום/ה בעוד התנדבות?",
       "tickets": "כרטיסים שנרכשו",
-      "ticketsTransferred": "כרטיסים שהועברו",
-      "allowToAllocate": "אשר להקצות כרטיסים"
+      "ticketsTransferred": "כרטיסים שהועברו"
     },
     "sums": {
       "ticketsAll": "כרטיסים שנרכשו",

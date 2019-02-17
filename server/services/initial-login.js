@@ -27,7 +27,6 @@ class InitialLoginService {
                 user_id: sparkUser.user_id,
                 logged: true
             });
-            return;
         }
         await this.initCampManagerPermissions(sparkUser, req);
         await db.LoggedUsers.upsert({
