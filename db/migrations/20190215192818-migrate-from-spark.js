@@ -1,7 +1,6 @@
 const Sequelize = require ('sequelize');
 const Models = require ('../models');
 const constants = require ('../../models/constants');
-const args = require ('args');
 
 async function getCommunitiesDb (config) {
   console.log (
@@ -117,35 +116,25 @@ async function getGroupMembersData (group, members) {
  * Starting function
  */
 async function Migrate () {
-  args
-    .option ('spark-host', 'Spark db host', 'sparkdb')
-    .option ('spark-user', 'Spark db user', 'spark')
-    .option ('spark-db', 'Spark db name', 'spark')
-    .option ('spark-pass', 'Spark db password', 'spark')
-    .option ('com-host', 'Communities db host', 'communitiesdb')
-    .option ('com-user', 'Communities db user', 'root')
-    .option ('com-db', 'Communities db name', 'communities')
-    .option ('com-pass', 'Communities db password');
-  const flags = args.parse (process.argv);
-  const isLocal = process.argv.includes ('local');
-  try {
+    const isLocal = process.argv.includes ('local');
+    try {
     const sparkConfig = {
-      username: flags.sparkUser || process.env.SPARK_DB_USER || 'spark',
-      password: flags.sparkPass || process.env.SPARK_DB_PASSWORD || 'spark',
-      database: flags.sparkDb || process.env.SPARK_DB_DBNAME || 'spark',
-      host: flags.sparkHost || process.env.SPARK_DB_HOSTNAME || isLocal
-        ? 'localhost'
-        : 'sparkdb',
+      username: process.env.SPARK_DB_USER || 'spark',
+      password: process.env.SPARK_DB_PASSWORD || 'spark',
+      database: process.env.SPARK_DB_DBNAME || 'spark',
+      host: process.env.SPARK_DB_HOSTNAME || process.env.SPARK_DB_HOSTNAME || isLocal
+          ? 'localhost'
+          : 'sparkdb',
       dialect: 'mysql',
     };
     const communitiesConfig = {
       dialect: 'mysql',
-      host: flags.comHost || process.env.MYSQL_DB_HOST || isLocal
-        ? 'localhost'
-        : 'communitiesdb',
-      database: flags.comDb || process.env.MYSQL_DB_NAME || 'communities',
-      username: flags.comUser || process.env.MYSQL_DB_USERNAME || 'root',
-      password: flags.comPass || process.env.MYSQL_DB_PASSWORD,
+      host: process.env.MYSQL_DB_HOST || isLocal
+          ? 'localhost'
+          : 'communitiesdb',
+      database: process.env.MYSQL_DB_NAME || 'communities',
+      username: process.env.MYSQL_DB_USERNAME || 'root',
+      password: process.env.MYSQL_DB_PASSWORD,
     };
     const communitiesDb = await getCommunitiesDb (communitiesConfig);
     const sparkDb = await getSparkDb (sparkConfig);
