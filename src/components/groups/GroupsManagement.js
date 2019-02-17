@@ -11,6 +11,7 @@ import {GroupsService} from '../../services/groups';
 import {Tabs} from '../controls/Tabs';
 import {EventRulesService} from '../../services/event-rules';
 import {PermissionService} from '../../services/permissions';
+import {Loader} from '../Loader';
 
 @observer class BaseGroupsManagement extends React.Component {
   parsingService = new ParsingService ();
@@ -22,6 +23,7 @@ import {PermissionService} from '../../services/permissions';
   @observable groups = [];
 
   @observable query = '';
+  @observable loading = true;
 
   getTranslatePath (type) {
     return `${type}:management`;
@@ -73,11 +75,14 @@ import {PermissionService} from '../../services/permissions';
   async init (props) {
     try {
       const {match} = props;
+      this.loading = true;
       this.groups = (await this.groupService.getAllGroups (
         this.parsingService.getGroupTypeFromString (match.params.groupType)
       )) || [];
+      this.loading = false;
       this.getGroupsTickets ();
     } catch (e) {
+      this.loading = false;
       this.groups = [];
       // TODO - what do we do with errors?
       this.error = e;
@@ -85,24 +90,24 @@ import {PermissionService} from '../../services/permissions';
   }
 
   /**
-     * For displaying ticket count (for this event)
-     * @returns {Promise<void>}
-     */
+   * For displaying ticket count (for this event)
+   * @returns {Promise<void>}
+   */
   async getGroupsTickets () {
-    for (const group of this.groups) {
-      try {
-        const tickets = await this.groupService.getCampsMembersTickets (
-          group.id
-        );
-        if (!tickets || !tickets.length) {
-          group.tickets = [];
-        } else {
-          group.tickets = tickets;
+    try {
+      const tickets = await this.groupService.getAllCampsMembersTickets (
+        this.groups.map (g => g.id)
+      );
+      if (!tickets || !Object.keys (tickets).length) {
+        return;
+      } else {
+        for (const group of this.groups) {
+          group.tickets = tickets[group.id];
         }
-      } catch (e) {
-        // TODO - what do we do with errors?
-        group.members_count = 0;
       }
+    } catch (e) {
+      // TODO - what do we do with errors?
+      console.warn (e);
     }
   }
 
@@ -148,19 +153,23 @@ import {PermissionService} from '../../services/permissions';
     ];
     return (
       <div>
+
         <Row>
           <Col md="12">
             <h1>{t (`${this.getTranslatePath (type)}.header`)}</h1>
           </Col>
         </Row>
         <Row>
-          <Col>
-            <Tabs
-              tabs={tabs}
-              selectedId={this.activeTab}
-              onSelect={e => this.setActiveTab (e)}
-            />
-          </Col>
+          {this.loading
+            ? <Loader />
+            : <Col>
+                <Tabs
+                  tabs={tabs}
+                  selectedId={this.activeTab}
+                  onSelect={e => this.setActiveTab (e)}
+                />
+              </Col>}
+
         </Row>
       </div>
     );
