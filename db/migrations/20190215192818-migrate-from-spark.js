@@ -127,17 +127,22 @@ async function Migrate () {
     .option ('com-db', 'Communities db name', 'communities')
     .option ('com-pass', 'Communities db password');
   const flags = args.parse (process.argv);
+  const isLocal = process.argv.includes ('local');
   try {
     const sparkConfig = {
       username: flags.sparkUser || process.env.SPARK_DB_USER || 'spark',
       password: flags.sparkPass || process.env.SPARK_DB_PASSWORD || 'spark',
       database: flags.sparkDb || process.env.SPARK_DB_DBNAME || 'spark',
-      host: flags.sparkHost || process.env.SPARK_DB_HOSTNAME || 'sparkdb',
+      host: flags.sparkHost || process.env.SPARK_DB_HOSTNAME || isLocal
+        ? 'localhost'
+        : 'sparkdb',
       dialect: 'mysql',
     };
     const communitiesConfig = {
       dialect: 'mysql',
-      host: flags.comHost || process.env.MYSQL_DB_HOST || 'communitiesdb',
+      host: flags.comHost || process.env.MYSQL_DB_HOST || isLocal
+        ? 'localhost'
+        : 'communitiesdb',
       database: flags.comDb || process.env.MYSQL_DB_NAME || 'communities',
       username: flags.comUser || process.env.MYSQL_DB_USERNAME || 'root',
       password: flags.comPass || process.env.MYSQL_DB_PASSWORD,
@@ -171,16 +176,17 @@ async function Migrate () {
     }
     console.log (`Migrated ${results.success.length} groups`);
     console.log (`Faild ${results.failure.length} groups`);
-    process.exit (0);
   } catch (e) {
     console.warn (e.stack);
-    process.exit (1);
   }
 }
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return Migrate ();
+    if (!process.argv.includes ('no-spark')) {
+      return Migrate ();
+    }
+    return Promise.resolve ();
   },
   down: (queryInterface, Sequelize) => {},
 };

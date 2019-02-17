@@ -131,39 +131,31 @@ module.exports = class GroupsController {
       };
       for (const group of req.body.groups) {
         try {
-          let main_contact;
-          try {
-            main_contact = (await services.spark.get (
-              `users/email/${group.contact_person_email}`,
-              req
-            )).data;
-          } catch (e) {
-            results.failedEmails.push (group.contact_person_email);
-          }
-          if (main_contact) {
-            try {
-              await this.createMemberForNewGroup (group, main_contact);
-            } catch (e) {
-              results.failedEmails.push (group.contact_person_email);
-            }
-          }
           const existing = await services.db.Groups.findOne ({
-            where: {group_name: group.group_name},
+            where: {group_name: group.group_name, event_id: group.event_id},
           });
           let dbGroup;
           if (existing) {
             results.existing.push (group.group_name);
           } else {
+            const contacts = await this.getMembersForNewGroup (group, req);
+            group.main_contact = contacts[constants.GROUP_STATIC_ROLES.LEADER];
+            group.contact_person_id =
+              contacts[constants.GROUP_STATIC_ROLES.CONTACT];
+            group.safety_contact =
+              contacts[constants.GROUP_STATIC_ROLES.SAFETY];
+            group.moop_contact = contacts[constants.GROUP_STATIC_ROLES.MOOP];
+            group.sound_contact = contacts[constants.GROUP_STATIC_ROLES.SOUND];
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
+            await this.createMembersForNewGroup (group, contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
           results.failures.push (group.group_name);
         }
       }
-
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {results}));
     } catch (e) {
       next (
@@ -175,20 +167,59 @@ module.exports = class GroupsController {
     }
   }
 
-  async createMemberForNewGroup (group, main_contact) {
+  async getMemberIdByMail (email, req) {
     try {
-      await services.db.GroupMembers.create ({
-        GroupId: group.id,
-        role: constants.GROUP_STATIC_ROLES.LEADER,
-        user_id: main_contact.user_id,
-      });
-      console.log (main_contact);
+      return (await services.spark.get (`users/email/${email}`, req)).data;
     } catch (e) {
-      console.warn (
-        'Could not create main member for group',
-        main_contact,
-        group.group_name
-      );
+      return null;
+    }
+  }
+
+  async getMembersForNewGroup (group, req) {
+    try {
+      const contacts = {
+        [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberByMail (
+          group.contact_person_midburn_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberByMail (
+          group.contact_person_midburn_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.MOOP]: await this.getMemberByMail (
+          group.group_moop_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.SAFETY]: await this.getMemberByMail (
+          group.group_security_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.SOUND]: await this.getMemberByMail (
+          group.group_sound_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.CONTENT]: await this.getMemberByMail (
+          group.group_content_leader_email,
+          req
+        ),
+      };
+      return contacts;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  async createMembersForNewGroup (group, contacts) {
+    for (const role of contacts) {
+      try {
+        if (contacts[role]) {
+          await services.db.GroupMembers.create ({
+            GroupId: group.id,
+            role: role,
+            user_id: contacts[role],
+          });
+        }
+      } catch (e) {}
     }
   }
 
