@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       group_desc_he: {
         type: DataTypes.TEXT,
       },
-      group_character: DataTypes.STRING,
+      group_character: DataTypes.TEXT,
       accept_families: DataTypes.BOOLEAN,
       child_friendly: DataTypes.BOOLEAN,
       web_published: DataTypes.BOOLEAN,
@@ -30,6 +30,9 @@ module.exports = (sequelize, DataTypes) => {
       main_contact: {
         type: DataTypes.INTEGER,
       },
+      sound_contact: {
+        type: DataTypes.INTEGER,
+      },
       moop_contact: {
         type: DataTypes.INTEGER,
       },
@@ -40,6 +43,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
       },
       event_id: {
+        type: DataTypes.STRING,
+      },
+      dream_id: {
+        type: DataTypes.STRING,
+      },
+      camp_type: {
         type: DataTypes.STRING,
       },
       record_status: {

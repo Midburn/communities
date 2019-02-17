@@ -17,6 +17,7 @@ This application uses [Spark](https://github.com/midburn/spark) as parent applic
 
 ## Development
 ### Make sure to create a local `.env` file (see `.env.example` file)
+### Migrate db schema using `npm run migrate`
 ### Run `npm start:dev`
 
 Runs the app in the development mode.<br>
