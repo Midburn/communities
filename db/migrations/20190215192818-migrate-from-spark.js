@@ -171,10 +171,8 @@ async function Migrate () {
     }
     console.log (`Migrated ${results.success.length} groups`);
     console.log (`Faild ${results.failure.length} groups`);
-    process.exit (0);
   } catch (e) {
     console.warn (e.stack);
-    process.exit (1);
   }
 }
 
