@@ -178,27 +178,27 @@ module.exports = class GroupsController {
   async getMembersForNewGroup (group, req) {
     try {
       const contacts = {
-        [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
           group.contact_person_midburn_email,
           req
         ),
-        [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
           group.contact_person_midburn_email,
           req
         ),
-        [constants.GROUP_STATIC_ROLES.MOOP]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.MOOP]: await this.getMemberIdByMail (
           group.group_moop_leader_email,
           req
         ),
-        [constants.GROUP_STATIC_ROLES.SAFETY]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.SAFETY]: await this.getMemberIdByMail (
           group.group_security_leader_email,
           req
         ),
-        [constants.GROUP_STATIC_ROLES.SOUND]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.SOUND]: await this.getMemberIdByMail (
           group.group_sound_leader_email,
           req
         ),
-        [constants.GROUP_STATIC_ROLES.CONTENT]: await this.getMemberByMail (
+        [constants.GROUP_STATIC_ROLES.CONTENT]: await this.getMemberIdByMail (
           group.group_content_leader_email,
           req
         ),
@@ -210,7 +210,7 @@ module.exports = class GroupsController {
   }
 
   async createMembersForNewGroup (group, contacts) {
-    for (const role of contacts) {
+    for (const role of Object.keys(contacts)) {
       try {
         if (contacts[role]) {
           await services.db.GroupMembers.create ({
