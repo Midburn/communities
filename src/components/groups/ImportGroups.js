@@ -73,6 +73,7 @@ import {ParsingService} from '../../services/parsing';
       match.params.groupType
     );
     delete group.group_comments;
+    group.group_description_en = group.group_description_he = group.content;
     return group;
   };
 
