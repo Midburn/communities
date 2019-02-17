@@ -64,8 +64,9 @@ export class GroupsService {
         group_type: type,
         event_id: eventId || state.currentEventId,
         group_status: constants.GROUP_STATUS.OPEN,
+        noMembers: true,
       };
-      return this.getGroups (params);
+      return this.getGroups (params, false);
     } catch (e) {
       console.warn (`Error fetching all ${type}s ${e.stack}`);
     }
@@ -78,9 +79,9 @@ export class GroupsService {
       }
       const params = {
         group_type: type,
-        event_id: eventId,
+        event_id: eventId
       };
-      return this.getGroups (params);
+      return this.getGroups (params, false);
     } catch (e) {
       console.warn (`Error fetching all ${type}s ${e.stack}`);
     }
