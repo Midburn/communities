@@ -132,11 +132,11 @@ module.exports = class GroupsController {
       for (const group of req.body.groups) {
         try {
           const existing = await services.db.Groups.findOne ({
-            where: {group_name: group.group_name, event_id: group.event_id},
+            where: {group_name_en: group.group_name_en, group_name_he: group.group_name_he, event_id: group.event_id},
           });
           let dbGroup;
           if (existing) {
-            results.existing.push (group.group_name);
+            results.existing.push (`${group.group_name_he} - ${group.group_name_en}`);
           } else {
             const contacts = await this.getMembersForNewGroup (group, req);
             group.main_contact = contacts[constants.GROUP_STATIC_ROLES.LEADER];
@@ -153,7 +153,7 @@ module.exports = class GroupsController {
             results.success.push (dbGroup);
           }
         } catch (e) {
-          results.failures.push (group.group_name);
+          results.failures.push (`${group.group_name_he} - ${group.group_name_en}`);
         }
       }
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {results}));
@@ -169,7 +169,7 @@ module.exports = class GroupsController {
 
   async getMemberIdByMail (email, req) {
     try {
-      return (await services.spark.get (`users/email/${email}`, req)).data;
+      return (await services.spark.get (`users/email/${email}`, req)).data.user_id;
     } catch (e) {
       return null;
     }
@@ -179,7 +179,7 @@ module.exports = class GroupsController {
     try {
       const contacts = {
         [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
-          group.contact_person_midburn_email,
+          'a',
           req
         ),
         [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
