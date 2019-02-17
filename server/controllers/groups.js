@@ -15,13 +15,17 @@ module.exports = class GroupsController {
     this.getGroupMembers = this.getGroupMembers.bind (this);
     this.addGroupMembers = this.addGroupMembers.bind (this);
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
+    this.metaParams = ['noMembers'];
   }
 
   addQueryParamsToWhere (query, where) {
     const updatedWhere = {...where};
     for (const paramName in query) {
-      const param = query[paramName];
-      updatedWhere[paramName] = param;
+      let param;
+      if (!this.metaParams.includes(paramName)) {
+          param = query[paramName];
+          updatedWhere[paramName] = param;
+      }
     }
     return updatedWhere;
   }
@@ -45,7 +49,6 @@ module.exports = class GroupsController {
     } catch (e) {
         console.warn(e.stack);
     }
-
   }
 
   async getGroups (req, res, next) {
@@ -72,8 +75,10 @@ module.exports = class GroupsController {
       const parsedGroups = [];
       for (const group of groups) {
         const parsedGroup = group.toJSON();
-          parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
-          parsedGroups.push(parsedGroup);
+        if (!req.query.noMembers) {
+            parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
+        }
+        parsedGroups.push(parsedGroup);
       }
       next (
         new GenericResponse  (constants.RESPONSE_TYPES.JSON, {
