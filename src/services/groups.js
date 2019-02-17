@@ -128,22 +128,6 @@ export class GroupsService {
     }
   }
 
-  async updatePresaleQuota (groups, group_type, eventId) {
-    if (!groups || !Array.isArray (groups)) {
-      console.warn ('Must specify groups for allocating presale tickets');
-      return;
-    }
-    try {
-      await axios.post (
-        `/api/v1/spark/camps/updatePresaleQuota/${group_type}`,
-        {groups, event_id: eventId || state.currentEventId},
-        {withCredentials: true}
-      ).data;
-    } catch (e) {
-      console.warn (`Error allocating quota data - ${e.stack}`);
-    }
-  }
-
   /**
      * GROUPS CRUD
      */
@@ -250,6 +234,18 @@ export class GroupsService {
     } catch (e) {
       console.warn (`Error getting groups data - ${e.stack}`);
       throw e;
+    }
+  }
+  async getPresaleAllocationGroups () {
+    try {
+      const groups = (await this.getUserGroups (
+        this.eventService.getFormerEventId ()
+      )).groups;
+      return await Promise.all (
+        groups.map (group => this.getGroup (group.group_id))
+      );
+    } catch (e) {
+      console.warn ('Error getting allocation data');
     }
   }
 }

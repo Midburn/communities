@@ -118,9 +118,16 @@ class BaseGroupsTable extends React.Component {
       : 0;
   }
 
-  getGroupsBucketCount (group, allocationType) {
-    return allocationType === constants.ALLOCATION_TYPES.PRE_SALE
-      ? group.pre_sale_tickets_quota || 0
+  getGroupsBucketCount (group) {
+    const {groupQuotas} = this.props;
+    if (!groupQuotas) {
+      return 0;
+    }
+    return groupQuotas[group.id]
+      ? groupQuotas[group.id].reduce ((result, value) => {
+          result += +value.count || 0;
+          return result;
+        }, 0)
       : 0;
   }
 

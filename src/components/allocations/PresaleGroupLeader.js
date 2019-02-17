@@ -37,6 +37,7 @@ import {action} from 'mobx/lib/mobx';
   @observable groupPermissions = [];
 
   @observable isLoading = true;
+  @observable quota = 0;
 
   get lastAudit () {
     if (!this.audits || !this.audits[0]) {
@@ -89,6 +90,7 @@ import {action} from 'mobx/lib/mobx';
       await this.getGroupAllocations ();
       await this.getAudits ();
       await this.getGroupPermissions ();
+      await this.getGroupsAllocationAndBuckets ();
       this.isLoading = false;
     } catch (e) {
       this.isLoading = false;
@@ -146,6 +148,23 @@ import {action} from 'mobx/lib/mobx';
       console.warn (e);
     }
   };
+
+  async getGroupsAllocationAndBuckets () {
+    const response = await this.allocationsService.getGroupsAllocations ([
+      this.group.id,
+    ]);
+    if (!response.buckets) {
+      return;
+    }
+    this.quota = response.buckets
+      .filter (
+        bucket => bucket.allocation_type === constants.ALLOCATION_TYPES.PRE_SALE
+      )
+      .reduce ((result, value) => {
+        result += +value.count;
+        return result;
+      }, 0);
+  }
 
   get TRANSLATE_PREFIX () {
     const {match} = this.props;
@@ -209,7 +228,7 @@ import {action} from 'mobx/lib/mobx';
       },
       {
         label: t (`${this.TRANSLATE_PREFIX}.charts.allocationsLeft`),
-        value: this.group.pre_sale_tickets_quota - totalAllocated,
+        value: this.quota - totalAllocated,
         focus: true,
       },
     ];
@@ -304,6 +323,7 @@ import {action} from 'mobx/lib/mobx';
           <Col md="12">
             <GroupMembers
               isLoading={this.isLoading}
+              quota={this.quota}
               permissions={this.groupPermissions}
               permissionsChanged={this.getGroupPermissions}
               allocationsChanged={this.allocationsChanged}

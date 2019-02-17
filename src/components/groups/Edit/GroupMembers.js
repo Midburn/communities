@@ -20,11 +20,6 @@ import {Loader} from '../../Loader';
   permissionsService = new PermissionService ();
   TRANSLATE_PREFIX = `members`;
 
-  ALLOCATION_TYPE_TO_GROUP_QUOTA = {
-    [constants.ALLOCATION_TYPES.PRE_SALE]: 'pre_sale_tickets_quota',
-    [constants.ALLOCATION_TYPES.EARLY_ARRIVAL]: 'early_arrival_tickets_quota',
-  };
-
   @observable memberPermissions = {};
 
   @observable tickets = [];
@@ -34,11 +29,10 @@ import {Loader} from '../../Loader';
   allocationTimeout = null;
 
   changeAllocation = async (memberId, allocationType, e) => {
-    const {allocations, match, group, allocationsChanged} = this.props;
+    const {allocations, match, group, allocationsChanged, quota} = this.props;
     const allocated = allocations.filter (
       allocation => allocation.allocation_type === allocationType
     ).length;
-    const quota = group[this.ALLOCATION_TYPE_TO_GROUP_QUOTA[allocationType]];
     try {
       if (!!e.target.checked && quota <= allocated) {
         // There no more allocations
@@ -199,13 +193,12 @@ import {Loader} from '../../Loader';
   }
 
   get tableSums () {
-    const {t, members, presale, group} = this.props;
+    const {t, members, presale} = this.props;
     let allPurchasedTicketsCount = 0, totalAllocated = 0;
     if (presale) {
       for (const member of members) {
         allPurchasedTicketsCount +=
           this.getMemberTicketCount (member.user_id) || 0;
-        // allTransfferedTicketsCount += this.getMemberTransfferedTicketCount(member.user_id) || 0;
         totalAllocated += this.getMemberAllocationId (
           member.user_id,
           constants.ALLOCATION_TYPES.PRE_SALE,
@@ -220,7 +213,7 @@ import {Loader} from '../../Loader';
       }
     }
     const baseSums = {
-      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: (members || []).length,
+      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
     };
     const preSaleSums = presale
       ? {
@@ -229,9 +222,7 @@ import {Loader} from '../../Loader';
           )]: allPurchasedTicketsCount,
           // [t(`${this.TRANSLATE_PREFIX}.sums.ticketsTransferred`)]: allTransfferedTicketsCount,
           [t (`${this.TRANSLATE_PREFIX}.sums.allocated`)]: totalAllocated,
-          [t (
-            `${this.TRANSLATE_PREFIX}.sums.quota`
-          )]: group.pre_sale_tickets_quota || 0,
+          [t (`${this.TRANSLATE_PREFIX}.sums.quota`)]: this.quota || 0,
         }
       : {};
     return {
@@ -335,12 +326,12 @@ import {Loader} from '../../Loader';
             </tr>
           </TableHead>
           <TableBody>
-            {(members || []).map (member => {
-              return (
-                <tr key={member.user_id}>
-                  <td>{(member.info || {}).name}</td>
-                  <td>{(member.info || {}).email}</td>
-                  <td>{(member.info || {}).cell_phone}</td>
+              {(members || []).map (member => {
+                  return (
+                      <tr key={member.user_id}>
+                          <td>{(member.info || {}).name}</td>
+                          <td>{(member.info || {}).email}</td>
+                          <td>{(member.info || {}).cell_phone}</td>
                   <PermissableComponent permitted={ticketCount}>
                     <td>
                       {this.getMemberTicketCount (member.user_id)}
