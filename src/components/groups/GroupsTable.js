@@ -151,7 +151,7 @@ class BaseGroupsTable extends React.Component {
       return ' ';
     }
     const manager = group.members.find (
-      member => member.role === constants.GROUP_STATIC_ROLES.LEADER
+      member => member.role === constants.GROUP_STATIC_ROLES.LEADER || member.role === constants.GROUP_STATIC_ROLES.CONTACT
     );
     if (manager && manager.info) {
       return manager.info[propName];

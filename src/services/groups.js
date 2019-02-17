@@ -30,7 +30,7 @@ export class GroupsService {
   async getAllCampsMembersTickets (ids, eventId) {
     try {
       return (await axios.post (
-        `/api/v1/spark/camps/members/tickets?eventId=${eventId || ''}`,
+        `/api/v1/spark/camps/members/tickets?eventId=${eventId || state.currentEventId || ''}`,
         {ids},
         {withCredentials: true}
       )).data.body.tickets;
@@ -79,7 +79,7 @@ export class GroupsService {
       }
       const params = {
         group_type: type,
-        event_id: eventId
+        event_id: eventId || state.currentEventId
       };
       return this.getGroups (params, false);
     } catch (e) {
@@ -130,8 +130,8 @@ export class GroupsService {
   }
 
   /**
-     * GROUPS CRUD
-     */
+   * GROUPS CRUD
+   */
   async getGroup (id) {
     try {
       return (await axios.get (`/api/v1/groups/${id}`, {
