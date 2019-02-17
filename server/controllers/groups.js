@@ -179,7 +179,7 @@ module.exports = class GroupsController {
     try {
       const contacts = {
         [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
-          'a',
+            group.contact_person_midburn_email,
           req
         ),
         [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (

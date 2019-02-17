@@ -72,8 +72,28 @@ import {ParsingService} from '../../services/parsing';
     group.group_type = this.parsingService.getGroupTypeFromString (
       match.params.groupType
     );
+      /**
+       * Parse text to boolean
+       */
+    Object.keys(group).forEach(key => {
+      if (group[key] && group[key].trim)
+      switch (group[key.trim()]) {
+          case 'yes':
+          case 'כן':
+            group[key] = true;
+            break;
+          case 'no':
+          case 'לא':
+          case 'עודלאיודעים':
+            group[key] = false;
+            break;
+          default:
+            break;
+      }
+    });
     delete group.group_comments;
-    group.group_description_en = group.group_description_he = group.content;
+    group.group_desc_en = group.group_desc_he = group.group_content;
+    group.child_friendly = !group.over_18;
     return group;
   };
 
