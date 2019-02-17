@@ -31,7 +31,6 @@ import {action} from 'mobx/lib/mobx';
   @observable query = '';
   @observable error;
   @observable group = {};
-  @observable members = [];
   @observable tickets = [];
   @observable allocations = [];
   @observable auditedUser = [];
@@ -74,17 +73,6 @@ import {action} from 'mobx/lib/mobx';
         return;
       }
       this.group = group;
-      try {
-        this.members = await this.groupService.getCampsMembers (
-          this.group.id,
-          this.eventsService.getFormerEventId ()
-        );
-      } catch (e) {
-        console.warn (e.stack);
-        // TODO - what do we do with errors ?
-        this.members = [];
-        this.error = e;
-      }
       try {
         const tickets = await this.groupService.getCampsMembersTickets (
           group.id
@@ -154,7 +142,7 @@ import {action} from 'mobx/lib/mobx';
   getGroupAllocations = async () => {
     try {
       this.allocations = (await this.allocationsService.getMembersAllocations ([
-        this.members.map (member => member.user_id),
+        this.group.members.map (member => member.user_id),
       ])) || [];
     } catch (e) {
       console.warn (e);
@@ -220,7 +208,7 @@ import {action} from 'mobx/lib/mobx';
   get chartData () {
     const {t} = this.props;
     let totalAllocated = 0;
-    for (const member of this.members) {
+    for (const member of this.group.members || []) {
       totalAllocated += this.getMemberAllocationId (
         member.user_id,
         constants.ALLOCATION_TYPES.PRE_SALE,
@@ -345,7 +333,7 @@ import {action} from 'mobx/lib/mobx';
               ticketCount={true}
               match={match}
               tickets={this.tickets || []}
-              members={(this.members || []).filter (this.filter)}
+              members={(this.group.members || []).filter (this.filter)}
             />
           </Col>
         </Row>

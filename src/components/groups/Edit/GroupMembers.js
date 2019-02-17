@@ -233,7 +233,7 @@ import {Loader} from '../../Loader';
 
   get CSVdata () {
     const {presale, t, members} = this.props;
-    return members.map (member => {
+    return (members || []).map (member => {
       const baseData = {
         [t (`${this.TRANSLATE_PREFIX}.columns.name`)]: member.name,
         [t (`${this.TRANSLATE_PREFIX}.columns.email`)]: member.email,
@@ -326,12 +326,12 @@ import {Loader} from '../../Loader';
             </tr>
           </TableHead>
           <TableBody>
-            {members.map (member => {
-              return (
-                <tr key={member.user_id}>
-                  <td>{member.name}</td>
-                  <td>{member.email}</td>
-                  <td>{member.cell_phone}</td>
+              {(members || []).map (member => {
+                  return (
+                      <tr key={member.user_id}>
+                          <td>{(member.info || {}).name}</td>
+                          <td>{(member.info || {}).email}</td>
+                          <td>{(member.info || {}).cell_phone}</td>
                   <PermissableComponent permitted={ticketCount}>
                     <td>
                       {this.getMemberTicketCount (member.user_id)}
