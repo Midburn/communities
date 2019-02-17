@@ -147,7 +147,7 @@ import {BarChartCard} from '../controls/BarChartCard';
     try {
       this.allocations = (await this.allocationsService.getGroupsAllocations ([
         this.groups.map (g => g.id),
-      ])) || [];
+      ])).allocations || [];
     } catch (e) {
       console.warn (e);
     }
@@ -174,29 +174,8 @@ import {BarChartCard} from '../controls/BarChartCard';
       ) {
         return;
       }
-      const update = this.groups.map (group => {
-        let updatedQouta;
-        const groupUpdate = this.groupQuotas[
-          constants.UNPUBLISHED_ALLOCATION_KEY
-        ].find (allocation => allocation.group_id === group.id);
-        if (!groupUpdate) {
-          updatedQouta = group.pre_sale_tickets_quota || 0;
-        } else {
-          updatedQouta =
-            (Number (group.pre_sale_tickets_quota) || 0) +
-            (Number (groupUpdate.count) || 0);
-        }
-        group.pre_sale_tickets_quota = updatedQouta;
-        return {
-          id: group.id,
-          pre_sale_tickets_quota: updatedQouta,
-        };
-      });
-      if (!update || !update.length) {
-        return;
-      }
-      await this.groupService.updatePresaleQuota (
-        update,
+      await this.allocationsService.publishAdminsAllocations (
+        constants.ALLOCATION_TYPES.PRE_SALE,
         this.parsingService.getGroupTypeFromString (match.params.groupType)
       );
       await this.auditService.setAudit (
