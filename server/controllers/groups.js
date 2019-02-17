@@ -15,35 +15,40 @@ module.exports = class GroupsController {
     this.getGroupMembers = this.getGroupMembers.bind (this);
     this.addGroupMembers = this.addGroupMembers.bind (this);
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
+    this.metaParams = ['noMembers'];
   }
 
   addQueryParamsToWhere (query, where) {
     const updatedWhere = {...where};
     for (const paramName in query) {
-      const param = query[paramName];
-      updatedWhere[paramName] = param;
+      let param;
+      if (!this.metaParams.includes(paramName)) {
+          param = query[paramName];
+          updatedWhere[paramName] = param;
+      }
     }
     return updatedWhere;
   }
 
   async getMembersInfo (members, req) {
-    const sparkMembers = [];
-    for (let member of members) {
-      member = member.toJSON ();
-      try {
-        member.info = (await services.spark.get (
-          `users/${member.user_id}`,
-          req
-        )).data;
-      } catch (e) {
-        members.info = {
-          e: 'Error fetching data from spark',
-          message: e.message,
-        };
-      }
-      sparkMembers.push (member);
+    try {
+        const allMembers = [];
+        const sparkMembers = (await services.spark.post (
+            `users/ids`,
+            {ids: members.map(member => member.user_id)},
+            req)).data.users;
+        for (const member of members) {
+          const parsedMember = member.toJSON();
+          const sparkMember = sparkMembers.find(user => user.user_id === member.user_id);
+          if (sparkMember){
+              parsedMember.info = sparkMember;
+          }
+          allMembers.push(parsedMember);
+        }
+        return allMembers;
+    } catch (e) {
+        console.warn(e.stack);
     }
-    return sparkMembers;
   }
 
   async getGroups (req, res, next) {
@@ -63,14 +68,20 @@ module.exports = class GroupsController {
           },
         ],
       });
+      const allDbMembers = groups.reduce((result, value) => {
+        return [...result, ...value.members];
+      }, []);
+      const allMembers = await await this.getMembersInfo(allDbMembers, req);
       const parsedGroups = [];
       for (const group of groups) {
-        const parsedGroup = group.toJSON ();
-        parsedGroup.members = await this.getMembersInfo (group.members, req);
-        parsedGroups.push (parsedGroup);
+        const parsedGroup = group.toJSON();
+        if (!req.query.noMembers) {
+            parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
+        }
+        parsedGroups.push(parsedGroup);
       }
       next (
-        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+        new GenericResponse  (constants.RESPONSE_TYPES.JSON, {
           groups: parsedGroups,
         })
       );

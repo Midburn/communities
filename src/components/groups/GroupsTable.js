@@ -153,7 +153,7 @@ class BaseGroupsTable extends React.Component {
     const manager = group.members.find (
       member => member.role === constants.GROUP_STATIC_ROLES.LEADER
     );
-    if (manager) {
+    if (manager && manager.info) {
       return manager.info[propName];
     } else {
       return '';
