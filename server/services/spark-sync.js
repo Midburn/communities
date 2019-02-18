@@ -1,3 +1,4 @@
+const db = require('./database');
 
 class SparkSync {
     async getSparkDb () {

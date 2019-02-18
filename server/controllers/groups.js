@@ -230,7 +230,9 @@ module.exports = class GroupsController {
             user_id: contacts[role],
           });
         }
-      } catch (e) {}
+      } catch (e) {
+
+      }
     }
   }
 
