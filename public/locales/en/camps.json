@@ -64,7 +64,11 @@
     },
     "charts": {
       "allocationsUsage": "Allocations usage",
-      "fullGroups": "Camps who used all quota"
+      "fullGroups": "Camps who used all quota",
+      "ticketsBaught": "Tickets baught",
+      "reservedTickets": "Tickets reserved",
+      "reservedGiven": "Tickets given",
+      "ticketOwners": "Ticket owners (2018)"
     },
     "table": {
       "publish": "Publish {{allocationsCount}}",
