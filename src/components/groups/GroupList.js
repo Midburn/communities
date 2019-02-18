@@ -56,7 +56,7 @@ class BaseGroupList extends React.Component {
     };
 
     render() {
-        const {groups, t, query, match} = this.props;
+        const {groups, t, query, match, lng} = this.props;
         const filteredGroups = groups.filter(this.filter);
         return (
             <div>
@@ -72,9 +72,9 @@ class BaseGroupList extends React.Component {
                                     hover
                                 />
                                 <CardBody>
-                                    <CardTitle>{this.groupsService.getPropertyByLang(group, 'name')}</CardTitle>
+                                    <CardTitle>{this.groupsService.getPropertyByLang(group, 'name', lng)}</CardTitle>
                                     <CardText>
-                                        {this.groupsService.getPropertyByLang(group, 'description')}
+                                        {this.groupsService.getPropertyByLang(group, 'description', lng)}
                                     </CardText>
                                     <Button onClick={() => this.viewGroup(group.id)}>{t('view')}</Button>
                                     <PermissableComponent

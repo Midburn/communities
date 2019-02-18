@@ -1,4 +1,3 @@
-import i18n from './i18n';
 import axios from 'axios';
 import {state} from '../models/state';
 import {EventsService} from './events';
@@ -30,7 +29,7 @@ export class GroupsService {
   async getAllCampsMembersTickets (ids, eventId) {
     try {
       return (await axios.post (
-        `/api/v1/spark/camps/members/tickets?eventId=${eventId || ''}`,
+        `/api/v1/spark/camps/members/tickets?eventId=${eventId || state.currentEventId || ''}`,
         {ids},
         {withCredentials: true}
       )).data.body.tickets;
@@ -79,7 +78,7 @@ export class GroupsService {
       }
       const params = {
         group_type: type,
-        event_id: eventId
+        event_id: eventId || state.currentEventId
       };
       return this.getGroups (params, false);
     } catch (e) {
@@ -87,11 +86,10 @@ export class GroupsService {
     }
   }
 
-  getPropertyByLang (group, propName) {
+  getPropertyByLang (group, propName, lng) {
     if (!group || !propName) {
       return '';
     }
-    const {lng} = i18n.language;
     const isHeb = lng === 'he';
     switch (propName) {
       case 'name':
@@ -130,8 +128,8 @@ export class GroupsService {
   }
 
   /**
-     * GROUPS CRUD
-     */
+   * GROUPS CRUD
+   */
   async getGroup (id) {
     try {
       return (await axios.get (`/api/v1/groups/${id}`, {

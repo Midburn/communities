@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormInline, Fa, Input, Col, Row } from 'mdbreact';
 import { withI18n } from 'react-i18next';
-import { observable, action, computed } from 'mobx';
+import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { GroupList } from './GroupList';
 import { state } from '../../models/state';
@@ -10,7 +10,6 @@ import * as constants from '../../../models/constants';
 @observer
 class BaseGroups extends React.Component {
 
-    @observable
     query = '';
 
     @action

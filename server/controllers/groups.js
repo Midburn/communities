@@ -181,7 +181,7 @@ module.exports = class GroupsController {
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
-            await this.createMembersForNewGroup (group, contacts);
+            await this.createMembersForNewGroup (dbGroup.toJSON (), contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
@@ -249,12 +249,14 @@ module.exports = class GroupsController {
       try {
         if (contacts[role]) {
           await services.db.GroupMembers.create ({
-            GroupId: group.id,
+            group_id: group.id,
             role: role,
             user_id: contacts[role],
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn (e.stack);
+      }
     }
   }
 
