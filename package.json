@@ -55,6 +55,7 @@
     "mysql2": "^1.6.4",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "5.0.1",
+    "papaparse": "^4.6.3",
     "pnp-webpack-plugin": "1.1.0",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-loader": "3.0.0",
@@ -97,6 +98,7 @@
     "test": "node scripts/test.js",
     "test:once": "jest",
     "sequelize": "sequelize",
+    "migrate": "sequelize db:migrate local",
     "createdb": "mysql -u root -p < db/create_db.sql"
   },
   "eslintConfig": {

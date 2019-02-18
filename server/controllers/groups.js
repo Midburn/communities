@@ -15,35 +15,40 @@ module.exports = class GroupsController {
     this.getGroupMembers = this.getGroupMembers.bind (this);
     this.addGroupMembers = this.addGroupMembers.bind (this);
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
+    this.metaParams = ['noMembers'];
   }
 
   addQueryParamsToWhere (query, where) {
     const updatedWhere = {...where};
     for (const paramName in query) {
-      const param = query[paramName];
-      updatedWhere[paramName] = param;
+      let param;
+      if (!this.metaParams.includes(paramName)) {
+          param = query[paramName];
+          updatedWhere[paramName] = param;
+      }
     }
     return updatedWhere;
   }
 
   async getMembersInfo (members, req) {
-    const sparkMembers = [];
-    for (let member of members) {
-      member = member.toJSON ();
-      try {
-        member.info = (await services.spark.get (
-          `users/${member.user_id}`,
-          req
-        )).data;
-      } catch (e) {
-        members.info = {
-          e: 'Error fetching data from spark',
-          message: e.message,
-        };
-      }
-      sparkMembers.push (member);
+    try {
+        const allMembers = [];
+        const sparkMembers = (await services.spark.post (
+            `users/ids`,
+            {ids: members.map(member => member.user_id)},
+            req)).data.users;
+        for (const member of members) {
+          const parsedMember = member.toJSON();
+          const sparkMember = sparkMembers.find(user => user.user_id === member.user_id);
+          if (sparkMember){
+              parsedMember.info = sparkMember;
+          }
+          allMembers.push(parsedMember);
+        }
+        return allMembers;
+    } catch (e) {
+        console.warn(e.stack);
     }
-    return sparkMembers;
   }
 
   async getGroups (req, res, next) {
@@ -63,14 +68,20 @@ module.exports = class GroupsController {
           },
         ],
       });
+      const allDbMembers = groups.reduce((result, value) => {
+        return [...result, ...value.members];
+      }, []);
+      const allMembers = await await this.getMembersInfo(allDbMembers, req);
       const parsedGroups = [];
       for (const group of groups) {
-        const parsedGroup = group.toJSON ();
-        parsedGroup.members = await this.getMembersInfo (group.members, req);
-        parsedGroups.push (parsedGroup);
+        const parsedGroup = group.toJSON();
+        if (!req.query.noMembers) {
+            parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
+        }
+        parsedGroups.push(parsedGroup);
       }
       next (
-        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+        new GenericResponse  (constants.RESPONSE_TYPES.JSON, {
           groups: parsedGroups,
         })
       );
@@ -131,39 +142,31 @@ module.exports = class GroupsController {
       };
       for (const group of req.body.groups) {
         try {
-          let main_contact;
-          try {
-            main_contact = (await services.spark.get (
-              `users/email/${group.contact_person_email}`,
-              req
-            )).data;
-          } catch (e) {
-            results.failedEmails.push (group.contact_person_email);
-          }
-          if (main_contact) {
-            try {
-              await this.createMemberForNewGroup (group, main_contact);
-            } catch (e) {
-              results.failedEmails.push (group.contact_person_email);
-            }
-          }
           const existing = await services.db.Groups.findOne ({
-            where: {group_name: group.group_name},
+            where: {group_name_en: group.group_name_en, group_name_he: group.group_name_he, event_id: group.event_id},
           });
           let dbGroup;
           if (existing) {
-            results.existing.push (group.group_name);
+            results.existing.push (`${group.group_name_he} - ${group.group_name_en}`);
           } else {
+            const contacts = await this.getMembersForNewGroup (group, req);
+            group.main_contact = contacts[constants.GROUP_STATIC_ROLES.LEADER];
+            group.contact_person_id =
+              contacts[constants.GROUP_STATIC_ROLES.CONTACT];
+            group.safety_contact =
+              contacts[constants.GROUP_STATIC_ROLES.SAFETY];
+            group.moop_contact = contacts[constants.GROUP_STATIC_ROLES.MOOP];
+            group.sound_contact = contacts[constants.GROUP_STATIC_ROLES.SOUND];
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
+            await this.createMembersForNewGroup (dbGroup.toJSON(), contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
-          results.failures.push (group.group_name);
+          results.failures.push (`${group.group_name_he} - ${group.group_name_en}`);
         }
       }
-
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {results}));
     } catch (e) {
       next (
@@ -175,20 +178,61 @@ module.exports = class GroupsController {
     }
   }
 
-  async createMemberForNewGroup (group, main_contact) {
+  async getMemberIdByMail (email, req) {
     try {
-      await services.db.GroupMembers.create ({
-        GroupId: group.id,
-        role: constants.GROUP_STATIC_ROLES.LEADER,
-        user_id: main_contact.user_id,
-      });
-      console.log (main_contact);
+      return (await services.spark.get (`users/email/${email}`, req)).data.user_id;
     } catch (e) {
-      console.warn (
-        'Could not create main member for group',
-        main_contact,
-        group.group_name
-      );
+      return null;
+    }
+  }
+
+  async getMembersForNewGroup (group, req) {
+    try {
+      const contacts = {
+        [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
+            'a',
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
+          group.contact_person_midburn_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.MOOP]: await this.getMemberIdByMail (
+          group.group_moop_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.SAFETY]: await this.getMemberIdByMail (
+          group.group_security_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.SOUND]: await this.getMemberIdByMail (
+          group.group_sound_leader_email,
+          req
+        ),
+        [constants.GROUP_STATIC_ROLES.CONTENT]: await this.getMemberIdByMail (
+          group.group_content_leader_email,
+          req
+        ),
+      };
+      return contacts;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  async createMembersForNewGroup (group, contacts) {
+    for (const role of Object.keys(contacts)) {
+      try {
+        if (contacts[role]) {
+          await services.db.GroupMembers.create ({
+            group_id: group.id,
+            role: role,
+            user_id: contacts[role],
+          });
+        }
+      } catch (e) {
+        console.warn(e.stack);
+      }
     }
   }
 

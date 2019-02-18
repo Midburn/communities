@@ -261,7 +261,7 @@ import {action} from 'mobx/lib/mobx';
   };
 
   render () {
-    const {t, match} = this.props;
+    const {t, match, lng} = this.props;
     const AllocationLastDate = (
       <div>
         <span>{t (`allocationsLastDate`)}: </span>
@@ -279,7 +279,7 @@ import {action} from 'mobx/lib/mobx';
               {' '}
               -
               {' '}
-              {this.groupService.getPropertyByLang (this.group, 'name')}
+              {this.groupService.getPropertyByLang (this.group, 'name', lng)}
             </h1>
           </Col>
           <Col md="6">

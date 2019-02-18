@@ -60,7 +60,7 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
                       <NavLink
                         to={`/${lng}/${parsingService.getPlural (group.group_type)}/${group.id}/allocations`}
                       >
-                        {groupsService.getPropertyByLang (group, 'name')}
+                        {groupsService.getPropertyByLang (group, 'name', lng)}
                       </NavLink>
                     </NavItem>
                   </DropdownItem>

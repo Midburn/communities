@@ -116,17 +116,22 @@ async function getGroupMembersData (group, members) {
  * Starting function
  */
 async function Migrate () {
-  try {
+    const isLocal = process.argv.includes ('local');
+    try {
     const sparkConfig = {
       username: process.env.SPARK_DB_USER || 'spark',
       password: process.env.SPARK_DB_PASSWORD || 'spark',
       database: process.env.SPARK_DB_DBNAME || 'spark',
-      host: process.env.SPARK_DB_HOSTNAME || 'sparkdb',
+      host: process.env.SPARK_DB_HOSTNAME || process.env.SPARK_DB_HOSTNAME || isLocal
+          ? 'localhost'
+          : 'sparkdb',
       dialect: 'mysql',
     };
     const communitiesConfig = {
       dialect: 'mysql',
-      host: process.env.MYSQL_DB_HOST || 'communitiesdb',
+      host: process.env.MYSQL_DB_HOST || isLocal
+          ? 'localhost'
+          : 'communitiesdb',
       database: process.env.MYSQL_DB_NAME || 'communities',
       username: process.env.MYSQL_DB_USERNAME || 'root',
       password: process.env.MYSQL_DB_PASSWORD,
@@ -162,13 +167,15 @@ async function Migrate () {
     console.log (`Faild ${results.failure.length} groups`);
   } catch (e) {
     console.warn (e.stack);
-
   }
 }
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return Migrate ();
+    if (!process.argv.includes ('no-spark')) {
+      return Migrate ();
+    }
+    return Promise.resolve ();
   },
   down: (queryInterface, Sequelize) => {},
 };

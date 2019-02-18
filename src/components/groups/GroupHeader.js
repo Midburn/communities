@@ -10,12 +10,12 @@ class BaseGroupBasicHeader extends React.Component {
     groupsService = new GroupsService();
 
     render() {
-        const { match, t, group } = this.props;
+        const { match, t, group, lng } = this.props;
         return (
                 <div>
                     <Row>
                         <Col md="11">
-                            <h1 className="h1-responsive">{this.groupsService.getPropertyByLang(group, 'name')}</h1>
+                            <h1 className="h1-responsive">{this.groupsService.getPropertyByLang(group, 'name', lng)}</h1>
                             <label>{t('since')}: <Moment format={'DD/MM/YYYY'}>{group.created_at}</Moment></label>
                         </Col>
                     </Row>
@@ -23,7 +23,7 @@ class BaseGroupBasicHeader extends React.Component {
                         <Col md="11">
                             <h2 className="h2-responsive">{t(`${match.params.groupType}:single.header.description`)}</h2>
                             <p>
-                                {this.groupsService.getPropertyByLang(group, 'description')}
+                                {this.groupsService.getPropertyByLang(group, 'description', lng)}
                             </p>
                         </Col>
                     </Row>

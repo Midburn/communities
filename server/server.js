@@ -43,7 +43,7 @@ class Server {
       next ();
     });
     this.app.use (cookieParser ());
-    this.app.use (bodyParser.json ()); // for parsing application/json
+    this.app.use (bodyParser.json ({limit: '50mb'})); // for parsing application/json
     this.app.use (compression ()); // compress all responses
     this.app.use (async (req, res, next) => {
       if (
