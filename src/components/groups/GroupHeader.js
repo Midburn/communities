@@ -20,7 +20,7 @@ class BaseGroupBasicHeader extends React.Component {
                 <div className="GroupHeader">
                   <Row>
                     <Col md="12">
-                      <div className="camp-my-relation text-black2">{campAndMyRelationText}</div>
+                      <div className="font-size-13-responsive text-black2">{campAndMyRelationText}</div>
                     </Col>
                   </Row>
                     <Row>
