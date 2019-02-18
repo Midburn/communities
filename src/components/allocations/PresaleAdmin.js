@@ -243,7 +243,7 @@ import {BarChartCard} from '../controls/BarChartCard';
     return (
       <div className="DGSAdmin">
         <Row>
-          <Col md="8">
+          <Col lg="8" xl="7">
             <h1 className="h1-responsive headerText">
               <span>{t (`${this.TRANSLATE_PREFIX}.allocations.header`)}</span>
               {' '}
@@ -264,8 +264,8 @@ import {BarChartCard} from '../controls/BarChartCard';
               </span>
             </p>
           </Col>
-          <Col md="4">
-            <BarChartCard />
+          <Col lg="4" xl="5">
+            <BarChartCard t={t} translatePrefix={this.TRANSLATE_PREFIX} />
           </Col>
         </Row>
 
