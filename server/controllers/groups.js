@@ -225,7 +225,7 @@ module.exports = class GroupsController {
       try {
         if (contacts[role]) {
           await services.db.GroupMembers.create ({
-            GroupId: group.id,
+            group_id: group.id,
             role: role,
             user_id: contacts[role],
           });
