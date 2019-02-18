@@ -43,10 +43,6 @@ class BaseGroupPublicationDetails extends React.Component {
         return (
             <div className="CampSiteDetails">
                 <Row>
-                    <Col className="mb-3" xs="12">
-                        <h4 className="h4-responsive">{this.t('single.publication.title')}</h4>
-                        <p >{this.t('single.publication.body')}</p>
-                    </Col>
                     <Col className="mb-4" xs="12" md="6">
                         <h5 className="h5-responsive">{this.t('single.publication.contactTitle')}</h5>
                         <ListGroup>
