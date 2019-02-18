@@ -8,6 +8,7 @@
       "description": "Camp's description"
     },
     "publication": {
+      "campType": "Camp type",
       "title": "Publication",
       "body": "The details here will be shown in the web-site, if camp is published.",
       "contactTitle": "Contact Person",
