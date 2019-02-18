@@ -160,7 +160,7 @@ module.exports = class GroupsController {
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
-            await this.createMembersForNewGroup (group, contacts);
+            await this.createMembersForNewGroup (dbGroup.toJSON(), contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
@@ -190,7 +190,7 @@ module.exports = class GroupsController {
     try {
       const contacts = {
         [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
-            group.contact_person_midburn_email,
+            'a',
           req
         ),
         [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
@@ -230,7 +230,9 @@ module.exports = class GroupsController {
             user_id: contacts[role],
           });
         }
-      } catch (e) {}
+      } catch (e) {
+        console.warn(e.stack);
+      }
     }
   }
 

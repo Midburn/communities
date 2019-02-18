@@ -87,11 +87,10 @@ export class GroupsService {
     }
   }
 
-  getPropertyByLang (group, propName) {
+  getPropertyByLang (group, propName, lng) {
     if (!group || !propName) {
       return '';
     }
-    const {lng} = i18n.language;
     const isHeb = lng === 'he';
     switch (propName) {
       case 'name':

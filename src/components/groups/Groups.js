@@ -10,7 +10,6 @@ import * as constants from '../../../models/constants';
 @observer
 class BaseGroups extends React.Component {
 
-    @observable
     query = '';
 
     @action
