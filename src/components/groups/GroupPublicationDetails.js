@@ -1,9 +1,12 @@
 import React from 'react';
 import { withI18n } from 'react-i18next';
-import { Row, Col, ListGroup, MDBIcon , MDBBtn   } from 'mdbreact';
+import { Row, Col, ListGroup, MDBIcon , MDBBtn, Card, CardBody   } from 'mdbreact';
 import { ListItemWithBadge } from '../controls/ListItemWithBadge';
+import { GroupsService } from '../../services/groups';
+
 
 class BaseGroupPublicationDetails extends React.Component {
+    groupsService = new GroupsService()
 
     t(term, options) {
         const {t, match} = this.props;
@@ -17,6 +20,10 @@ class BaseGroupPublicationDetails extends React.Component {
     get tCommon() {
         return this.props.t;
     }
+
+      get lng () {
+          return this.props.lng
+      }
 
     get openToNewMembers() {
         return this.group.status === 'open' ? this.tCommon('yes') : this.tCommon('no');
@@ -34,11 +41,37 @@ class BaseGroupPublicationDetails extends React.Component {
         return this.group.support_art ? this.tCommon('yes') : this.tCommon('no');
     }
 
+    get groupType () {
+      return this.lng === 'he' ? 'מחנה תוכן (מוק)' : 'Theme group (MOCK)'
+    }
+
     getColor(term) {
         return term ? 'success-color-dark' : 'danger-color-dark';
     }
 
-    render() {
+    render () {
+        return (
+          <Card>
+              <CardBody>
+                  <Row>
+                      <Col md="6">
+                          <div className="d-flex">
+                            <div className="mb-h6-responsive text-black1">{this.t('single.publication.campType')}</div>
+                            <p className="text-black2 font-size-14-responsive mx-2">{this.groupType}</p>
+                          </div>
+                          <div className="mb-h6-responsive text-black1">{this.t('single.header.description')}</div>
+                          <p className="text-black2 font-size-14-responsive">
+                            {this.groupsService.getPropertyByLang(this.group, 'description', this.lng)}
+                          </p>
+                      </Col>
+                      <Col md="6">second</Col>
+                  </Row>
+              </CardBody>
+          </Card>
+      )
+    }
+
+    render_o() {
         const { t, group } = this.props;
         return (
             <div className="CampSiteDetails">
