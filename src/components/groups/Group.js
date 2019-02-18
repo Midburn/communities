@@ -32,7 +32,6 @@ import {ParsingService} from '../../services/parsing';
 
   edit = () => {
     this.editMode = true;
-    this.editMode = true;
     this.buttons = [this.viewButton];
     this.props.history.push ({search: '?edit=true'});
   };
@@ -121,6 +120,9 @@ import {ParsingService} from '../../services/parsing';
       },
     ];
   }
+  get isGroupMember () {
+      return this.permissionService.isGroupMember(this.group.id)
+  }
 
   get isGroupEditable () {
     const {match} = this.props;
@@ -135,6 +137,8 @@ import {ParsingService} from '../../services/parsing';
 
   render () {
     const {lng, match} = this.props;
+    const isMemberOrAdmin = this.permissionService.isGroupMember(this.group.id) || this.permissionService.isAdmin()
+
     const MemberView = this.editMode
       ? <GroupBasicInfo group={this.group} onSave={this.saveChanges} />
       : <Tabs
@@ -154,16 +158,12 @@ import {ParsingService} from '../../services/parsing';
                 <ButtonGroup buttons={this.buttons} vertical={true} />
               </div>
             </PermissableComponent>
-            <GroupHeader group={this.group} editMode={this.editMode} />
+            <GroupHeader group={this.group} isGroupMember={this.isGroupMember}/>
           </Col>
         </Row>
         <Row>
           <Col md="12">
-            {(this.permissionService.isGroupMember (this.group.id) ||
-              this.permissionService.isAdmin ()) &&
-              !!this.group.members
-              ? MemberView
-              : BasicView}
+            { isMemberOrAdmin && !!this.group.members ? MemberView : BasicView}
           </Col>
         </Row>
       </div>

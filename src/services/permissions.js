@@ -18,11 +18,18 @@ export class PermissionService {
     if (!state.isUserGroups) {
       return false;
     }
-    return (
-      this.isAdmin () ||
-      state.loggedUser.groups.some (
-        g => g.event_id === state.currentEventId && g.id === groupId
-      )
+    return state.userGroups.groups.some(g => g.group_id === groupId);
+  }
+
+  // Does the logged user has a group he manages
+  isAGroupManager (groupType) {
+    if (!state.isUserGroups) {
+      return false;
+    }
+    return state.userGroups.groups.some (
+      g =>
+        g.group_type === groupType &&
+        g.main_contact === state.loggedUser.user_id
     );
   }
 
