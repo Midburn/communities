@@ -1,4 +1,3 @@
-import i18n from './i18n';
 import axios from 'axios';
 import {state} from '../models/state';
 import {EventsService} from './events';
