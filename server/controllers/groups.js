@@ -74,21 +74,22 @@ module.exports = class GroupsController {
               },
             ],
       });
-      const allDbMembers = groups.reduce ((result, value) => {
+      const allDbMembers = (groups || []).reduce ((result, value) => {
         return [...result, ...value.members];
       }, []);
       const parsedGroups = noMembers ? groups.map (g => g.toJSON ()) : [];
       if (!req.query.noMembers) {
         // Perform single reduce to prevent to many iterations over members.
-        const allMembersDict = (await this.getMembersInfo (
+        const allMembersDict = ((await this.getMembersInfo (
           allDbMembers,
           req
-        )).reduce ((result, member) => {
-          result[member.group_id] = result[member.group_id]
-            ? [...result[member.group_id], member]
-            : [member];
-          return result;
-        }, {});
+        )) || [])
+          .reduce ((result, member) => {
+            result[member.group_id] = result[member.group_id]
+              ? [...result[member.group_id], member]
+              : [member];
+            return result;
+          }, {});
         for (const group of groups) {
           const parsedGroup = group.toJSON ();
           parsedGroup.members = allMembersDict[group.id];
