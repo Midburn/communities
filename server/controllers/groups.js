@@ -22,9 +22,9 @@ module.exports = class GroupsController {
     const updatedWhere = {...where};
     for (const paramName in query) {
       let param;
-      if (!this.metaParams.includes(paramName)) {
-          param = query[paramName];
-          updatedWhere[paramName] = param;
+      if (!this.metaParams.includes (paramName)) {
+        param = query[paramName];
+        updatedWhere[paramName] = param;
       }
     }
     return updatedWhere;
@@ -32,22 +32,25 @@ module.exports = class GroupsController {
 
   async getMembersInfo (members, req) {
     try {
-        const allMembers = [];
-        const sparkMembers = (await services.spark.post (
-            `users/ids`,
-            {ids: members.map(member => member.user_id)},
-            req)).data.users;
-        for (const member of members) {
-          const parsedMember = member.toJSON();
-          const sparkMember = sparkMembers.find(user => user.user_id === member.user_id);
-          if (sparkMember){
-              parsedMember.info = sparkMember;
-          }
-          allMembers.push(parsedMember);
+      const allMembers = [];
+      const sparkMembers = (await services.spark.post (
+        `users/ids`,
+        {ids: members.map (member => member.user_id)},
+        req
+      )).data.users;
+      for (const member of members) {
+        const parsedMember = member.toJSON ();
+        const sparkMember = sparkMembers.find (
+          user => user.user_id === member.user_id
+        );
+        if (sparkMember) {
+          parsedMember.info = sparkMember;
         }
-        return allMembers;
+        allMembers.push (parsedMember);
+      }
+      return allMembers;
     } catch (e) {
-        console.warn(e.stack);
+      console.warn (e.stack);
     }
   }
 
@@ -57,31 +60,44 @@ module.exports = class GroupsController {
         req.query,
         this.DEFAULT_WHERE_OPTIONS
       );
+      const {noMembers} = req.query;
       const groups = await services.db.Groups.findAll ({
         where,
-        include: [
-          {
-            model: services.db.GroupMembers,
-            as: 'members',
-            where: this.DEFAULT_WHERE_OPTIONS,
-            required: false,
-          },
-        ],
+        include: noMembers
+          ? undefined
+          : [
+              {
+                model: services.db.GroupMembers,
+                as: 'members',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+              },
+            ],
       });
-      const allDbMembers = groups.reduce((result, value) => {
+      const allDbMembers = (groups || []).reduce ((result, value) => {
         return [...result, ...value.members];
       }, []);
-      const allMembers = await await this.getMembersInfo(allDbMembers, req);
-      const parsedGroups = [];
-      for (const group of groups) {
-        const parsedGroup = group.toJSON();
-        if (!req.query.noMembers) {
-            parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
+      const parsedGroups = noMembers ? groups.map (g => g.toJSON ()) : [];
+      if (!req.query.noMembers) {
+        // Perform single reduce to prevent to many iterations over members.
+        const allMembersDict = ((await this.getMembersInfo (
+          allDbMembers,
+          req
+        )) || [])
+          .reduce ((result, member) => {
+            result[member.group_id] = result[member.group_id]
+              ? [...result[member.group_id], member]
+              : [member];
+            return result;
+          }, {});
+        for (const group of groups) {
+          const parsedGroup = group.toJSON ();
+          parsedGroup.members = allMembersDict[group.id];
+          parsedGroups.push (parsedGroup);
         }
-        parsedGroups.push(parsedGroup);
       }
       next (
-        new GenericResponse  (constants.RESPONSE_TYPES.JSON, {
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
           groups: parsedGroups,
         })
       );
@@ -143,11 +159,17 @@ module.exports = class GroupsController {
       for (const group of req.body.groups) {
         try {
           const existing = await services.db.Groups.findOne ({
-            where: {group_name_en: group.group_name_en, group_name_he: group.group_name_he, event_id: group.event_id},
+            where: {
+              group_name_en: group.group_name_en,
+              group_name_he: group.group_name_he,
+              event_id: group.event_id,
+            },
           });
           let dbGroup;
           if (existing) {
-            results.existing.push (`${group.group_name_he} - ${group.group_name_en}`);
+            results.existing.push (
+              `${group.group_name_he} - ${group.group_name_en}`
+            );
           } else {
             const contacts = await this.getMembersForNewGroup (group, req);
             group.main_contact = contacts[constants.GROUP_STATIC_ROLES.LEADER];
@@ -160,11 +182,13 @@ module.exports = class GroupsController {
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
-            await this.createMembersForNewGroup (dbGroup.toJSON(), contacts);
+            await this.createMembersForNewGroup (dbGroup.toJSON (), contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
-          results.failures.push (`${group.group_name_he} - ${group.group_name_en}`);
+          results.failures.push (
+            `${group.group_name_he} - ${group.group_name_en}`
+          );
         }
       }
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {results}));
@@ -180,7 +204,8 @@ module.exports = class GroupsController {
 
   async getMemberIdByMail (email, req) {
     try {
-      return (await services.spark.get (`users/email/${email}`, req)).data.user_id;
+      return (await services.spark.get (`users/email/${email}`, req)).data
+        .user_id;
     } catch (e) {
       return null;
     }
@@ -190,7 +215,7 @@ module.exports = class GroupsController {
     try {
       const contacts = {
         [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
-            'a',
+          group.contact_person_midburn_email,
           req
         ),
         [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
@@ -221,7 +246,7 @@ module.exports = class GroupsController {
   }
 
   async createMembersForNewGroup (group, contacts) {
-    for (const role of Object.keys(contacts)) {
+    for (const role of Object.keys (contacts)) {
       try {
         if (contacts[role]) {
           await services.db.GroupMembers.create ({
@@ -231,7 +256,7 @@ module.exports = class GroupsController {
           });
         }
       } catch (e) {
-        console.warn(e.stack);
+        console.warn (e.stack);
       }
     }
   }

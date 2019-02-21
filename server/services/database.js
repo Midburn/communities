@@ -5,10 +5,6 @@ const DBConfig = require ('../../db/config');
 require ('dotenv').config ();
 
 class DatabaseService {
-  constructor () {
-    this.init ();
-  }
-
   async init () {
     this.initsequelize ();
     try {
