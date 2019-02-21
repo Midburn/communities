@@ -45,6 +45,9 @@ module.exports = {
             // Copy all data to roles table
             queryInterface.bulkInsert('MemberRoles', members.map(member => {
                 member = member.toJSON();
+                if (!member.role) {
+                    member.role = 'MEMBER';
+                }
                 delete member.id;
                 return member;
             }));

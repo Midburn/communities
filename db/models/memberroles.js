@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     group_id: DataTypes.INTEGER,
     record_status: {
-        type: Sequelize.ENUM,
+        type: DataTypes.ENUM,
         values: [
             constants.DB_RECORD_STATUS_TYPES.ACTIVE,
             constants.DB_RECORD_STATUS_TYPES.DELETED,

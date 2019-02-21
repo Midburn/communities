@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       user_id: DataTypes.INTEGER,
-      role: DataTypes.STRING,
       group_id: {
         type: DataTypes.INTEGER,
         onDelete: 'CASCADE',

@@ -248,11 +248,18 @@ module.exports = class GroupsController {
   async createMembersForNewGroup (group, contacts) {
     for (const role of Object.keys (contacts)) {
       try {
-        if (contacts[role]) {
-          await services.db.GroupMembers.create ({
-            group_id: group.id,
-            role: role,
-            user_id: contacts[role],
+        if (role && contacts[role]) {
+          const member = await services.db.GroupMembers.findOne({where: { user_id: contacts[role], group_id: group.id }});
+          if (!member) {
+              await services.db.GroupMembers.create ({
+                  group_id: group.id,
+                  user_id: contacts[role],
+              });
+          }
+          await services.db.MemberRoles.create ({
+              group_id: group.id,
+              role: role,
+              user_id: contacts[role],
           });
         }
       } catch (e) {
