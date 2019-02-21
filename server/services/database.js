@@ -42,10 +42,15 @@ class DatabaseService {
       this.sequelize,
       Sequelize
     );
+    this.MemberRoles = await Models.MemberRoles(this.sequelize, Sequelize);
 
     this.Groups.hasMany (this.GroupMembers, {
       as: 'members',
       foreignKey: 'group_id',
+    });
+    this.GroupMembers.hasMany (this.GroupMembers, {
+        as: 'roles',
+        foreignKey: 'user_id',
     });
 
     // DO NOT USE FORCE TRUE - this will recreate the data base

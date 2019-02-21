@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       foreignKey: {
         allowNull: false,
-        fieldName: 'GroupId',
+        fieldName: 'group_id',
       },
     });
   };
