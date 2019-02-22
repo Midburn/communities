@@ -49,7 +49,7 @@ export class PermissionService {
     if (!state.isUserGroups) {
       return false;
     }
-    return state.userGroups.groups.some (g => g.group_type === groupType);
+    return state.loggedUser.groups.some (g => g.event_id === state.currentEventId && g.group_type === groupType);
   }
 
   isGroupMember (groupId) {
@@ -57,7 +57,7 @@ export class PermissionService {
       return false;
     }
     return (
-      this.isAdmin () || state.userGroups.groups.some (g => g.id === groupId)
+      this.isAdmin () || state.loggedUser.groups.some (g => g.event_id === state.currentEventId && g.id === groupId)
     );
   }
 
@@ -66,8 +66,9 @@ export class PermissionService {
     if (!state.isUserGroups) {
       return false;
     }
-    return state.userGroups.groups.some (
+    return state.loggedUser.groups.some (
       g =>
+        g.event_id === state.currentEventId &&
         g.group_type === groupType &&
         g.main_contact === state.loggedUser.user_id
     );
@@ -88,7 +89,7 @@ export class PermissionService {
       return false;
     }
     return (
-      state.userGroups.groups.some (
+      state.loggedUser.groups.some (
         g => g.id === +groupId && g.main_contact === state.loggedUser.user_id
       ) || this.isFormerGroupManager (groupId)
     );
@@ -102,7 +103,7 @@ export class PermissionService {
     if (!state.isUserGroups) {
       return false;
     }
-    const currentGroup = state.userGroups.groups.find (g => g.id === group.id);
+    const currentGroup = state.loggedUser.groups.find (g => g.id === group.id);
     return (
       !!currentGroup && currentGroup.main_contact === state.loggedUser.user_id
     );

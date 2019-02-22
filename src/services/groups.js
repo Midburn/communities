@@ -120,8 +120,8 @@ export class GroupsService {
     if (!state.isUserGroups) {
       return;
     }
-    for (const g of state.userGroups.groups) {
-      if (g.group_type.toLowerCase ().includes (type)) {
+    for (const g of state.loggedUser.groups) {
+      if (g.event_id === state.currentEventId && g.group_type.toLowerCase ().includes (type)) {
         return g.group_id;
       }
     }

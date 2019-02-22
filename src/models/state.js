@@ -59,9 +59,6 @@ class State {
     @observable
     namesDictionary = {};
 
-    @observable
-    userGroups;
-
     setNameDictionary(type, groups) {
         this.namesDictionary[type] = {};
         for (const group of groups) {
@@ -78,7 +75,7 @@ class State {
     }
 
     get isUserGroups() {
-        return this.userGroups && this.userGroups.groups && this.userGroups.groups.length
+        return this.loggedUser && this.loggedUser.groups && this.loggedUser.groups.length
     }
 
 }

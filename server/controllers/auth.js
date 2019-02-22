@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const services = require('../services');
 const GenericResponse = require('../../models/generic-response');
 const constants = require('../../models/constants');
-const axios = require('axios');
 module.exports = class AuthController {
 
     constructor() {
@@ -21,6 +20,21 @@ module.exports = class AuthController {
                 throw new Error('Np mail specified');
             }
             user = (await this.spark.get(`users/email/${baseData.email}`, req)).data;
+            user.groups = await services.db.Groups.findAll({
+                include: [
+                    {
+                        model: services.db.GroupMembers,
+                        as: 'members',
+                        where: {
+                            user_id: user.user_id
+                        },
+                        required: true
+                    }
+                ]
+            });
+            user.roles = await services.db.MemberRoles.findAll({
+                where: { user_id: user.user_id}
+            });
             await this.initialLogin.initUser(user, req);
             user.permissions = await services.permissions.getPermissionsForUsers([user.user_id]);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { user, currentEventId: req.cookies[this.config.JWT_KEY].currentEventId}));
