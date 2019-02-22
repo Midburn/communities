@@ -1,5 +1,6 @@
-const db = require('./database');
-
+const db = require('./database'),
+    Sequelize = require('sequelize'),
+ schedule = require('node-schedule');
 class SparkSync {
 
     async getSparkDb () {
@@ -11,17 +12,29 @@ class SparkSync {
                 ? 'sparkdb'
                 : 'localhost',
             dialect: 'mysql',
+            logging: false
         };
         console.log (
             `Connecting to spark db with config - ${JSON.stringify (sparkConfig)}`
         );
         const db = {};
-        db.sequelize = new Sequelize (config);
+        db.sequelize = new Sequelize (sparkConfig);
         return db;
     }
 
-    getUserName (userDb) {
-        const user = userDb.toJSON ();
+    async getSparkData (sparkDb, tables) {
+        const results = {};
+        for (const tableName of tables) {
+            results[
+                tableName
+                ] = await sparkDb.sequelize.query (`SELECT * FROM \`${tableName}\``, {
+                type: sparkDb.sequelize.QueryTypes.SELECT,
+            });
+        }
+        return results;
+    }
+
+    getUserName (user) {
         let name;
         if (user.first_name && user.last_name) {
             name = `${user.first_name} ${user.last_name}`;
@@ -39,13 +52,14 @@ class SparkSync {
     }
 
     initSync() {
-
+        this.schedule = schedule.scheduleJob('*/30 * * * *', this.syncUsersCommonData.bind(this));
     }
 
     async syncUsersCommonData() {
+        console.log('Starting users sync...');
         try {
             const sparkDb = await this.getSparkDb();
-            const sparkData = await getSparkData (sparkDb, ['users']);
+            const sparkData = await this.getSparkData (sparkDb, ['users']);
             for (const user of sparkData.users) {
                 try {
 
