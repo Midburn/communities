@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_id: DataTypes.INTEGER,
       role: DataTypes.STRING,
+        email: DataTypes.STRING,
+        cell_phone: DataTypes.STRING,
+        name: DataTypes.STRING,
       group_id: {
         type: DataTypes.INTEGER,
         onDelete: 'CASCADE',
