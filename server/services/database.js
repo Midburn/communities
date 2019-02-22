@@ -5,10 +5,6 @@ const DBConfig = require ('../../db/config');
 require ('dotenv').config ();
 
 class DatabaseService {
-  constructor () {
-    this.init ();
-  }
-
   async init () {
     this.initsequelize ();
     try {
@@ -42,10 +38,20 @@ class DatabaseService {
       this.sequelize,
       Sequelize
     );
+    this.MemberRoles = await Models.MemberRoles(this.sequelize, Sequelize);
 
     this.Groups.hasMany (this.GroupMembers, {
       as: 'members',
       foreignKey: 'group_id',
+    });
+      this.Groups.hasMany (this.MemberRoles, {
+          as: 'roles',
+          foreignKey: 'group_id',
+      });
+    this.GroupMembers.hasMany (this.MemberRoles, {
+        as: 'roles',
+        foreignKey: 'unique_id',
+        sourceKey: 'unique_id'
     });
 
     // DO NOT USE FORCE TRUE - this will recreate the data base

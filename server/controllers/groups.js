@@ -2,6 +2,7 @@ const services = require ('../services');
 const GenericResponse = require ('../../models/generic-response');
 const constants = require ('../../models/constants');
 
+
 module.exports = class GroupsController {
   constructor () {
     this.DEFAULT_WHERE_OPTIONS = {
@@ -66,29 +67,36 @@ module.exports = class GroupsController {
         include: noMembers
           ? undefined
           : [
-              {
-                model: services.db.GroupMembers,
-                as: 'members',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-              },
-            ],
+                {
+                    model: services.db.GroupMembers,
+                    as: 'members',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                },
+                {
+                    model: services.db.MemberRoles,
+                    as: 'roles',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                }
+            ]
       });
-      const allDbMembers = groups.reduce ((result, value) => {
-        return [...result, ...value.members];
-      }, []);
       const parsedGroups = noMembers ? groups.map (g => g.toJSON ()) : [];
       if (!req.query.noMembers) {
+          const allDbMembers = (groups || []).reduce ((result, value) => {
+              return [...result, ...value.members];
+          }, []);
         // Perform single reduce to prevent to many iterations over members.
-        const allMembersDict = (await this.getMembersInfo (
+        const allMembersDict = ((await this.getMembersInfo (
           allDbMembers,
           req
-        )).reduce ((result, member) => {
-          result[member.group_id] = result[member.group_id]
-            ? [...result[member.group_id], member]
-            : [member];
-          return result;
-        }, {});
+        )) || [])
+          .reduce ((result, member) => {
+            result[member.group_id] = result[member.group_id]
+              ? [...result[member.group_id], member]
+              : [member];
+            return result;
+          }, {});
         for (const group of groups) {
           const parsedGroup = group.toJSON ();
           parsedGroup.members = allMembersDict[group.id];
@@ -117,12 +125,18 @@ module.exports = class GroupsController {
       }
       const group = await services.db.Groups.findByPk (req.params.groupId, {
         include: [
-          {
-            model: services.db.GroupMembers,
-            as: 'members',
-            where: this.DEFAULT_WHERE_OPTIONS,
-            required: false,
-          },
+            {
+                model: services.db.GroupMembers,
+                as: 'members',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            },
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            }
         ],
       });
       const parsedGroup = group.toJSON ();
@@ -247,11 +261,21 @@ module.exports = class GroupsController {
   async createMembersForNewGroup (group, contacts) {
     for (const role of Object.keys (contacts)) {
       try {
-        if (contacts[role]) {
-          await services.db.GroupMembers.create ({
-            group_id: group.id,
-            role: role,
-            user_id: contacts[role],
+        if (role && contacts[role]) {
+          const unique_id = `${contacts[role]}-${group.id}`;
+          const member = await services.db.GroupMembers.findOne({where: { unique_id }});
+          if (!member) {
+              await services.db.GroupMembers.create ({
+                  group_id: group.id,
+                  user_id: contacts[role],
+                  unique_id
+              });
+          }
+          await services.db.MemberRoles.create ({
+              group_id: group.id,
+              role: role,
+              user_id: contacts[role],
+              unique_id
           });
         }
       } catch (e) {
@@ -304,6 +328,14 @@ module.exports = class GroupsController {
       });
       const members = await services.db.GroupMembers.findAll ({
         where,
+        include: [
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where,
+                required: false
+            }
+        ]
       });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {members}));
     } catch (e) {
