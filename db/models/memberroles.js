@@ -12,14 +12,6 @@ module.exports = (sequelize, DataTypes) => {
               key: 'id',
           },
       },
-      unique_id: {
-          type: DataTypes.STRING,
-          allowNull: false,
-          references: {
-              model: 'GroupMembers',
-              key: 'unique_id',
-          },
-      },
     record_status: {
         type: DataTypes.ENUM,
         values: [
@@ -38,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       models.MemberRoles.belongsTo (models.GroupMembers, {
           foreignKey: {
               allowNull: false,
-              fieldName: 'unique_id',
+              fieldName: 'user_id',
           },
       });
   };
