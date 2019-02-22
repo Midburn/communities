@@ -21,7 +21,14 @@ class SparkService {
     }
 
     getHeadersFromRequest(req) {
-        return { cookie: req.headers.cookie, USER_TOKEN: req.cookies[configService.JWT_KEY].token, SECRET: configService.SECRET};
+        const headers = {
+            cookie: req.headers.cookie,
+            SECRET: configService.SECRET,
+        };
+        if (req.cookies[configService.JWT_KEY]) {
+            headers.token = req.cookies[configService.JWT_KEY].token
+        }
+        return headers;
     }
 
 }

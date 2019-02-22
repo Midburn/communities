@@ -5,7 +5,8 @@ const Audits = require('./audit'),
     Groups = require('./group'),
     AdminAllocationRounds = require('./adminallocationrounds'),
     GroupMembers = require('./groupmember'),
-    Requests = require('./requests');
+    Requests = require('./requests'),
+    MemberRoles = require('./memberroles');
 
 module.exports = {
     Audits,
@@ -15,5 +16,6 @@ module.exports = {
     Permissions,
     LoggedUsers,
     Requests,
-    AdminAllocationRounds
+    AdminAllocationRounds,
+    MemberRoles
 };

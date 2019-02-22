@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       user_id: DataTypes.INTEGER,
-      role: DataTypes.STRING,
+      unique_id: {
+        type: DataTypes.STRING,
+        unique: true
+      },
       group_id: {
         type: DataTypes.INTEGER,
         onDelete: 'CASCADE',
@@ -32,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       foreignKey: {
         allowNull: false,
-        fieldName: 'GroupId',
+        fieldName: 'group_id',
       },
     });
   };
