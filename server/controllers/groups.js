@@ -2,10 +2,25 @@ const services = require ('../services');
 const GenericResponse = require ('../../models/generic-response');
 const constants = require ('../../models/constants');
 
+
 module.exports = class GroupsController {
   constructor () {
     this.DEFAULT_WHERE_OPTIONS = {
       record_status: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
+    };
+    this.INCLUDE_MEMBERS = {
+        model: services.db.GroupMembers,
+        as: 'members',
+        where: this.DEFAULT_WHERE_OPTIONS,
+        required: false,
+        include: [
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            }
+        ]
     };
     this.config = services.config;
     this.getGroups = this.getGroups.bind (this);
@@ -66,12 +81,7 @@ module.exports = class GroupsController {
         include: noMembers
           ? undefined
           : [
-              {
-                model: services.db.GroupMembers,
-                as: 'members',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-              },
+                this.INCLUDE_MEMBERS
             ],
       });
       const allDbMembers = (groups || []).reduce ((result, value) => {
@@ -118,12 +128,7 @@ module.exports = class GroupsController {
       }
       const group = await services.db.Groups.findByPk (req.params.groupId, {
         include: [
-          {
-            model: services.db.GroupMembers,
-            as: 'members',
-            where: this.DEFAULT_WHERE_OPTIONS,
-            required: false,
-          },
+            this.INCLUDE_MEMBERS
         ],
       });
       const parsedGroup = group.toJSON ();
@@ -249,17 +254,20 @@ module.exports = class GroupsController {
     for (const role of Object.keys (contacts)) {
       try {
         if (role && contacts[role]) {
-          const member = await services.db.GroupMembers.findOne({where: { user_id: contacts[role], group_id: group.id }});
+          const unique_id = `${contacts[role]}-${group.id}`;
+          const member = await services.db.GroupMembers.findOne({where: { unique_id }});
           if (!member) {
               await services.db.GroupMembers.create ({
                   group_id: group.id,
                   user_id: contacts[role],
+                  unique_id
               });
           }
           await services.db.MemberRoles.create ({
               group_id: group.id,
               role: role,
               user_id: contacts[role],
+              unique_id
           });
         }
       } catch (e) {
@@ -310,8 +318,17 @@ module.exports = class GroupsController {
       const where = this.addQueryParamsToWhere (req.query, {
         ...this.DEFAULT_WHERE_OPTIONS,
       });
+      where.group_id = req.params.groupId;
       const members = await services.db.GroupMembers.findAll ({
         where,
+        include: [
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where,
+                required: false
+            }
+        ]
       });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {members}));
     } catch (e) {

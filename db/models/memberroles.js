@@ -4,7 +4,22 @@ const constants = require ('../../models/constants');
 module.exports = (sequelize, DataTypes) => {
   const MemberRoles = sequelize.define('MemberRoles', {
     user_id: DataTypes.INTEGER,
-    group_id: DataTypes.INTEGER,
+      group_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+              model: 'Groups',
+              key: 'id',
+          },
+      },
+      unique_id: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          references: {
+              model: 'GroupMembers',
+              key: 'unique_id',
+          },
+      },
     record_status: {
         type: DataTypes.ENUM,
         values: [
@@ -20,11 +35,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   MemberRoles.associate = function(models) {
     // associations can be defined here
-      models.GroupMember.belongsTo (models.GroupMember, {
-          onDelete: 'CASCADE',
+      models.MemberRoles.belongsTo (models.GroupMembers, {
           foreignKey: {
               allowNull: false,
-              fieldName: 'user_id',
+              fieldName: 'unique_id',
           },
       });
   };

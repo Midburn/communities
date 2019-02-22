@@ -44,9 +44,10 @@ class DatabaseService {
       as: 'members',
       foreignKey: 'group_id',
     });
-    this.GroupMembers.hasMany (this.GroupMembers, {
+    this.GroupMembers.hasMany (this.MemberRoles, {
         as: 'roles',
-        foreignKey: 'user_id',
+        foreignKey: 'unique_id',
+        sourceKey: 'unique_id'
     });
 
     // DO NOT USE FORCE TRUE - this will recreate the data base

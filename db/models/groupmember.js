@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       user_id: DataTypes.INTEGER,
+      unique_id: {
+        type: DataTypes.STRING,
+        unique: true
+      },
       group_id: {
         type: DataTypes.INTEGER,
         onDelete: 'CASCADE',

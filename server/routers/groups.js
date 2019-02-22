@@ -27,10 +27,10 @@ module.exports = class GroupRouter {
          * groups members actions
          * E.G - POST/DELETE /api/VERSION/group/1/members
          */
-    this.router.route ('/groups/members').get (this.controller.getGroupMembers);
     this.router.route ('/groups/:groupId').get (this.controller.getGroup);
     this.router
       .route ('/groups/:groupId/members')
+      .get (this.controller.getGroupMembers)
       .post (this.controller.addGroupMembers)
       .delete (this.controller.removeGroupMembers);
   }
