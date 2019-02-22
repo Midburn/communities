@@ -54,6 +54,7 @@
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "node-sass": "^4.11.0",
+    "node-schedule": "^1.3.2",
     "optimize-css-assets-webpack-plugin": "5.0.1",
     "papaparse": "^4.6.3",
     "pnp-webpack-plugin": "1.1.0",
@@ -98,8 +99,9 @@
     "test": "node scripts/test.js",
     "test:once": "jest",
     "sequelize": "sequelize",
-    "migrate": "sequelize db:migrate local",
-    "createdb": "mysql -u root -p < db/create_db.sql"
+    "migrate": "sequelize db:migrate local && npm run erd",
+    "createdb": "mysql -u root -p < db/create_db.sql",
+    "erd": "node db/erd.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -118,7 +120,8 @@
     "cross-env": "^5.2.0",
     "enzyme": "^3.8.0",
     "enzyme-adapter-react-16": "^1.7.1",
-    "enzyme-to-json": "^3.3.5"
+    "enzyme-to-json": "^3.3.5",
+    "sequelize-erd": "^1.2.0"
   },
   "jest": {
     "snapshotSerializers": [

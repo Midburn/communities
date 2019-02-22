@@ -2,6 +2,7 @@ const services = require ('../services');
 const GenericResponse = require ('../../models/generic-response');
 const constants = require ('../../models/constants');
 
+
 module.exports = class GroupsController {
   constructor () {
     this.DEFAULT_WHERE_OPTIONS = {
@@ -22,33 +23,12 @@ module.exports = class GroupsController {
     const updatedWhere = {...where};
     for (const paramName in query) {
       let param;
-      if (!this.metaParams.includes(paramName)) {
-          param = query[paramName];
-          updatedWhere[paramName] = param;
+      if (!this.metaParams.includes (paramName)) {
+        param = query[paramName];
+        updatedWhere[paramName] = param;
       }
     }
     return updatedWhere;
-  }
-
-  async getMembersInfo (members, req) {
-    try {
-        const allMembers = [];
-        const sparkMembers = (await services.spark.post (
-            `users/ids`,
-            {ids: members.map(member => member.user_id)},
-            req)).data.users;
-        for (const member of members) {
-          const parsedMember = member.toJSON();
-          const sparkMember = sparkMembers.find(user => user.user_id === member.user_id);
-          if (sparkMember){
-              parsedMember.info = sparkMember;
-          }
-          allMembers.push(parsedMember);
-        }
-        return allMembers;
-    } catch (e) {
-        console.warn(e.stack);
-    }
   }
 
   async getGroups (req, res, next) {
@@ -57,32 +37,29 @@ module.exports = class GroupsController {
         req.query,
         this.DEFAULT_WHERE_OPTIONS
       );
+      const {noMembers} = req.query;
       const groups = await services.db.Groups.findAll ({
         where,
-        include: [
-          {
-            model: services.db.GroupMembers,
-            as: 'members',
-            where: this.DEFAULT_WHERE_OPTIONS,
-            required: false,
-          },
-        ],
+        include: noMembers
+          ? undefined
+          : [
+                {
+                    model: services.db.GroupMembers,
+                    as: 'members',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                },
+                {
+                    model: services.db.MemberRoles,
+                    as: 'roles',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                }
+            ]
       });
-      const allDbMembers = groups.reduce((result, value) => {
-        return [...result, ...value.members];
-      }, []);
-      const allMembers = await await this.getMembersInfo(allDbMembers, req);
-      const parsedGroups = [];
-      for (const group of groups) {
-        const parsedGroup = group.toJSON();
-        if (!req.query.noMembers) {
-            parsedGroup.members = allMembers.filter(member => member.group_id === group.id);
-        }
-        parsedGroups.push(parsedGroup);
-      }
       next (
-        new GenericResponse  (constants.RESPONSE_TYPES.JSON, {
-          groups: parsedGroups,
+        new GenericResponse (constants.RESPONSE_TYPES.JSON, {
+          groups,
         })
       );
     } catch (e) {
@@ -102,19 +79,23 @@ module.exports = class GroupsController {
       }
       const group = await services.db.Groups.findByPk (req.params.groupId, {
         include: [
-          {
-            model: services.db.GroupMembers,
-            as: 'members',
-            where: this.DEFAULT_WHERE_OPTIONS,
-            required: false,
-          },
+            {
+                model: services.db.GroupMembers,
+                as: 'members',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            },
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            }
         ],
       });
-      const parsedGroup = group.toJSON ();
-      parsedGroup.members = await this.getMembersInfo (group.members, req);
       next (
         new GenericResponse (constants.RESPONSE_TYPES.JSON, {
-          group: parsedGroup,
+          group,
         })
       );
     } catch (e) {
@@ -143,11 +124,17 @@ module.exports = class GroupsController {
       for (const group of req.body.groups) {
         try {
           const existing = await services.db.Groups.findOne ({
-            where: {group_name_en: group.group_name_en, group_name_he: group.group_name_he, event_id: group.event_id},
+            where: {
+              group_name_en: group.group_name_en,
+              group_name_he: group.group_name_he,
+              event_id: group.event_id,
+            },
           });
           let dbGroup;
           if (existing) {
-            results.existing.push (`${group.group_name_he} - ${group.group_name_en}`);
+            results.existing.push (
+              `${group.group_name_he} - ${group.group_name_en}`
+            );
           } else {
             const contacts = await this.getMembersForNewGroup (group, req);
             group.main_contact = contacts[constants.GROUP_STATIC_ROLES.LEADER];
@@ -160,11 +147,13 @@ module.exports = class GroupsController {
             dbGroup = await services.db.Groups.create (group, {
               returning: true,
             });
-            await this.createMembersForNewGroup (dbGroup.toJSON(), contacts);
+            await this.createMembersForNewGroup (dbGroup.toJSON (), contacts);
             results.success.push (dbGroup);
           }
         } catch (e) {
-          results.failures.push (`${group.group_name_he} - ${group.group_name_en}`);
+          results.failures.push (
+            `${group.group_name_he} - ${group.group_name_en}`
+          );
         }
       }
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {results}));
@@ -180,7 +169,8 @@ module.exports = class GroupsController {
 
   async getMemberIdByMail (email, req) {
     try {
-      return (await services.spark.get (`users/email/${email}`, req)).data.user_id;
+      return (await services.spark.get (`users/email/${email}`, req)).data
+        .user_id;
     } catch (e) {
       return null;
     }
@@ -190,7 +180,7 @@ module.exports = class GroupsController {
     try {
       const contacts = {
         [constants.GROUP_STATIC_ROLES.LEADER]: await this.getMemberIdByMail (
-            'a',
+          group.contact_person_midburn_email,
           req
         ),
         [constants.GROUP_STATIC_ROLES.CONTACT]: await this.getMemberIdByMail (
@@ -221,17 +211,27 @@ module.exports = class GroupsController {
   }
 
   async createMembersForNewGroup (group, contacts) {
-    for (const role of Object.keys(contacts)) {
+    for (const role of Object.keys (contacts)) {
       try {
-        if (contacts[role]) {
-          await services.db.GroupMembers.create ({
-            group_id: group.id,
-            role: role,
-            user_id: contacts[role],
+        if (role && contacts[role]) {
+          const unique_id = `${contacts[role]}-${group.id}`;
+          const member = await services.db.GroupMembers.findOne({where: { unique_id }});
+          if (!member) {
+              await services.db.GroupMembers.create ({
+                  group_id: group.id,
+                  user_id: contacts[role],
+                  unique_id
+              });
+          }
+          await services.db.MemberRoles.create ({
+              group_id: group.id,
+              role: role,
+              user_id: contacts[role],
+              unique_id
           });
         }
       } catch (e) {
-        console.warn(e.stack);
+        console.warn (e.stack);
       }
     }
   }
@@ -280,6 +280,14 @@ module.exports = class GroupsController {
       });
       const members = await services.db.GroupMembers.findAll ({
         where,
+        include: [
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where,
+                required: false
+            }
+        ]
       });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {members}));
     } catch (e) {

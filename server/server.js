@@ -23,8 +23,19 @@ class Server {
     this.initRouters ();
     this.initStaticServer ();
     this.handleGenericReposnse ();
+    this.initDB ();
     if (this.config.isDevMode) {
       this.initWebpackDevServer ();
+    }
+  }
+
+  async initDB () {
+    try {
+      await services.db.init ();
+      services.sparkSync.syncUsersCommonData();
+    } catch (e) {
+      console.warn ('Connection to DB failed! API would not work!');
+      console.warn (e.stack);
     }
   }
 
