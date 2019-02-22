@@ -214,20 +214,17 @@ module.exports = class GroupsController {
     for (const role of Object.keys (contacts)) {
       try {
         if (role && contacts[role]) {
-          const unique_id = `${contacts[role]}-${group.id}`;
-          const member = await services.db.GroupMembers.findOne({where: { unique_id }});
+          const member = await services.db.GroupMembers.findOne({where: { user_id: contacts[role], group_id: group.id }});
           if (!member) {
               await services.db.GroupMembers.create ({
                   group_id: group.id,
-                  user_id: contacts[role],
-                  unique_id
+                  user_id: contacts[role]
               });
           }
           await services.db.MemberRoles.create ({
               group_id: group.id,
               role: role,
-              user_id: contacts[role],
-              unique_id
+              user_id: contacts[role]
           });
         }
       } catch (e) {

@@ -106,16 +106,19 @@ async function getGroupMembersData (group, members) {
       role,
       group_id: group.id,
       user_id: member.user_id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        record_status: 'active',
     };
     communitiesMemberships.push (communitiesMembership);
   }
   return communitiesMemberships;
 }
 
-/**
+ /**
  * Starting function
  */
-async function Migrate () {
+async function Migrate (queryInterface) {
     const isLocal = process.argv.includes ('local');
     try {
     const sparkConfig = {
@@ -157,14 +160,15 @@ async function Migrate () {
               +members.camp_id === group.spark_id
           )
         );
-        await communitiesDb.GroupMembers.bulkCreate (groupMembers);
+        await queryInterface.bulkInsert('GroupMembers', groupMembers);
         results.success.push (result);
       } catch (e) {
         results.failure.push (group.spark_id);
+        console.warn(e);
       }
     }
     console.log (`Migrated ${results.success.length} groups`);
-    console.log (`Faild ${results.failure.length} groups`);
+    console.log (`Failed ${results.failure.length} groups`);
   } catch (e) {
     console.warn (e.stack);
   }
@@ -173,7 +177,7 @@ async function Migrate () {
 module.exports = {
   up: (queryInterface, Sequelize) => {
     if (!process.argv.includes ('no-spark')) {
-      return Migrate ();
+      return Migrate (queryInterface);
     }
     return Promise.resolve ();
   },
