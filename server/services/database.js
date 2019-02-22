@@ -44,6 +44,10 @@ class DatabaseService {
       as: 'members',
       foreignKey: 'group_id',
     });
+      this.Groups.hasMany (this.MemberRoles, {
+          as: 'roles',
+          foreignKey: 'group_id',
+      });
     this.GroupMembers.hasMany (this.MemberRoles, {
         as: 'roles',
         foreignKey: 'unique_id',

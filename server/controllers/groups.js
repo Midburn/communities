@@ -8,20 +8,6 @@ module.exports = class GroupsController {
     this.DEFAULT_WHERE_OPTIONS = {
       record_status: constants.DB_RECORD_STATUS_TYPES.ACTIVE,
     };
-    this.INCLUDE_MEMBERS = {
-        model: services.db.GroupMembers,
-        as: 'members',
-        where: this.DEFAULT_WHERE_OPTIONS,
-        required: false,
-        include: [
-            {
-                model: services.db.MemberRoles,
-                as: 'roles',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-            }
-        ]
-    };
     this.config = services.config;
     this.getGroups = this.getGroups.bind (this);
     this.getGroup = this.getGroup.bind (this);
@@ -81,14 +67,25 @@ module.exports = class GroupsController {
         include: noMembers
           ? undefined
           : [
-                this.INCLUDE_MEMBERS
-            ],
+                {
+                    model: services.db.GroupMembers,
+                    as: 'members',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                },
+                {
+                    model: services.db.MemberRoles,
+                    as: 'roles',
+                    where: this.DEFAULT_WHERE_OPTIONS,
+                    required: false,
+                }
+            ]
       });
-      const allDbMembers = (groups || []).reduce ((result, value) => {
-        return [...result, ...value.members];
-      }, []);
       const parsedGroups = noMembers ? groups.map (g => g.toJSON ()) : [];
       if (!req.query.noMembers) {
+          const allDbMembers = (groups || []).reduce ((result, value) => {
+              return [...result, ...value.members];
+          }, []);
         // Perform single reduce to prevent to many iterations over members.
         const allMembersDict = ((await this.getMembersInfo (
           allDbMembers,
@@ -128,7 +125,18 @@ module.exports = class GroupsController {
       }
       const group = await services.db.Groups.findByPk (req.params.groupId, {
         include: [
-            this.INCLUDE_MEMBERS
+            {
+                model: services.db.GroupMembers,
+                as: 'members',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            },
+            {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+            }
         ],
       });
       const parsedGroup = group.toJSON ();
@@ -318,7 +326,6 @@ module.exports = class GroupsController {
       const where = this.addQueryParamsToWhere (req.query, {
         ...this.DEFAULT_WHERE_OPTIONS,
       });
-      where.group_id = req.params.groupId;
       const members = await services.db.GroupMembers.findAll ({
         where,
         include: [
