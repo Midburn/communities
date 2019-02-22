@@ -129,6 +129,7 @@ async function Migrate (queryInterface) {
           ? 'localhost'
           : 'sparkdb',
       dialect: 'mysql',
+        logging: false
     };
     const communitiesConfig = {
       dialect: 'mysql',
@@ -138,6 +139,7 @@ async function Migrate (queryInterface) {
       database: process.env.MYSQL_DB_NAME || 'communities',
       username: process.env.MYSQL_DB_USERNAME || 'root',
       password: process.env.MYSQL_DB_PASSWORD,
+        logging: false
     };
     const communitiesDb = await getCommunitiesDb (communitiesConfig);
     const sparkDb = await getSparkDb (sparkConfig);
@@ -160,7 +162,9 @@ async function Migrate (queryInterface) {
               +members.camp_id === group.spark_id
           )
         );
-        await queryInterface.bulkInsert('GroupMembers', groupMembers);
+        if (groupMembers && groupMembers.length) {
+            await queryInterface.bulkInsert('GroupMembers', groupMembers);
+        }
         results.success.push (result);
       } catch (e) {
         results.failure.push (group.spark_id);
