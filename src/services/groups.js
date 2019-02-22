@@ -1,4 +1,3 @@
-import i18n from './i18n';
 import axios from 'axios';
 import {state} from '../models/state';
 import {EventsService} from './events';
@@ -87,11 +86,10 @@ export class GroupsService {
     }
   }
 
-  getPropertyByLang (group, propName) {
+  getPropertyByLang (group, propName, lng) {
     if (!group || !propName) {
       return '';
     }
-    const {lng} = i18n.language;
     const isHeb = lng === 'he';
     switch (propName) {
       case 'name':

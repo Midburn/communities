@@ -34,7 +34,7 @@ class BaseJoinGroupModal extends React.Component {
     };
 
     render() {
-        const {isOpen, group, toggle, t, match} = this.props;
+        const {isOpen, group, toggle, t, match, lng} = this.props;
         return (
             <Modal className="JoinModal" isOpen={isOpen} toggle={toggle}>
                 <ModalHeader toggle={toggle}>{t(`${match.params.groupType}:joinModal.header`)}</ModalHeader>
@@ -42,7 +42,7 @@ class BaseJoinGroupModal extends React.Component {
                     {
                         // TODO - implement loader
                         this.loading ? <div className="loader small"></div> :
-                        this.error ? t(this.error.message) : t(`${match.params.groupType}:joinModal.body`, {name: this.groupsService.getPropertyByLang(group, 'name')})
+                        this.error ? t(this.error.message) : t(`${match.params.groupType}:joinModal.body`, {name: this.groupsService.getPropertyByLang(group, 'name', lng)})
                     }
 
                 </ModalBody>

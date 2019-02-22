@@ -47,12 +47,12 @@ class BaseGroupsTable extends React.Component {
   }
 
   get CSVdata () {
-    const {t, groups, presale} = this.props;
+    const {t, groups, presale, lng} = this.props;
     return groups.map (g => {
       const baseData = {
         [t (
           `${this.TRANSLATE_PREFIX}.table.groupName`
-        )]: this.groupsService.getPropertyByLang (g, 'name'),
+        )]: this.groupsService.getPropertyByLang (g, 'name', lng),
         [t (`${this.TRANSLATE_PREFIX}.table.leaderName`)]: this.getManagerProp (
           g,
           'name'
@@ -187,6 +187,7 @@ class BaseGroupsTable extends React.Component {
       presale,
       groupQuotas,
       publishQuota,
+      lng,
     } = this.props;
     if (isLoading) {
       return <Loader />;
@@ -249,7 +250,7 @@ class BaseGroupsTable extends React.Component {
                 <tr key={g.id}>
                   <td>
                     <NavLink to={`${g.id}`}>
-                      {this.groupsService.getPropertyByLang (g, 'name')}
+                      {this.groupsService.getPropertyByLang (g, 'name', lng)}
                     </NavLink>
                   </td>
                   <td>

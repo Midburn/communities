@@ -64,7 +64,11 @@
     },
     "charts": {
       "allocationsUsage": "ניצול הקצאות",
-      "fullGroups": "מחנות נושא שניצלו את הקצאותים"
+      "fullGroups": "מחנות נושא שניצלו את הקצאותים",
+      "ticketsBaught": "כרטיסים שנקנו",
+      "reservedTickets": "הקצאות ששויכו",
+      "reservedGiven": "הקצאות שניתנו",
+      "ticketOwners": "בעלי כרטיס (2018)"
     },
     "table": {
       "publish": "מתן {{allocationsCount}} הקצאות",
