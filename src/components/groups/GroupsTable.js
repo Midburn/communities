@@ -158,8 +158,8 @@ class BaseGroupsTable extends React.Component {
     const manager = group.members.find (
       member => member.user_id === managerId
     );
-    if (manager && manager.info) {
-      return manager.info[propName];
+    if (manager) {
+      return manager[propName];
     } else {
       return '';
     }

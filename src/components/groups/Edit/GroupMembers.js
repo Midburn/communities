@@ -329,9 +329,9 @@ import {Loader} from '../../Loader';
               {(members || []).map (member => {
                   return (
                       <tr key={member.user_id}>
-                          <td>{(member.info || {}).name}</td>
-                          <td>{(member.info || {}).email}</td>
-                          <td>{(member.info || {}).cell_phone}</td>
+                          <td>{member.name}</td>
+                          <td>{member.email}</td>
+                          <td>{member.cell_phone}</td>
                   <PermissableComponent permitted={ticketCount}>
                     <td>
                       {this.getMemberTicketCount (member.user_id)}

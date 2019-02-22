@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true
       },
+        email: DataTypes.STRING,
+        cell_phone: DataTypes.STRING,
+        name: DataTypes.STRING,
       group_id: {
         type: DataTypes.INTEGER,
         onDelete: 'CASCADE',

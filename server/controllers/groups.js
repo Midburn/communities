@@ -31,30 +31,6 @@ module.exports = class GroupsController {
     return updatedWhere;
   }
 
-  async getMembersInfo (members, req) {
-    try {
-      const allMembers = [];
-      const sparkMembers = (await services.spark.post (
-        `users/ids`,
-        {ids: members.map (member => member.user_id)},
-        req
-      )).data.users;
-      for (const member of members) {
-        const parsedMember = member.toJSON ();
-        const sparkMember = sparkMembers.find (
-          user => user.user_id === member.user_id
-        );
-        if (sparkMember) {
-          parsedMember.info = sparkMember;
-        }
-        allMembers.push (parsedMember);
-      }
-      return allMembers;
-    } catch (e) {
-      console.warn (e.stack);
-    }
-  }
-
   async getGroups (req, res, next) {
     try {
       const where = this.addQueryParamsToWhere (
@@ -81,31 +57,9 @@ module.exports = class GroupsController {
                 }
             ]
       });
-      const parsedGroups = noMembers ? groups.map (g => g.toJSON ()) : [];
-      if (!req.query.noMembers) {
-          const allDbMembers = (groups || []).reduce ((result, value) => {
-              return [...result, ...value.members];
-          }, []);
-        // Perform single reduce to prevent to many iterations over members.
-        const allMembersDict = ((await this.getMembersInfo (
-          allDbMembers,
-          req
-        )) || [])
-          .reduce ((result, member) => {
-            result[member.group_id] = result[member.group_id]
-              ? [...result[member.group_id], member]
-              : [member];
-            return result;
-          }, {});
-        for (const group of groups) {
-          const parsedGroup = group.toJSON ();
-          parsedGroup.members = allMembersDict[group.id];
-          parsedGroups.push (parsedGroup);
-        }
-      }
       next (
         new GenericResponse (constants.RESPONSE_TYPES.JSON, {
-          groups: parsedGroups,
+          groups,
         })
       );
     } catch (e) {
@@ -139,11 +93,9 @@ module.exports = class GroupsController {
             }
         ],
       });
-      const parsedGroup = group.toJSON ();
-      parsedGroup.members = await this.getMembersInfo (group.members, req);
       next (
         new GenericResponse (constants.RESPONSE_TYPES.JSON, {
-          group: parsedGroup,
+          group,
         })
       );
     } catch (e) {
