@@ -1,6 +1,7 @@
 const Sequelize = require ('sequelize');
 const Models = require ('../models');
 const constants = require ('../../models/constants');
+require ('dotenv').config ();
 
 async function getCommunitiesDb (config) {
   console.log (
