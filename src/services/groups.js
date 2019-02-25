@@ -78,7 +78,7 @@ export class GroupsService {
       }
       const params = {
         group_type: type,
-        event_id: eventId || state.currentEventId
+        event_id: eventId || state.currentEventId,
       };
       return this.getGroups (params, false);
     } catch (e) {
@@ -121,7 +121,10 @@ export class GroupsService {
       return;
     }
     for (const g of state.loggedUser.groups) {
-      if (g.event_id === state.currentEventId && g.group_type.toLowerCase ().includes (type)) {
+      if (
+        g.event_id === state.currentEventId &&
+        g.group_type.toLowerCase ().includes (type)
+      ) {
         return g.group_id;
       }
     }
@@ -183,6 +186,23 @@ export class GroupsService {
       )).data.body.results;
     } catch (e) {
       console.warn (`Error getting groups data - ${e.stack}`);
+      throw e;
+    }
+  }
+
+  // Group Roles
+
+  async changeUserRole (group_id, user_id, role, action) {
+    try {
+      const method = action === constants.ACTION_NAMES.ADD ? 'post' : 'delete';
+      const body = action === constants.ACTION_NAMES.ADD
+        ? {group_id, user_id, role}
+        : {data: {group_id, user_id, role}};
+      return (await axios[method] (`/api/v1/groups/roles`, body, {
+        withCredentials: true,
+      })).data.body;
+    } catch (e) {
+      console.warn (`Error change group role - ${e.stack}`);
       throw e;
     }
   }

@@ -34,7 +34,6 @@ import {action} from 'mobx/lib/mobx';
   @observable tickets = [];
   @observable allocations = [];
   @observable auditedUser = [];
-  @observable groupPermissions = [];
 
   @observable isLoading = true;
   @observable quota = 0;
@@ -89,7 +88,6 @@ import {action} from 'mobx/lib/mobx';
       }
       await this.getGroupAllocations ();
       await this.getAudits ();
-      await this.getGroupPermissions ();
       await this.getGroupsAllocationAndBuckets ();
       this.isLoading = false;
     } catch (e) {
@@ -98,16 +96,6 @@ import {action} from 'mobx/lib/mobx';
       this.error = e;
     }
   }
-
-  getGroupPermissions = async () => {
-    try {
-      this.groupPermissions = await this.permissionsService.getPermissionsRelatedToEntity (
-        this.group.id
-      );
-    } catch (e) {
-      console.warn (e);
-    }
-  };
 
   allocationsChanged = async () => {
     try {
@@ -324,7 +312,6 @@ import {action} from 'mobx/lib/mobx';
             <GroupMembers
               isLoading={this.isLoading}
               quota={this.quota}
-              permissions={this.groupPermissions}
               permissionsChanged={this.getGroupPermissions}
               allocationsChanged={this.allocationsChanged}
               allocations={this.allocations}

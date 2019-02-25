@@ -9,15 +9,14 @@ import {WarningModal} from '../../controls/WarningModal';
 import * as constants from '../../../../models/constants';
 import {AllocationService} from '../../../services/allocations';
 import {ParsingService} from '../../../services/parsing';
-import {state} from '../../../models/state';
-import {PermissionService} from '../../../services/permissions';
 import {isMobileOnly} from 'react-device-detect';
 import {Loader} from '../../Loader';
+import {GroupsService} from '../../../services/groups';
 
 @observer class BaseGroupMembers extends React.Component {
   allocationsService = new AllocationService ();
   parsingService = new ParsingService ();
-  permissionsService = new PermissionService ();
+  groupService = new GroupsService ();
   TRANSLATE_PREFIX = `members`;
 
   @observable memberPermissions = {};
@@ -136,59 +135,16 @@ import {Loader} from '../../Loader';
     ).length;
   }
 
-  getMemberPermission (memberId, permissionType) {
-    const {permissions} = this.props;
-    if (!permissions) {
-      return;
-    }
-    return permissions.some (
-      permission =>
-        permission.permission_type === permissionType &&
-        permission.user_id === memberId
-    );
-  }
-
-  async changeMemberPermission (memberId, permissionType) {
-    const {permissions, permissionsChanged} = this.props;
-    if (!permissions) {
-      return;
-    }
-    const permission = permissions.find (p => {
-      return p.permission_type === permissionType && p.user_id === memberId;
-    });
-    if (!permission) {
-      await this.addPermission (memberId, permissionType);
-    } else {
-      await this.removePermission (permission);
-    }
-    permissionsChanged ();
-  }
-
-  async addPermission (memberId, permissionType) {
-    const {group} = this.props;
-    try {
-      await this.permissionsService.addPermission ({
-        user_id: memberId,
-        permission_type: permissionType,
-        entity_type: constants.ENTITY_TYPE.GROUP,
-        related_entity: group.id,
-        permitted_by: state.loggedUser.user_id,
-      });
-    } catch (e) {
-      console.warn (e);
-    }
-  }
-
-  async removePermission (permission) {
-    const {group} = this.props;
-    try {
-      await this.permissionsService.revokePermission (
-        permission.id,
-        constants.ENTITY_TYPE.GROUP,
-        group.id
+  async changeMemberRole (memberId, role) {
+    if (!constants.GROUP_STATIC_ROLES[role]) {
+      throw new Error (
+        'Role which give action rights must come from static constants'
       );
-    } catch (e) {
-      console.warn (e);
+    }
+    if (!this.memberHasRole (memberId, role)) {
+      await this.addMemberRole (memberId, role);
+    } else {
+      await this.removeMemberRole (memberId, role);
     }
   }
 
@@ -254,29 +210,72 @@ import {Loader} from '../../Loader';
             ),
             [t (
               `${this.TRANSLATE_PREFIX}.columns.allowToAllocate`
-            )]: this.getMemberPermission (member.user_id),
+            )]: this.canAllocatePresale (member.user_id),
           }
         : {};
       return {...baseData, ...preSaleData};
     });
   }
 
-  isChangePermissionsDisabled (memberId) {
-    const {permissions, group} = this.props;
-    if (memberId === group.main_contact) {
-      // This is the camp manager - can't change his permissions.
+  memberHasRole (memberId, role) {
+    const {group} = this.props;
+    return (
+      group.roles &&
+      group.roles.some (r => memberId === r.user_id && r.role === role)
+    );
+  }
+
+  isChangeRoleDisabled (memberId) {
+    if (this.memberHasRole (memberId, constants.GROUP_STATIC_ROLES.LEADER)) {
+      // cant change leader roles
       return true;
     }
+  }
+
+  canAllocatePresale (memberId) {
     return (
-      permissions &&
-      !permissions.some (permission => {
-        return (
-          permission.permission_type ===
-            constants.PERMISSION_TYPES.GIVE_PERMISSION &&
-          permission.user_id === state.loggedUser.user_id
-        );
-      })
+      this.memberHasRole (memberId, constants.GROUP_STATIC_ROLES.LEADER) ||
+      this.memberHasRole (
+        memberId,
+        constants.GROUP_STATIC_ROLES.PRE_SALE_ALLOCATOR
+      )
     );
+  }
+
+  async addMemberRole (memberId, role) {
+    const {group} = this.props;
+    try {
+      await this.groupService.changeUserRole (
+        group.id,
+        memberId,
+        role,
+        constants.ACTION_NAMES.ADD
+      );
+      group.roles.push ({
+        group_id: group.id,
+        user_id: memberId,
+        role,
+      });
+    } catch (e) {
+      console.warn (e.stack);
+    }
+  }
+
+  async removeMemberRole (memberId, role) {
+    const {group} = this.props;
+    try {
+      await this.groupService.changeUserRole (
+        group.id,
+        memberId,
+        role,
+        constants.ACTION_NAMES.DELETE
+      );
+      group.roles = group.roles.filter (
+        r => !(r.user_id === memberId && r.role === role)
+      );
+    } catch (e) {
+      console.warn (e.stack);
+    }
   }
 
   toggleAllocationWarning = () => {
@@ -326,12 +325,12 @@ import {Loader} from '../../Loader';
             </tr>
           </TableHead>
           <TableBody>
-              {(members || []).map (member => {
-                  return (
-                      <tr key={member.user_id}>
-                          <td>{member.name}</td>
-                          <td>{member.email}</td>
-                          <td>{member.cell_phone}</td>
+            {(members || []).map (member => {
+              return (
+                <tr key={member.user_id}>
+                  <td>{member.name}</td>
+                  <td>{member.email}</td>
+                  <td>{member.cell_phone}</td>
                   <PermissableComponent permitted={ticketCount}>
                     <td>
                       {this.getMemberTicketCount (member.user_id)}
@@ -376,18 +375,13 @@ import {Loader} from '../../Loader';
                   <PermissableComponent permitted={presale}>
                     <td className="d-flex justify-content-center">
                       <input
-                        disabled={this.isChangePermissionsDisabled (
-                          member.user_id
-                        )}
+                        disabled={this.isChangeRoleDisabled (member.user_id)}
                         onChange={e =>
-                          this.changeMemberPermission (
+                          this.changeMemberRole (
                             member.user_id,
-                            constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET
+                            constants.GROUP_STATIC_ROLES.PRE_SALE_ALLOCATOR
                           )}
-                        checked={this.getMemberPermission (
-                          member.user_id,
-                          constants.PERMISSION_TYPES.ALLOCATE_PRESALE_TICKET
-                        )}
+                        checked={this.canAllocatePresale (member.user_id)}
                         type="checkbox"
                       />
                     </td>

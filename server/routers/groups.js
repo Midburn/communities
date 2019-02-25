@@ -1,5 +1,6 @@
 const Router = require ('express').Router;
 const controllers = require ('../controllers');
+const constants = require ('../../models/constants');
 
 module.exports = class GroupRouter {
   constructor () {
@@ -24,9 +25,13 @@ module.exports = class GroupRouter {
       .post (this.controller.createGroups)
       .put (this.controller.updateGroups);
 
-    this.router.route('/groups/members').get(this.controller.getGroupMembers);
+    this.router.route ('/groups/members').get (this.controller.getGroupMembers);
+    this.router
+      .route ('/groups/roles')
+      .post (this.controller.addGroupRole)
+      .delete (this.controller.removeGroupRole);
     this.router.route ('/groups/:groupId').get (this.controller.getGroup);
-      /**
+    /**
        * groups members actions
        * E.G - POST/DELETE /api/VERSION/group/1/members
        */
