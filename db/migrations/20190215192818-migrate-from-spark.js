@@ -124,9 +124,7 @@ async function Migrate (queryInterface) {
       username: process.env.SPARK_DB_USER || 'spark',
       password: process.env.SPARK_DB_PASSWORD || 'spark',
       database: process.env.SPARK_DB_DBNAME || 'spark',
-      host: process.env.SPARK_DB_HOSTNAME ||
-        process.env.SPARK_DB_HOSTNAME ||
-        'sparkdb',
+      host: process.env.SPARK_DB_HOSTNAME || 'sparkdb',
       dialect: 'mysql',
       logging: false,
     };
