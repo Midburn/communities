@@ -3,6 +3,10 @@ import { withI18n } from 'react-i18next';
 import { Row, Col, ListGroup, MDBIcon , MDBBtn, Card, CardBody   } from 'mdbreact';
 import { ListItemWithBadge } from '../controls/ListItemWithBadge';
 import { GroupsService } from '../../services/groups';
+import { OneLineFieldValue } from './OneLineFieldValue'
+import { GroupDetailListItem } from './GroupDetailListItem'
+import {SvgIcon} from './SvgIcon'
+import './GroupPublicationDetails.scss'
 
 
 class BaseGroupPublicationDetails extends React.Component {
@@ -50,24 +54,37 @@ class BaseGroupPublicationDetails extends React.Component {
     }
 
     render () {
+        console.log('this.group', this.group)
         return (
-          <Card>
-              <CardBody>
-                  <Row>
-                      <Col md="6">
-                          <div className="d-flex">
-                            <div className="mb-h6-responsive text-black1">{this.t('single.publication.campType')}</div>
-                            <p className="text-black2 font-size-14-responsive mx-2">{this.groupType}</p>
-                          </div>
-                          <div className="mb-h6-responsive text-black1">{this.t('single.header.description')}</div>
-                          <p className="text-black2 font-size-14-responsive">
-                            {this.groupsService.getPropertyByLang(this.group, 'description', this.lng)}
-                          </p>
-                      </Col>
-                      <Col md="6">second</Col>
-                  </Row>
-              </CardBody>
-          </Card>
+          <Row>
+              <Col md="6">
+                  <OneLineFieldValue fieldName={this.t('single.publication.campType')}>
+                    {this.groupType}
+                  </OneLineFieldValue>
+                  <div className="mb-h6-responsive text-black1">{this.t('single.header.description')}</div>
+                  <p className="text-black2 font-size-14-responsive">
+                    {this.groupsService.getPropertyByLang(this.group, 'description', this.lng)}
+                  </p>
+                  <OneLineFieldValue fieldName={this.t('single.publication.details.noise')}>
+                    {this.group.noise_level}
+                  </OneLineFieldValue>
+                  <OneLineFieldValue fieldName={this.t('single.publication.details.openMembers')}>
+                    {this.openToNewMembers}
+                  </OneLineFieldValue>
+                  <OneLineFieldValue fieldName={this.t('single.publication.details.family')}>
+                    {this.acceptFamilies}
+                  </OneLineFieldValue>
+                  <OneLineFieldValue fieldName={this.t('single.publication.details.children')}>
+                    {this.childFriendly}
+                  </OneLineFieldValue>
+
+                  <div className="mb-h6-responsive text-black1">{this.t('single.publication.contactTitle')}</div>
+                  <GroupDetailListItem icon={<SvgIcon name="person" size="16px"/>} text="מוביל שם-טוב"/>
+              </Col>
+              <Col md="6">
+                  <div className="image-placeholder">image 600 X 400</div>
+              </Col>
+          </Row>
       )
     }
 
