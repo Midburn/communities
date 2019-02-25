@@ -119,7 +119,6 @@ async function getGroupMembersData (group, members) {
  * Starting function
  */
 async function Migrate (queryInterface) {
-  const isLocal = process.argv.includes ('local-db-migration');
   try {
     const sparkConfig = {
       username: process.env.SPARK_DB_USER || 'spark',
@@ -127,17 +126,13 @@ async function Migrate (queryInterface) {
       database: process.env.SPARK_DB_DBNAME || 'spark',
       host: process.env.SPARK_DB_HOSTNAME ||
         process.env.SPARK_DB_HOSTNAME ||
-        isLocal
-        ? 'localhost'
-        : 'sparkdb',
+        'sparkdb',
       dialect: 'mysql',
       logging: false,
     };
     const communitiesConfig = {
       dialect: 'mysql',
-      host: process.env.MYSQL_DB_HOST || isLocal
-        ? 'localhost'
-        : 'communitiesdb',
+      host: process.env.MYSQL_DB_HOST || 'communitiesdb',
       database: process.env.MYSQL_DB_NAME || 'communities',
       username: process.env.MYSQL_DB_USERNAME || 'root',
       password: process.env.MYSQL_DB_PASSWORD,

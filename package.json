@@ -99,7 +99,7 @@
     "test": "node scripts/test.js",
     "test:once": "jest",
     "sequelize": "sequelize",
-    "migrate": "sequelize db:migrate local-db-migration && npm run erd",
+    "migrate": "sequelize db:migrate && npm run erd",
     "createdb": "mysql -u root -p < db/create_db.sql",
     "erd": "node db/erd.js"
   },
