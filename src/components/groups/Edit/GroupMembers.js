@@ -169,7 +169,7 @@ import {GroupsService} from '../../../services/groups';
       }
     }
     const baseSums = {
-      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: members.length,
+      [t (`${this.TRANSLATE_PREFIX}.sums.members`)]: (members || []).length,
     };
     const preSaleSums = presale
       ? {
