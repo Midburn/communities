@@ -9,7 +9,7 @@ class BaseGroupBasicHeader extends React.Component {
     groupsService = new GroupsService();
 
     render() {
-        const { lng, match, t, group, isGroupMember } = this.props;
+        const { lng, t, group, isGroupMember } = this.props;
         const themeCamps = t('nav.camps.title')
         const campName = this.groupsService.getPropertyByLang(group, 'name')
         const myCampOrCampName = isGroupMember ? t('nav.camps.my') : campName
@@ -26,14 +26,6 @@ class BaseGroupBasicHeader extends React.Component {
                     <Row>
                         <Col md="11">
                             <h1 className="h1-responsive text-blue">{this.groupsService.getPropertyByLang(group, 'name', lng)}</h1>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md="11">
-                            <div className="mb-h6-responsive text-black1">{t(`${match.params.groupType}:single.header.description`)}</div>
-                            <p className="text-black2">
-                                {this.groupsService.getPropertyByLang(group, 'description', lng)}
-                            </p>
                         </Col>
                     </Row>
                 </div>
