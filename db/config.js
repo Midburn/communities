@@ -9,7 +9,7 @@ const pool = {
 module.exports = {
   development: {
     username: process.env.MYSQL_DB_USERNAME || 'root',
-    password: process.env.MYSQL_LOCAL_DB_PASS,
+    password: process.env.MYSQL_DB_HOST,
     database: process.env.MYSQL_DB_NAME || 'communities',
     port: process.env.MYSQL_DB_PORT || 3306,
     host: process.env.MYSQL_DB_HOST || 'localhost',
