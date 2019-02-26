@@ -359,7 +359,7 @@ module.exports = class GroupsController {
         failures: [],
       };
       const currentMembers = await services.db.GroupMembers.findAll ({
-        where: {GroupId: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
+        where: {group_id: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
       });
       const currentMembersIds = currentMembers.map (m => m.user_id.toString ());
       const membersToAdd = req.body.members.filter (
@@ -370,9 +370,22 @@ module.exports = class GroupsController {
         try {
           await services.db.GroupMembers.create ({
             user_id: member.id,
-            GroupId: req.params.groupId,
-            role: member.role,
+            group_id: req.params.groupId,
+            role: member.roles,
           });
+          if (member.roles) {
+            for (const role of member.roles) {
+              try {
+                await services.db.MemberRoles.create ({
+                  role,
+                  user_id: member.id,
+                  group_id: req.params.groupId,
+                });
+              } catch (e) {
+                console.warn (e.stack);
+              }
+            }
+          }
           result.success.push (member.id);
         } catch (e) {
           console.warn (e.stack);
@@ -402,7 +415,7 @@ module.exports = class GroupsController {
         failures: [],
       };
       const currentMembers = await services.db.GroupMembers.findAll ({
-        where: {GroupId: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
+        where: {group_id: req.params.groupId, ...this.DEFAULT_WHERE_OPTIONS},
       });
       const currentMembersIds = currentMembers.map (m => m.user_id.toString ());
       const membersToRemove = req.body.members.filter (newMemberId =>
@@ -414,7 +427,13 @@ module.exports = class GroupsController {
             {
               record_status: constants.DB_RECORD_STATUS_TYPES.DELETED,
             },
-            {where: {user_id: id, GroupId: req.params.groupId}}
+            {where: {user_id: id, group_id: req.params.groupId}}
+          );
+          await services.db.MemberRoles.update (
+            {
+              record_status: constants.DB_RECORD_STATUS_TYPES.DELETED,
+            },
+            {where: {user_id: id, group_id: req.params.groupId}}
           );
           result.success.push (id);
         } catch (e) {
