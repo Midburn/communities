@@ -31,7 +31,6 @@ export class InitilizationService {
     state.artInstallations = await this.groups.getAllOpenGroups (
       constants.GROUP_TYPES.ART
     );
-    state.userGroups = await this.groups.getUserGroups ();
     state.currentEvent = await this.events.getEvent (state.currentEventId);
     state.allocationGroups = (await this.groups.getUserGroups (
       this.events.getFormerEventId ()
@@ -46,6 +45,7 @@ export class InitilizationService {
       await this.fetchAppInitialData ();
       const loginDetails = await this.auth.auth ();
       state.loggedUser = loginDetails.loggedUser;
+      console.log(loginDetails.loggedUser);
       state.currentEventId = loginDetails.currentEventId;
       try {
         await this.fetchInitialData ();

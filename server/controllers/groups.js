@@ -2,7 +2,6 @@ const services = require ('../services');
 const GenericResponse = require ('../../models/generic-response');
 const constants = require ('../../models/constants');
 
-
 module.exports = class GroupsController {
   constructor () {
     this.DEFAULT_WHERE_OPTIONS = {
@@ -16,6 +15,8 @@ module.exports = class GroupsController {
     this.getGroupMembers = this.getGroupMembers.bind (this);
     this.addGroupMembers = this.addGroupMembers.bind (this);
     this.removeGroupMembers = this.removeGroupMembers.bind (this);
+    this.addGroupRole = this.addGroupRole.bind (this);
+    this.removeGroupRole = this.removeGroupRole.bind (this);
     this.metaParams = ['noMembers'];
   }
 
@@ -43,19 +44,19 @@ module.exports = class GroupsController {
         include: noMembers
           ? undefined
           : [
-                {
-                    model: services.db.GroupMembers,
-                    as: 'members',
-                    where: this.DEFAULT_WHERE_OPTIONS,
-                    required: false,
-                },
-                {
-                    model: services.db.MemberRoles,
-                    as: 'roles',
-                    where: this.DEFAULT_WHERE_OPTIONS,
-                    required: false,
-                }
-            ]
+              {
+                model: services.db.GroupMembers,
+                as: 'members',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+              },
+              {
+                model: services.db.MemberRoles,
+                as: 'roles',
+                where: this.DEFAULT_WHERE_OPTIONS,
+                required: false,
+              },
+            ],
       });
       next (
         new GenericResponse (constants.RESPONSE_TYPES.JSON, {
@@ -79,18 +80,18 @@ module.exports = class GroupsController {
       }
       const group = await services.db.Groups.findByPk (req.params.groupId, {
         include: [
-            {
-                model: services.db.GroupMembers,
-                as: 'members',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-            },
-            {
-                model: services.db.MemberRoles,
-                as: 'roles',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-            }
+          {
+            model: services.db.GroupMembers,
+            as: 'members',
+            where: this.DEFAULT_WHERE_OPTIONS,
+            required: false,
+          },
+          {
+            model: services.db.MemberRoles,
+            as: 'roles',
+            where: this.DEFAULT_WHERE_OPTIONS,
+            required: false,
+          },
         ],
       });
       next (
@@ -214,17 +215,19 @@ module.exports = class GroupsController {
     for (const role of Object.keys (contacts)) {
       try {
         if (role && contacts[role]) {
-          const member = await services.db.GroupMembers.findOne({where: { user_id: contacts[role], group_id: group.id }});
+          const member = await services.db.GroupMembers.findOne ({
+            where: {user_id: contacts[role], group_id: group.id},
+          });
           if (!member) {
-              await services.db.GroupMembers.create ({
-                  group_id: group.id,
-                  user_id: contacts[role]
-              });
+            await services.db.GroupMembers.create ({
+              group_id: group.id,
+              user_id: contacts[role],
+            });
           }
           await services.db.MemberRoles.create ({
-              group_id: group.id,
-              role: role,
-              user_id: contacts[role]
+            group_id: group.id,
+            role: role,
+            user_id: contacts[role],
           });
         }
       } catch (e) {
@@ -268,6 +271,53 @@ module.exports = class GroupsController {
     }
   }
 
+  // GROUP ROLES
+
+  async addGroupRole (req, res, next) {
+    try {
+      const {user_id, group_id, role} = req.body;
+      if (!user_id || !group_id || !role) {
+        throw new Error ('Must state user_id, user_id, and role and body');
+      }
+      const result = await services.db.MemberRoles.create (req.body);
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {result}));
+    } catch (e) {
+      next (
+        new GenericResponse (
+          constants.RESPONSE_TYPES.ERROR,
+          new Error (`Failed adding member role - ${e.stack}`)
+        )
+      );
+    }
+  }
+
+  async removeGroupRole (req, res, next) {
+    try {
+      const {user_id, group_id, role} = req.body;
+      if (!user_id || !group_id || !role) {
+        throw new Error ('Must state user_id, user_id, and role and body');
+      }
+      const result = await services.db.MemberRoles.update (
+        {record_status: constants.DB_RECORD_STATUS_TYPES.DELETED},
+        {
+          where: {
+            user_id,
+            group_id,
+            role,
+          },
+        }
+      );
+      next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {result}));
+    } catch (e) {
+      next (
+        new GenericResponse (
+          constants.RESPONSE_TYPES.ERROR,
+          new Error (`Failed adding member role - ${e.stack}`)
+        )
+      );
+    }
+  }
+
   // GROUP MEMBERS
 
   async getGroupMembers (req, res, next) {
@@ -278,13 +328,13 @@ module.exports = class GroupsController {
       const members = await services.db.GroupMembers.findAll ({
         where,
         include: [
-            {
-                model: services.db.MemberRoles,
-                as: 'roles',
-                where,
-                required: false
-            }
-        ]
+          {
+            model: services.db.MemberRoles,
+            as: 'roles',
+            where,
+            required: false,
+          },
+        ],
       });
       next (new GenericResponse (constants.RESPONSE_TYPES.JSON, {members}));
     } catch (e) {
