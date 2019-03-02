@@ -126,4 +126,10 @@ module.exports = {
     STATIC: 'STATIC',
     ERROR: 'ERROR',
   },
+
+  GROUP_MEMBERSHIP_STATUS: {
+    OPEN: 'OPEN',
+    CLOSED: 'CLOSED',
+    UNKNOWN: 'UNKNOWN',
+  },
 };
