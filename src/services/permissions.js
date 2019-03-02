@@ -76,7 +76,7 @@ export class PermissionService {
     ) {
       return false;
     }
-    return !!this.state.loggedUser.roles.find (
+    return !!state.loggedUser.roles.find (
       r => r.role === role && r.group_id === groupId
     );
   }
