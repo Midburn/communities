@@ -6,10 +6,28 @@ import {observer} from 'mobx-react';
 import {Loader} from '../../Loader';
 import {IconInput} from '../../controls/IconInput';
 import { Col, Row, Button } from 'mdbreact';
+import { RequestsService } from '../../../services/requests';
+import {state} from '../../../models/state';
 
 @observer class BaseGroupRequestManagement extends React.Component {
 
+  requestsService = new RequestsService();
   @observable email;
+
+  sendRequest = () => {
+    const {group} = this.props;
+    const request = {
+      created_by_id: state.loggedUser.user_id,
+      related_id: group.id,
+      related_type: group.group_type,
+      data: {
+        request_type: '',
+        request_status: '',
+        email: '',
+      }
+    };
+    this.requestsService.addRequest(request);
+  };
 
   render () {
     const {t, requests, isLoading} = this.props;

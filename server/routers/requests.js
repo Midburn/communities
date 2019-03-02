@@ -20,7 +20,8 @@ module.exports = class RequestRouter {
          * E.G - /api/VERSION/request/
          */
         this.router.route('/request')
-            .get(this.controller.getRequests);
+            .get(this.controller.getRequests)
+            .post(this.controller.addRequest)
 
     }
 };
