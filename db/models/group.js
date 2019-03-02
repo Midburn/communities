@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
             child_friendly: DataTypes.BOOLEAN,
             web_published: DataTypes.BOOLEAN,
             facebook_url: DataTypes.STRING,
-            group_is_new_members_open: DataTypes.BOOLEAN,
             group_type: {
                 type: DataTypes.ENUM,
                 values: [constants.GROUP_TYPES.CAMP, constants.GROUP_TYPES.ART],
