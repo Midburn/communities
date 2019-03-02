@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         constants.ENTITY_TYPE.GROUP
       ],
     },
+    record_status: {
+      type: DataTypes.ENUM,
+      values: [constants.DB_RECORD_STATUS_TYPES.ACTIVE, constants.DB_RECORD_STATUS_TYPES.DELETED],
+      defaultValue: constants.DB_RECORD_STATUS_TYPES.ACTIVE
+    },
 
     // Data for the request. Could be anything; Depending on the request type; This is extra-robust on purpose
     // Should be JSON, but currently unsupported. Should user JSON parse / stringify in the controller
