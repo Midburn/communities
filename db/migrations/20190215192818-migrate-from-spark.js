@@ -147,6 +147,9 @@ async function Migrate (queryInterface) {
     };
     for (const group of groups) {
       try {
+        if (group.hasOwnProperty('group_is_new_members_open')) {
+          delete group.group_is_new_members_open;
+        }
         const result = await communitiesDb.Groups.create (group, {
           returning: true,
         });
