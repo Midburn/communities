@@ -12,7 +12,8 @@ import {PermissionService} from '../../services/permissions';
 import {GroupsService} from '../../services/groups';
 import {ParsingService} from '../../services/parsing';
 import {EventRulesService} from '../../services/event-rules';
-
+import * as classnames from 'classnames';
+import * as constants from '../../../models/constants';
 /**
  * Renders drop down based on group type
  * @param type: from constanst group types
@@ -33,10 +34,14 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
     return groupsService.getUsersGroupId (type);
   }
 
+  const dropdownToggleClassname = classnames({
+    disabled: type === constants.GROUP_TYPES.ART
+  });
+
   return (
     <NavItem>
       <Dropdown id={`${type}-nav-fropdown`}>
-        <DropdownToggle className="disabled" nav>
+        <DropdownToggle className={dropdownToggleClassname} nav>
           {t (`${getTranslateModule ()}.title`)}
         </DropdownToggle>
         <DropdownMenu basic>
