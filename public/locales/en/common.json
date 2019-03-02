@@ -38,6 +38,8 @@
   "round": "Round",
   "published": "Published",
   "search": "Search",
+  "last_update": "Last update",
+  "request_status": "Request status",
   "nav": {
     "allocations": {
       "title": "Appreciation tickets {{year}}"
@@ -102,6 +104,7 @@
   },
   "members": {
     "search": "Search members",
+    "add": "Add members by email",
     "tooltips": {
       "allocate": "Add/Remove allocation",
       "allocatedByOtherGroup": "Has ticket allocated by another {{groupType}}"

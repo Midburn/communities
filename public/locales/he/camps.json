@@ -26,6 +26,7 @@
     },
     "edit": {
       "tabs": {
+        "join_requests": "בקשות הצטרפות",
         "info": "פרטים",
         "details": "פרטים בסיסיים",
         "members": "חברים",

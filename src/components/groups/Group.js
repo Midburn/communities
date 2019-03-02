@@ -18,6 +18,7 @@ import {Tabs} from '../controls/Tabs';
 import {GroupsService} from '../../services/groups';
 import {EventRulesService} from '../../services/event-rules';
 import {ParsingService} from '../../services/parsing';
+import {GroupRequestManagement} from './Edit/GroupRequestManagement';
 
 @observer class BaseGroup extends React.Component {
   permissionService = new PermissionService ();
@@ -117,6 +118,17 @@ import {ParsingService} from '../../services/parsing';
             key={2}
             members={this.group.members}
           />
+        ),
+      },
+      {
+        id: 3,
+        title: t (`${match.params.groupType}:single.edit.tabs.join_requests`),
+        component: (
+            <GroupRequestManagement
+                group={this.group}
+                match={match}
+                key={2}
+            />
         ),
       },
     ];

@@ -18,7 +18,7 @@ export class Tabs extends React.Component {
             <div>
                 <div className="d-flex flex-wrap">
                     {(tabs || []).map(tab => {
-                        return <MDBBtn
+                        return tab.hidden ? null : <MDBBtn
                             key={tab.id}
                             color={color || 'primary'}
                             outline={tab.id !== selectedId}

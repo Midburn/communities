@@ -26,6 +26,7 @@
     },
     "edit": {
       "tabs": {
+        "join_requests": "Join requests",
         "info": "Basic information",
         "details": "Basic details",
         "members": "Members",

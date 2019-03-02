@@ -77,11 +77,6 @@ class BaseMain extends React.Component {
                       component={Group}
                       exact
                     />
-                    <Route
-                      path="/:lng(en|he)/:groupType/:id/manage"
-                      component={GroupManagement}
-                      exact
-                    />
                     <Redirect path="/" to="/he/camps" exact />
                   </Switch>
                 </CardBody>

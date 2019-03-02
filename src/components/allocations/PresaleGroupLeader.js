@@ -17,8 +17,9 @@ import {EventRulesService} from '../../services/event-rules';
 import {PermissionService} from '../../services/permissions';
 import {DoughnutCard} from '../controls/DoughnutCard';
 import {isMobileOnly} from 'react-device-detect';
-import {SearchInput} from '../controls/SearchInput';
+import {IconInput} from '../controls/IconInput';
 import {action} from 'mobx/lib/mobx';
+import { IoMdSearch } from 'react-icons/io';
 
 @observer class BaseDGSGroupLeader extends React.Component {
   groupService = new GroupsService ();
@@ -290,7 +291,8 @@ import {action} from 'mobx/lib/mobx';
 
         <Row className="mt-4 mb-4">
           <Col md="6">
-            <SearchInput
+            <IconInput
+                icon={<IoMdSearch color="gray"/>}
               value={this.query}
               onChange={this.handleChange}
               placeholder={t (`members.search`)}

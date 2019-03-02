@@ -4,7 +4,7 @@
   "arts": "מיצבים",
   "he": "עברית",
   "en": "ENG",
-  "email": "דואר אלקטרוני",
+  "email": "אימייל",
   "password": "סיסמה",
   "login": "כניסה למערכת",
   "logout": "התנתקות",
@@ -39,6 +39,8 @@
   "round": "סבב",
   "published": "פורסם",
   "search": "חיפוש",
+  "last_update": "תאריך עדכון",
+  "request_status": "סטטוס בקשה",
   "nav": {
     "allocations": {
       "title": "הקצאות הוקרה {{year}}"
@@ -103,6 +105,7 @@
   },
   "members": {
     "search": "חפש חברים",
+    "add": "הוספת חברים לפי אימייל",
     "tooltips": {
       "allocate": "הוסף\\הסר הקצאה",
       "allocatedByOtherGroup": "בעל הקצאה מ{{groupType}} אחר"

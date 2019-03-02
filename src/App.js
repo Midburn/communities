@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.scss';
+import 'eva-icons/style/scss/eva-icons.scss';
 import { Layout } from './components/Layout';
 import { withNamespaces } from 'react-i18next';
 
