@@ -32,9 +32,7 @@ export class InitilizationService {
       constants.GROUP_TYPES.ART
     );
     state.currentEvent = await this.events.getEvent (state.currentEventId);
-    state.allocationGroups = (await this.groups.getUserGroups (
-      this.events.getFormerEventId ()
-    )) || [];
+    state.allocationGroups = state.loggedUser.groups.filter(g => g.event_id === this.events.getFormerEventId ());
   }
 
   async init () {
@@ -45,7 +43,6 @@ export class InitilizationService {
       await this.fetchAppInitialData ();
       const loginDetails = await this.auth.auth ();
       state.loggedUser = loginDetails.loggedUser;
-      console.log(loginDetails.loggedUser);
       state.currentEventId = loginDetails.currentEventId;
       try {
         await this.fetchInitialData ();

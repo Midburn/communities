@@ -26,19 +26,6 @@ export class PermissionService {
     );
   }
 
-  // Does the logged user has a group he manages
-  isAGroupManager (groupType) {
-    if (!state.isUserGroups) {
-      return false;
-    }
-    return state.loggedUser.groups.some (
-      g =>
-        g.event_id === state.currentEventId &&
-        g.group_type === groupType &&
-        g.main_contact === state.loggedUser.user_id
-    );
-  }
-
   isFormerGroupManager (groupId) {
     if (!state.allocationGroups) {
       return false;
@@ -64,6 +51,14 @@ export class PermissionService {
     return state.loggedUser.isAdmin;
   }
 
+  canManageGroups(type) {
+    if (this.isAdmin()) {
+      return true;
+    }
+    return type === constants.GROUP_TYPES.CAMP ? state.loggedUser.isCampsAdmin : state.loggedUser.isArtInstallationsAdmin;
+
+  }
+
   canEditThisGroup (group) {
     if (!state.isUserGroups) {
       return false;
@@ -81,7 +76,7 @@ export class PermissionService {
     ) {
       return false;
     }
-    return !!this.state.loggedUser.roles.find (
+    return !!state.loggedUser.roles.find (
       r => r.role === role && r.group_id === groupId
     );
   }
@@ -103,7 +98,7 @@ export class PermissionService {
 
   isAllowedToManageGroups (groupType) {
     // Add logic when there will be more roles for this;
-    return this.isAdmin ();
+    return this.canManageGroups (groupType);
   }
 
   redirectToSpark () {

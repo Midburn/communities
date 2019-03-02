@@ -125,7 +125,7 @@ export class GroupsService {
         g.event_id === state.currentEventId &&
         g.group_type.toLowerCase ().includes (type)
       ) {
-        return g.group_id;
+        return g.id;
       }
     }
   }
