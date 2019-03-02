@@ -4,9 +4,7 @@ import {TiPlus, TiMinus} from 'react-icons/ti'
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
-
-@observer
-export class NumberEditor extends React.Component {
+@observer class BaseNumberEditor extends React.Component {
     constructor(props) {
         super();
         this.value = props.value;
@@ -65,3 +63,5 @@ export class NumberEditor extends React.Component {
     }
 
 };
+
+export const NumberEditor = BaseNumberEditor;
