@@ -45,7 +45,6 @@ export class InitilizationService {
       await this.fetchAppInitialData ();
       const loginDetails = await this.auth.auth ();
       state.loggedUser = loginDetails.loggedUser;
-      console.log(loginDetails.loggedUser);
       state.currentEventId = loginDetails.currentEventId;
       try {
         await this.fetchInitialData ();
