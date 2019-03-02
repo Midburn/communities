@@ -46,7 +46,7 @@ import { observable } from 'mobx';
     };
 
     render() {
-        const {onChange, min, max} = this.props;
+        const { min, max} = this.props;
         return (
             <div className={style.NumberCounter}>
             <span disabled={max !== 'undefined' && this.value >= max} onClick={this.increment} id="increment" className="handle">
