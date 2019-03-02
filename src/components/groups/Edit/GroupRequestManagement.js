@@ -8,6 +8,7 @@ import {IconInput} from '../../controls/IconInput';
 import { Col, Row, Button } from 'mdbreact';
 import { RequestsService } from '../../../services/requests';
 import {state} from '../../../models/state';
+import * as constatns from '../../../../models/constants';
 
 @observer class BaseGroupRequestManagement extends React.Component {
 
@@ -21,9 +22,9 @@ import {state} from '../../../models/state';
       related_id: group.id,
       related_type: group.group_type,
       data: {
-        request_type: '',
-        request_status: '',
-        email: '',
+        request_type: constatns.REQUEST_TYPES.ADMIN_JOIN_REQUEST,
+        request_status: constatns.REQUEST_STATUSES.PENDING,
+        email: this.email,
       }
     };
     this.requestsService.addRequest(request);

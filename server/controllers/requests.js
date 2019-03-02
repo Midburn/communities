@@ -44,7 +44,7 @@ module.exports = class RequestsController {
             const result = await services.db.Requests.create(req.body);
             next(new GenericResponse(constants.RESPONSE_TYPES.JSON, { result }));
         } catch (e) {
-            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed fetching requests- ${e.stack}`)));
+            next(new GenericResponse(constants.RESPONSE_TYPES.ERROR, new Error(`Failed adding request- ${e.stack}`)));
         }
     }
 

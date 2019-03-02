@@ -132,4 +132,13 @@ module.exports = {
     CLOSED: 'CLOSED',
     UNKNOWN: 'UNKNOWN',
   },
+
+  REQUEST_STATUSES: {
+    PENDING: 'PENDING'
+  },
+
+  REQUEST_TYPES: {
+    // An admin launched a join request to a user.
+    ADMIN_JOIN_REQUEST: 'ADMIN_JOIN_REQUEST'
+  }
 };
