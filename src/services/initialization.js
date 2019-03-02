@@ -32,9 +32,7 @@ export class InitilizationService {
       constants.GROUP_TYPES.ART
     );
     state.currentEvent = await this.events.getEvent (state.currentEventId);
-    state.allocationGroups = (await this.groups.getUserGroups (
-      this.events.getFormerEventId ()
-    )) || [];
+    state.allocationGroups = state.loggedUser.groups.filter(g => g.event_id === this.events.getFormerEventId ());
   }
 
   async init () {
