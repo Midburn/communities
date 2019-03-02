@@ -13,6 +13,7 @@ import {GroupsService} from '../../services/groups';
 import {ParsingService} from '../../services/parsing';
 import * as classnames from 'classnames';
 import * as constants from '../../../models/constants';
+import {state} from  '../../models/state';
 /**
  * Renders drop down based on group type
  * @param type: from constanst group types
