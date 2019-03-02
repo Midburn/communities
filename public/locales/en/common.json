@@ -40,6 +40,7 @@
   "search": "Search",
   "last_update": "Last update",
   "request_status": "Request status",
+  "send_request": "Send request",
   "nav": {
     "allocations": {
       "title": "Appreciation tickets {{year}}"

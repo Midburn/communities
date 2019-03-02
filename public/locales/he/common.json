@@ -41,6 +41,7 @@
   "search": "חיפוש",
   "last_update": "תאריך עדכון",
   "request_status": "סטטוס בקשה",
+  "send_request": "שליחת בקשה",
   "nav": {
     "allocations": {
       "title": "הקצאות הוקרה {{year}}"

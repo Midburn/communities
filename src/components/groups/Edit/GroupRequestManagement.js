@@ -29,15 +29,15 @@ import { Col, Row, Button } from 'mdbreact';
     return (
       <div>
         <Row className="mt-4 mb-4">
-          <Col md="6">
+          <Col md="8">
           </Col>
-          <Col md="6" className="d-flex">
+          <Col md="4" className="d-flex">
             <IconInput
                 icon={<i className="eva eva-person-add-outline"/>}
                 value={this.email}
                 placeholder={t (`members.add`)}
             />
-            <Button disabled={this.loading} color="primary" onClick={this.sendRequest}>{t('ok')}</Button>
+            <Button disabled={this.loading} color="primary" onClick={this.sendRequest}>{t('send_request')}</Button>
           </Col>
         </Row>
         <Row>
