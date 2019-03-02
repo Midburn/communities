@@ -13,7 +13,6 @@ import {GroupsService} from '../../services/groups';
 import {ParsingService} from '../../services/parsing';
 import * as classnames from 'classnames';
 import * as constants from '../../../models/constants';
-import {state} from  '../../models/state';
 /**
  * Renders drop down based on group type
  * @param type: from constanst group types
@@ -31,15 +30,6 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
 
   function getMyGroupId () {
     return groupsService.getUsersGroupId (type);
-  }
-
-  function getMyGroupName () {
-    const id = getMyGroupId();
-    if (!id) {
-      return;
-    }
-    const group = state.loggedUser.groups.find(g => g.id === id);
-    return groupsService.getPropertyByLang(group, 'name');
   }
 
   const dropdownToggleClassname = classnames({
