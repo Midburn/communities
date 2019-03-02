@@ -72,7 +72,7 @@ export const AllocationsDropDown = ({type, t, onClick, lng}) => {
               return (
                 <PermissableComponent
                   key={groupType}
-                  permitted={!!permissionsService.isAdmin ()}
+                  permitted={permissionsService.canManageGroups (constants.GROUP_TYPES.ART) || permissionsService.canManageGroups (constants.GROUP_TYPES.CAMP)}
                 >
                   <DropdownItem onClick={onClick}>
                     <NavItem>

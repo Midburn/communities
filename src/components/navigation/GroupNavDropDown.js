@@ -11,7 +11,6 @@ import {PermissableComponent} from '../controls/PermissableComponent';
 import {PermissionService} from '../../services/permissions';
 import {GroupsService} from '../../services/groups';
 import {ParsingService} from '../../services/parsing';
-import {EventRulesService} from '../../services/event-rules';
 import * as classnames from 'classnames';
 import * as constants from '../../../models/constants';
 /**
@@ -24,7 +23,6 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
   const groupsService = new GroupsService ();
   const permissionsService = new PermissionService ();
   const parsingService = new ParsingService ();
-  const eventRulesService = new EventRulesService ();
 
   function getTranslateModule () {
     return `nav.${parsingService.getPlural (type)}`;
@@ -32,6 +30,15 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
 
   function getMyGroupId () {
     return groupsService.getUsersGroupId (type);
+  }
+
+  function getMyGroupName () {
+    const id = getMyGroupId();
+    if (!id) {
+      return;
+    }
+    const group = state.loggedUser.groups.find(g => g.id === id);
+    return groupsService.getPropertyByLang(group, 'name');
   }
 
   const dropdownToggleClassname = classnames({
@@ -46,7 +53,7 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
         </DropdownToggle>
         <DropdownMenu basic>
           {/*SEARCH GROUPS LINK*/}
-          <DropdownItem onClick={onClick}>
+          <DropdownItem className="disabled" onClick={onClick}>
             <NavLink to={`/${lng}/${parsingService.getPlural (type)}`}>
               {t (`${getTranslateModule ()}.search`)}
             </NavLink>
@@ -61,19 +68,11 @@ export const GroupDropDown = ({type, t, onClick, lng}) => {
               </NavLink>
             </DropdownItem>
           </PermissableComponent>
-          {/*MANAGE MY GROUP LINK*/}
-          <PermissableComponent
-            permitted={
-              permissionsService.isAGroupManager (type) &&
-                !eventRulesService.isGroupEditingDisabled (type)
-            }
-          >
+          {/*MANAGEMENT LINK*/}
+          <PermissableComponent permitted={permissionsService.canManageGroups(type)}>
             <DropdownItem onClick={onClick}>
               <NavLink
-                to={`/${lng}/${parsingService.getPlural (type)}/${getMyGroupId ()}/manage`}
-              >
-                {t (`${getTranslateModule ()}.manage`)}
-              </NavLink>
+                  to={`/${lng}/${parsingService.getPlural(type)}/management`}>{t(`nav.${parsingService.getPlural(type)}.management`)}</NavLink>
             </DropdownItem>
           </PermissableComponent>
         </DropdownMenu>

@@ -56,9 +56,9 @@
     "camps": {
       "title": "Camps",
       "search": "Find camps",
-      "my": "My camp",
+      "my": "My camp {{name}}",
       "manage": "Manage my camp",
-      "management": "Manage camps",
+      "management": "Camps admin",
       "allocate": "Allocate tickets for my camp",
       "allocateAdmin": "Manage camps allocations",
       "create": {
@@ -93,9 +93,9 @@
     "arts": {
       "title": "Art installations",
       "search": "Find Art installations",
-      "my": "My Art installation",
+      "my": "My Art installation {{name}}",
       "manage": "Manage my Art installation",
-      "management": "Manage Art installations",
+      "management": "Art installations admin",
       "allocate": "Allocate tickets for my art installation",
       "allocateAdmin": "Manage art installations allocations"
     }

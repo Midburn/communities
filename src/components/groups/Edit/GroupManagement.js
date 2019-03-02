@@ -9,6 +9,10 @@ import {GroupMembers} from './GroupMembers';
 import {GroupHeader} from '../GroupHeader';
 import {GroupsService} from '../../../services/groups';
 
+/**
+ * THIS COMPONENT IS DEPRECATED FOR NOW!
+ */
+
 @observer class BaseGroupManagement extends React.Component {
   groupService = new GroupsService ();
 

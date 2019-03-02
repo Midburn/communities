@@ -64,6 +64,14 @@ export class PermissionService {
     return state.loggedUser.isAdmin;
   }
 
+  canManageGroups(type) {
+    if (this.isAdmin()) {
+      return true;
+    }
+    return type === constants.GROUP_TYPES.CAMP ? state.loggedUser.isCampsAdmin : state.loggedUser.isArtInstallationsAdmin;
+
+  }
+
   canEditThisGroup (group) {
     if (!state.isUserGroups) {
       return false;
