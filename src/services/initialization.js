@@ -22,17 +22,10 @@ export class InitilizationService {
   }
 
   async fetchInitialData () {
-    /**
-         * Put all requests for initial business logic data here (logged user, event rules etc...).
-         */
-    state.camps = await this.groups.getAllOpenGroups (
-      constants.GROUP_TYPES.CAMP
-    );
-    state.artInstallations = await this.groups.getAllOpenGroups (
-      constants.GROUP_TYPES.ART
-    );
     state.currentEvent = await this.events.getEvent (state.currentEventId);
-    state.allocationGroups = state.loggedUser.groups.filter(g => g.event_id === this.events.getFormerEventId ());
+    state.allocationGroups = state.loggedUser.groups.filter (
+      g => g.event_id === this.events.getFormerEventId ()
+    );
   }
 
   async init () {

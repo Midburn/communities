@@ -1,5 +1,6 @@
 const db = require ('./database'),
   Sequelize = require ('sequelize'),
+  config = require ('./config'),
   schedule = require ('node-schedule');
 class SparkSync {
   async getSparkDb () {
@@ -53,6 +54,10 @@ class SparkSync {
   }
 
   initSync () {
+    if (config.NO_SPARK_SYNC) {
+      console.log ('Running without spark sync!');
+      return;
+    }
     this.schedule = schedule.scheduleJob (
       '*/4 * * *',
       this.syncUsersCommonData.bind (this)

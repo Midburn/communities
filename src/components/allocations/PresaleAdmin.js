@@ -58,7 +58,9 @@ import {BarChartCard} from '../controls/BarChartCard';
   }
 
   componentWillReceiveProps (props) {
-    this.init (props);
+    if (!this.isLoading) {
+      this.init (props);
+    }
   }
 
   async init (props) {
@@ -195,18 +197,47 @@ import {BarChartCard} from '../controls/BarChartCard';
 
   presaleQuotaChanged = async (group, quota) => {
     const {match} = this.props;
+    // Set locally to update view
+    const allocation = this.allocationsService.buildAdminAllocation (
+      constants.ALLOCATION_TYPES.PRE_SALE,
+      group.id,
+      quota,
+      this.parsingService.getGroupTypeFromString (match.params.groupType)
+    );
+    this.setGroupQuota (group, allocation);
     try {
+      // Send data to server
       await this.allocationsService.addAllocationsToGroup (
         constants.ALLOCATION_TYPES.PRE_SALE,
         group.id,
         quota,
         this.parsingService.getGroupTypeFromString (match.params.groupType)
       );
-      await this.getAdminAllocations ();
     } catch (e) {
       console.warn (e.stack);
     }
   };
+
+  setGroupQuota (group, allocation) {
+    if (
+      !this.groupQuotas ||
+      !this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY]
+    ) {
+      return;
+    }
+    let groupQuotaIndex = this.groupQuotas[
+      constants.UNPUBLISHED_ALLOCATION_KEY
+    ].findIndex (adminAllocation => adminAllocation.group_id === group.id);
+    if (groupQuotaIndex === -1) {
+      return this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY].push (
+        allocation
+      );
+    }
+    this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY][
+      groupQuotaIndex
+    ] = allocation;
+    return (this.groupQuotas = {...this.groupQuotas});
+  }
 
   /**
      * Filter related methods (change, filter, match)

@@ -50,17 +50,31 @@ module.exports = class GroupsController {
                 where: this.DEFAULT_WHERE_OPTIONS,
                 required: false,
               },
-              {
-                model: services.db.MemberRoles,
-                as: 'roles',
-                where: this.DEFAULT_WHERE_OPTIONS,
-                required: false,
-              },
             ],
       });
+
+      const allRoles = await services.db.MemberRoles.findAll ({
+        where: {
+          group_id: {$in: groups.map (g => g.toJSON ().id)},
+        },
+      });
+      const allRolesDict = allRoles.reduce ((result, value) => {
+        if (result[value.group_id]) {
+          result[value.group_id] = [...result[value.group_id], value];
+        } else {
+          result[value.group_id] = [value];
+        }
+        return result;
+      }, {});
+      const parsedGroups = [];
+      for (let group of groups) {
+        const parsedGroup = group.toJSON ();
+        parsedGroup.roles = allRolesDict[parsedGroup.id] || [];
+        parsedGroups.push (parsedGroup);
+      }
       next (
         new GenericResponse (constants.RESPONSE_TYPES.JSON, {
-          groups,
+          groups: parsedGroups,
         })
       );
     } catch (e) {
