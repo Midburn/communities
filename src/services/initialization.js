@@ -4,7 +4,6 @@ import {GroupsService} from './groups';
 import {state} from '../models/state';
 import {ConfigurationsService} from './configurations';
 import {EventsService} from './events';
-import * as constants from '../../models/constants';
 
 export class CookieError extends Error {}
 
