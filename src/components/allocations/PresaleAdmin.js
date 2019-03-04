@@ -229,13 +229,12 @@ import {BarChartCard} from '../controls/BarChartCard';
       constants.UNPUBLISHED_ALLOCATION_KEY
     ].findIndex (adminAllocation => adminAllocation.group_id === group.id);
     if (groupQuotaIndex === -1) {
-      return this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY].push (
-        allocation
-      );
+      this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY].push (allocation);
+    } else {
+      this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY][
+        groupQuotaIndex
+      ] = allocation;
     }
-    this.groupQuotas[constants.UNPUBLISHED_ALLOCATION_KEY][
-      groupQuotaIndex
-    ] = allocation;
     return (this.groupQuotas = {...this.groupQuotas});
   }
 
