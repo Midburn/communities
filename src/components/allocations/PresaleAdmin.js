@@ -71,11 +71,11 @@ import {BarChartCard} from '../controls/BarChartCard';
         this.parsingService.getGroupTypeFromString (match.params.groupType),
         this.eventsService.getFormerEventId ()
       )) || [];
-      this.isLoading = false;
       await this.getGroupsTickets ();
       await this.getGroupsFormerEventTickets ();
       await this.getAdminAllocations ();
       await this.getGroupsAllocations ();
+      this.isLoading = false;
       await this.getAudits ();
     } catch (e) {
       this.isLoading = false;
