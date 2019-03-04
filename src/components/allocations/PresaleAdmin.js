@@ -45,6 +45,14 @@ import {BarChartCard} from '../controls/BarChartCard';
 
   @observable query = '';
 
+  @observable ticketsCount;
+
+  @observable formerTicketsCount;
+
+  @observable allocationsGivenSum = 0;
+
+  @observable allocationsUsedSum = 0;
+
   get lastAudit () {
     if (!this.audits || !this.audits.length || !this.audits[0]) {
       return null;
@@ -112,6 +120,7 @@ import {BarChartCard} from '../controls/BarChartCard';
       if (!tickets || !Object.keys (tickets).length) {
         return;
       } else {
+        this.ticketsCount = this.sumTickets (tickets);
         for (const group of this.groups) {
           group.tickets = tickets[group.id];
         }
@@ -122,6 +131,15 @@ import {BarChartCard} from '../controls/BarChartCard';
     }
   }
 
+  // Tickets dictionary is a dictionary of group id to array of tickets
+  sumTickets (ticketsDict) {
+    console.log (ticketsDict);
+    return Object.values (ticketsDict).reduce ((result, value) => {
+      result += value ? value.length : 0;
+      return result;
+    }, 0);
+  }
+
   /**
    * For displaying entered count (for former event)
    * @returns {Promise<void>}
@@ -129,12 +147,13 @@ import {BarChartCard} from '../controls/BarChartCard';
   async getGroupsFormerEventTickets () {
     try {
       const tickets = await this.groupService.getAllCampsMembersTickets (
-        this.groups.map (g => g.id),
+        this.groups.map (g => g.spark_id),
         this.eventsService.getFormerEventId ()
       );
       if (!tickets || !Object.keys (tickets).length) {
         return;
       } else {
+        this.formerTicketsCount = this.sumTickets (tickets);
         for (const group of this.groups) {
           group.former_tickets = tickets[group.id];
         }
@@ -162,6 +181,17 @@ import {BarChartCard} from '../controls/BarChartCard';
         constants.ALLOCATION_TYPES.PRE_SALE,
         this.parsingService.getGroupTypeFromString (match.params.groupType)
       )) || [];
+      this.allocationsGivenSum = Object.keys (
+        this.groupQuotas
+      ).reduce ((result, key) => {
+        if (key === constants.UNPUBLISHED_ALLOCATION_KEY) {
+          // Don't sum unpublished allocations
+          return result;
+        }
+        const allocation = this.groupQuotas[key];
+        result += +allocation.count;
+        return result;
+      }, 0);
     } catch (e) {
       console.warn (e);
     }
@@ -268,6 +298,31 @@ import {BarChartCard} from '../controls/BarChartCard';
     return false;
   }
 
+  get chartData () {
+    const {t} = this.props;
+    const reservedGiven = this.allocationsGivenSum
+      ? this.formerTicketsCount / this.allocationsGivenSum
+      : 0;
+    return [
+      {
+        title: t (`${this.TRANSLATE_PREFIX}.charts.ticketsBaught`),
+        value: 0.2,
+      },
+      {
+        title: t (`${this.TRANSLATE_PREFIX}.charts.reservedTickets`),
+        value: 0.54,
+      },
+      {
+        title: t (`${this.TRANSLATE_PREFIX}.charts.reservedGiven`),
+        value: reservedGiven || 0,
+      },
+      {
+        title: t (`${this.TRANSLATE_PREFIX}.charts.ticketOwners`),
+        value: 1,
+      },
+    ];
+  }
+
   render () {
     const {t} = this.props;
     return (
@@ -295,7 +350,11 @@ import {BarChartCard} from '../controls/BarChartCard';
             </p>
           </Col>
           <Col lg="4" xl="5">
-            <BarChartCard t={t} translatePrefix={this.TRANSLATE_PREFIX} />
+            <BarChartCard
+              t={t}
+              translatePrefix={this.TRANSLATE_PREFIX}
+              data={this.chartData}
+            />
           </Col>
         </Row>
 
