@@ -51,7 +51,7 @@
     "mini-css-extract-plugin": "0.4.3",
     "mobx": "^5.8.0",
     "mobx-react": "^5.4.3",
-    "moment": "^2.23.0",
+    "moment": "^2.29.4",
     "morgan": "^1.9.1",
     "mysql2": "^1.6.4",
     "node-sass": "^4.11.0",
